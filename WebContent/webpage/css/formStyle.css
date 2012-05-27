@@ -1,0 +1,38 @@
+
+
+.tableTop-bg {
+	font-weight:bold;
+	font-size:14px;
+	background-image:;
+	vertical-align: middle;    
+  	color:#ffffff;   
+  	text-indent:6px;   
+  	background-repeat:repeat-x;
+  	height:   25px;    
+  	text-decoration:   none  
+}  
+.table-TitleBG {
+	font-weight:   bold;   
+	font-size:   12px;   
+	line-height:   150%;   
+	background-color:   #f7faff;    
+  	text-decoration:   none  
+}  
+.table-Kang {  
+  	border-right:   #0066cc   1px   solid;   
+  	border-top:   #0066cc   1px   solid;   
+  	border-left:  #0066cc   1px   solid;   
+  	border-bottom:   #0066cc   1px   solid;   
+  	background-color:   #91afdd  
+}  
+.table-Sbg {  
+  	font-size:   12px;   
+  	line-height:   150%;   
+  	background-color:   #ecf4ff  
+}  
+.table-Qbg {  
+  	font-size:   12px;   
+  	line-height:   150%;   
+  	background-color:   #f7faff;   
+  	text-decoration:none  
+}

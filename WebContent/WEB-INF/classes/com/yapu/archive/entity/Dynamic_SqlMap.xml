@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Dynamic" >
+
+	<!-- 有时候，为了代码灵活，便于修改，要直接向IBatis传入完整的SQL语句。其中最重要的设置是“remapResults="true"”。remapResults设置成true，
+		表示结果字段可以是不定的。也就是说，这次可返回“ID,NAME”两个字段，下次何返回“ID,NAME,TYPE_ID”三个字段，也可以返回“*” -->
+	<!--   selectBySql -->
+    <select id="selectBySql" resultClass="java.util.HashMap" remapResults="true" parameterClass="java.util.HashMap"> 
+        <isNotEmpty property="sql">$sql$</isNotEmpty>
+    </select>    
+    <!-- updateSql 
+    <update id="updateSql" parameterClass="java.lang.String">
+        <![CDATA[ $sql$ ]]>
+    </update>-->
+    <update id="updateSql" parameterClass="java.util.HashMap">
+        <isNotEmpty property="sql">$sql$</isNotEmpty>
+    </update>
+    <!-- insertSql -->
+    <insert id="insertSql" parameterClass="java.util.HashMap">
+        <isNotEmpty property="sql">$sql$</isNotEmpty>
+    </insert>
+    <!-- deleteSql -->
+    <delete id="deleteSql" parameterClass="java.util.HashMap">
+	   <isNotEmpty property="sql">$sql$</isNotEmpty>
+	</delete>
+</sqlMap>

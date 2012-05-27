@@ -1,0 +1,77 @@
+
+
+<script type="text/javascript" src="TempletfieldList.js"></script>
+<script type="text/javascript" src="CodeList.js"></script>
+<table id="templetfieldtable"></table>
+
+<div id="addTempletfieldWindow" class="easyui-window" closed="true" title="新建字段" style="display:none;width:600px;height:400px;padding:5px;">
+	<div class="easyui-layout" fit="true">
+		<div region="center" border="false" style="padding:5px;border:1px solid #ccc;">
+			<form id="ff" method="post">
+				<TABLE width="100%" border="0" cellPadding="4" cellSpacing="1" class="table-Kang">
+					<TR>  
+	              		<TD class="tableTop-bg" colSpan="2">新建字段内容</TD>
+	  				</TR>
+	           		<TR>
+	               		<TD class="table-TitleBG" width="15%">名称:</TD>
+	               		<TD class="table-Sbg" width="35%"><input name="chinesename" id="chinesename" onkeyup="pinyin()" type="text" class="easyui-validatebox" required="true" validType="CHAndENS" missingMessage="请输入字段名称，不能为空，最多10个汉字！" size="20" maxlength="20"></TD>  
+	            	</TR>
+	            	<TR>  
+	                    <TD class=table-TitleBG>标识:</TD>
+	                    <TD class=table-Sbg><input name="englishname" id="englishname" type="text" class="easyui-validatebox" required="true" missingMessage="标识不能为空。输入字段名称自动产生字段标识！" size="20" maxlength="20"></TD>  
+	              	</TR>
+	              	<TR>  
+	                    <TD class=table-TitleBG>长度:</TD>
+	                    <TD class=table-Sbg><input name="fieldsize" id="fieldsize" class="easyui-numberbox" type="text" max="255" min="10" value= "10" required="true" missingMessage="必须填写10-255之间的数字" invalidMessage= "必须填写10-255之间的数字" size="20" maxlength="20"></TD>  
+	              	</TR>
+	              	<TR>
+	                  	<TD   class=table-TitleBG>类型:</TD>  
+	                  	<TD   class=table-Sbg>
+	                  		<select name="fieldtype" id="fieldtype" class="easyui-combobox" >
+						  		<option value="VARCHAR">字符串型</option>
+						  		<option value="INT">整数型</option>
+					  		</select>
+					  	</TD>
+	              	</TR>  
+					<TR>  
+					    <TD   class=table-TitleBG>默认值:</TD>
+					    <TD   class=table-Sbg><input name="defaultvalue" id="defaultvalue" type="text" class="easyui-validatebox" size="20" maxlength="20"></TD>  
+					</TR>
+					<TR>  
+					    <TD class=table-TitleBG>排序:</TD>
+					    <TD class=table-Sbg><input name="sort" id="sort" class="easyui-numberbox" type="text" max="255" min="0" value= "0" required="true" missingMessage="必须填写0-255之间的数字" size="20" maxlength="20"></TD>  
+					</TR> 
+					<TR>  
+					    <TD   class=table-TitleBG>必著:</TD>  
+					    <TD   class=table-Sbg><input name="isrequire" id="isrequire" type="checkbox"></TD>  
+					</TR>
+					<TR>  
+					    <TD   class=table-TitleBG>唯一:</TD>  
+					    <TD   class=table-Sbg><input name="isunique" id="isunique" type="checkbox"></TD>  
+					</TR>
+					<TR>  
+					    <TD   class=table-TitleBG>检索字段:</TD>  
+					    <TD   class=table-Sbg><input name="issearch" id="issearch" type="checkbox"></TD>  
+					</TR>
+					<TR>
+					    <TD   class=table-TitleBG>列表显示:</TD>  
+					    <TD   class=table-Sbg><input name="isgridshow" id="isgridshow" type="checkbox"></TD>  
+					</TR>
+				</TABLE>
+			</form>
+		</div>
+	    <div region="south" border="false" style="text-align:right;height:30px;line-height:30px;">
+            <a href="#" class="easyui-linkbutton" icon="icon_ok" onclick="saveAddTempletfield()" plain="true">保存</a>
+            <a href="#" class="easyui-linkbutton" icon="icon_cancel" onclick="$('#addTempletfieldWindow').window('close');" plain="true">取消</a>
+        </div> 
+    </div>
+</div>
+<div id="addCodeWindow" class="easyui-window" closed="true" title="代码管理" style="display:none;width:800px;height:400px;padding:0px;">
+	<div class="easyui-layout" fit="true">
+		<div region="center" border="false" style="padding:5px;border:1px solid #ccc;">
+			<table id="addcodetable"></table>
+		</div>
+    </div>
+    
+</div>
+

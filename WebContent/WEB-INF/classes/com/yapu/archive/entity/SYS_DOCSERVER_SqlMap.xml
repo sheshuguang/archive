@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SYS_DOCSERVER" >
+  <resultMap id="ibatorgenerated_BaseResultMap" class="com.yapu.archive.entity.SysDocserver" >
+    
+    <result column="DOCSERVERID" property="docserverid" jdbcType="VARCHAR" />
+    <result column="SERVERIP" property="serverip" jdbcType="VARCHAR" />
+    <result column="SERVERPATH" property="serverpath" jdbcType="VARCHAR" />
+    <result column="FTPUSER" property="ftpuser" jdbcType="VARCHAR" />
+    <result column="FTPPASSWORD" property="ftppassword" jdbcType="VARCHAR" />
+    <result column="SERVERNAME" property="servername" jdbcType="VARCHAR" />
+    <result column="SERVERTYPE" property="servertype" jdbcType="VARCHAR" />
+    <result column="SERVERSTATE" property="serverstate" jdbcType="INTEGER" />
+    <result column="SERVERPORT" property="serverport" jdbcType="INTEGER" />
+    <result column="SERVERMEMO" property="servermemo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="ibatorgenerated_Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$
+            #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <select id="ibatorgenerated_selectByExample" resultMap="ibatorgenerated_BaseResultMap" parameterClass="com.yapu.archive.entity.SysDocserverExample" >
+    select DOCSERVERID, SERVERIP, SERVERPATH, FTPUSER, FTPPASSWORD, SERVERNAME, SERVERTYPE,
+      SERVERSTATE, SERVERPORT,SERVERMEMO
+    from SYS_DOCSERVER
+    <isParameterPresent >
+      <include refid="SYS_DOCSERVER.ibatorgenerated_Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="ibatorgenerated_selectByPrimaryKey" resultMap="ibatorgenerated_BaseResultMap" parameterClass="com.yapu.archive.entity.SysDocserver" >
+    select DOCSERVERID, SERVERIP, SERVERPATH, FTPUSER, FTPPASSWORD, SERVERNAME, SERVERTYPE,
+      SERVERSTATE, SERVERPORT,SERVERMEMO
+    from SYS_DOCSERVER
+    where DOCSERVERID = #docserverid:VARCHAR#
+  </select>
+  <delete id="ibatorgenerated_deleteByPrimaryKey" parameterClass="com.yapu.archive.entity.SysDocserver" >
+    delete from SYS_DOCSERVER
+    where DOCSERVERID = #docserverid:VARCHAR#
+  </delete>
+  <delete id="ibatorgenerated_deleteByExample" parameterClass="com.yapu.archive.entity.SysDocserverExample" >
+    delete from SYS_DOCSERVER
+    <include refid="SYS_DOCSERVER.ibatorgenerated_Example_Where_Clause" />
+  </delete>
+  <insert id="ibatorgenerated_insert" parameterClass="com.yapu.archive.entity.SysDocserver" >
+    insert into SYS_DOCSERVER (DOCSERVERID, SERVERIP, SERVERPATH, FTPUSER, FTPPASSWORD, SERVERNAME,
+      SERVERTYPE, SERVERSTATE, SERVERPORT,SERVERMEMO)
+    values (#docserverid:VARCHAR#, #serverip:VARCHAR#, #serverpath:VARCHAR#, #ftpuser:VARCHAR#,
+      #ftppassword:VARCHAR#, #servername:VARCHAR#, #servertype:VARCHAR#, #serverstate:INTEGER#,#serverport:INTEGER#,
+      #servermemo:VARCHAR#)
+  </insert>
+  <insert id="ibatorgenerated_insertSelective" parameterClass="com.yapu.archive.entity.SysDocserver" >
+    insert into SYS_DOCSERVER
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="docserverid" >
+        DOCSERVERID
+      </isNotNull>
+      <isNotNull prepend="," property="serverip" >
+        SERVERIP
+      </isNotNull>
+      <isNotNull prepend="," property="serverpath" >
+        SERVERPATH
+      </isNotNull>
+      <isNotNull prepend="," property="ftpuser" >
+        FTPUSER
+      </isNotNull>
+      <isNotNull prepend="," property="ftppassword" >
+        FTPPASSWORD
+      </isNotNull>
+      <isNotNull prepend="," property="servername" >
+        SERVERNAME
+      </isNotNull>
+      <isNotNull prepend="," property="servertype" >
+        SERVERTYPE
+      </isNotNull>
+      <isNotNull prepend="," property="serverstate" >
+        SERVERSTATE
+      </isNotNull>
+      <isNotNull prepend="," property="serverport" >
+        SERVERPORT
+      </isNotNull>
+      <isNotNull prepend="," property="servermemo" >
+        SERVERMEMO
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="docserverid" >
+        #docserverid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="serverip" >
+        #serverip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="serverpath" >
+        #serverpath:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="ftpuser" >
+        #ftpuser:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="ftppassword" >
+        #ftppassword:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="servername" >
+        #servername:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="servertype" >
+        #servertype:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="serverstate" >
+        #serverstate:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="serverport" >
+        #serverport:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="servermemo" >
+        #servermemo:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="ibatorgenerated_countByExample" parameterClass="com.yapu.archive.entity.SysDocserverExample" resultClass="java.lang.Integer" >
+    select count(*) from SYS_DOCSERVER
+    <include refid="SYS_DOCSERVER.ibatorgenerated_Example_Where_Clause" />
+  </select>
+  <update id="ibatorgenerated_updateByExampleSelective" >
+    update SYS_DOCSERVER
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.docserverid" >
+        DOCSERVERID = #record.docserverid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.serverip" >
+        SERVERIP = #record.serverip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.serverpath" >
+        SERVERPATH = #record.serverpath:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.ftpuser" >
+        FTPUSER = #record.ftpuser:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.ftppassword" >
+        FTPPASSWORD = #record.ftppassword:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.servername" >
+        SERVERNAME = #record.servername:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.servertype" >
+        SERVERTYPE = #record.servertype:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.serverstate" >
+        SERVERSTATE = #record.serverstate:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.serverport" >
+        SERVERPORT = #record.serverport:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.servermemo" >
+        SERVERMEMO = #record.servermemo:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="SYS_DOCSERVER.ibatorgenerated_Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="ibatorgenerated_updateByExample" >
+    update SYS_DOCSERVER
+    set DOCSERVERID = #record.docserverid:VARCHAR#,
+      SERVERIP = #record.serverip:VARCHAR#,
+      SERVERPATH = #record.serverpath:VARCHAR#,
+      FTPUSER = #record.ftpuser:VARCHAR#,
+      FTPPASSWORD = #record.ftppassword:VARCHAR#,
+      SERVERNAME = #record.servername:VARCHAR#,
+      SERVERTYPE = #record.servertype:VARCHAR#,
+      SERVERSTATE = #record.serverstate:INTEGER#,
+      SERVERPORT = #record.serverport:INTEGER#,
+      SERVERMEMO = #record.servermemo:VARCHAR#
+    <isParameterPresent >
+      <include refid="SYS_DOCSERVER.ibatorgenerated_Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="ibatorgenerated_updateByPrimaryKeySelective" parameterClass="com.yapu.archive.entity.SysDocserver" >
+    update SYS_DOCSERVER
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="serverip" >
+        SERVERIP = #serverip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="serverpath" >
+        SERVERPATH = #serverpath:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="ftpuser" >
+        FTPUSER = #ftpuser:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="ftppassword" >
+        FTPPASSWORD = #ftppassword:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="servername" >
+        SERVERNAME = #servername:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="servertype" >
+        SERVERTYPE = #servertype:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="serverstate" >
+        SERVERSTATE = #serverstate:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="serverport" >
+        SERVERPORT = #serverport:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="servermemo" >
+        SERVERMEMO = #servermemo:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where DOCSERVERID = #docserverid:VARCHAR#
+  </update>
+  <update id="ibatorgenerated_updateByPrimaryKey" parameterClass="com.yapu.archive.entity.SysDocserver" >
+    update SYS_DOCSERVER
+    set SERVERIP = #serverip:VARCHAR#,
+      SERVERPATH = #serverpath:VARCHAR#,
+      FTPUSER = #ftpuser:VARCHAR#,
+      FTPPASSWORD = #ftppassword:VARCHAR#,
+      SERVERNAME = #servername:VARCHAR#,
+      SERVERTYPE = #servertype:VARCHAR#,
+      SERVERSTATE = #serverstate:INTEGER#,
+      SERVERPORT = #serverport:INTEGER#,
+      SERVERMEMO = #servermemo:VARCHAR#
+    where DOCSERVERID = #docserverid:VARCHAR#
+  </update>
+</sqlMap>

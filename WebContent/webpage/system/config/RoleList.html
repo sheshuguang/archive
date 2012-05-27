@@ -1,0 +1,14 @@
+
+	<script type="text/javascript" src="RoleList.js"></script>
+	<table id="roletable"></table>
+	<div id="setFunWindow" class="easyui-window" title="设定角色操作的功能" closed="true" modal="true" iconCls="icon_role_go" style="display:none;width:300px;height:200px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false" style="padding:10px;background:#fff;border:1px solid #ccc;">
+				<ul id="funtree" class="easyui-tree"></ul>
+			</div>
+			<div region="south" border="false" style="text-align:right;height:30px;line-height:30px;">
+				<a class="easyui-linkbutton" iconCls="icon_ok" href="javascript:void(0)" plain="true" onclick="saveSetFun()">保存</a>
+				<a class="easyui-linkbutton" iconCls="icon_cancel" href="#" plain="true" onclick="$('#setFunWindow').window('close');">取消</a>
+			</div>
+		</div>
+	</div>

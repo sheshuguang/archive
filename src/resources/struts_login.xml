@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="login" extends="struts-default" >
+		
+		<!-- 登陆/首页管理 -->
+		<!-- 公共的错误页，现在还没用的上 -->
+		<global-results>
+			<result name="error">/webpage/login/loginError.jsp</result>
+		</global-results>
+		<!-- 登陆 -->
+		<action name="login" class="loginAction" method="login">
+			<result name="success">/main.jsp</result>
+			<result name="error">/login.jsp</result>
+		</action>
+		<!-- 读取框架top菜单 -->
+		<action name="menu" class="loginAction" method="menu">
+		</action>
+		
+		<!-- 页面转发 -->
+		<action name="dispatch" class="dispatchAction"
+			method="dispatch">
+			<result name="success">${page}</result>
+			<result name="error">../login.jsp</result>
+		</action>
+		
+	</package>
+</struts>

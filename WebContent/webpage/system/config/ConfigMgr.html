@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../images/images.css" />
+<link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />
+<script type="text/javascript" src="../../js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/json2.js"></script>
+<script type="text/javascript" src="../../js/jquery-easyui/jquery.easyui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../../js/zebra-dialog/css/zebra_dialog.css" />
+<script type="text/javascript" src="../../js/zebra-dialog/js/zebra_dialog.js"></script>
+<script type="text/javascript" src="../../js/uuid.js"></script>
+<title>Insert title here</title>
+<script type="text/javascript">   
+     
+     function openTab(name,url,icons) {
+    	 if ($('#tab').tabs('exists',name)){
+             $('#tab').tabs('select', name);
+             var tab = $('#tab').tabs('getSelected');
+ 			 $('#tab').tabs('update', {
+ 				tab: tab,
+ 				options:{
+ 					href:url
+ 				}
+ 			 });
+ 			tab.panel('refresh');
+			 
+         } else {
+        	 $('#tab').tabs('add',{
+             	 title:name,
+             	 iconCls:icons,
+            	 href:url,
+            	 closable:true
+             });
+         }
+     }
+ </script>
+</head>
+<body class="easyui-layout">
+	<div region="west" iconCls="icon_permissions_home" title="系统配置" split="true" style="width:220px;padding1:0px;overflow:hidden;">
+		<div id="aa" class="easyui-accordion" fit=true style="width:100%;">
+			<div title="系统初始化" iconCls="icon-ok" style="overflow:auto;padding:10px;text-align:center;" selected="true">
+				<table border="0" width="80%">
+					<tr>
+						<td width="30"></td>
+						<td align="left"><a href="#" onClick="openTab('参数设置','dispatch.action?page=/webpage/system/config/ConfigList.html','icon-sysmanage')" title="设置系统运行基本参数" class="easyui-linkbutton" plain="true" iconCls=icon-sysmanage>参数设置</a></td>
+					</tr>
+					<tr>
+						<td width="30"></td>
+						<td align="left"><a href="#" onClick="openTab('文件服务器管理','dispatch.action?page=/webpage/archive/config/DocserverList.html','icon_docserver_home')" title="电子文件服务器管理" class="easyui-linkbutton" plain="true" iconCls=icon_docserver_home>文件服务器</a></td>
+					</tr>
+					<tr align="center">
+						<td width="30"></td>
+						<td align="left"><a href="#" onClick="openTab('角色管理','dispatch.action?page=/webpage/system/config/RoleList.html','icon_role_home')" title="角色管理" class="easyui-linkbutton" plain="true" iconCls=icon_role_home>角色管理</a></td>
+					</tr>
+				</table>
+			</div>
+			<div title="Title3" style="padding:10px;">
+				content3
+			</div>
+		</div>
+	</div>
+	<div region="center"  style="overflow:hidden;" border="true">
+		<div id="tab" class="easyui-tabs" fit="true" border="false" plain="false">
+			<div title="操作帮助" style="padding:20px;overflow:hidden;"> 
+				<div style="margin-top:20px;">
+					<h3>帐户组操作：</h3>
+					<li>1.移动帐户组后，请手动刷新相关帐户组节点。</li> 
+					<li>2.移动帐户组，不能选择子几点。</li> 
+					<li>Open</li> 
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

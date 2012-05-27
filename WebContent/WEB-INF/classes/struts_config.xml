@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 系统属性设置 -->
+	<package name="config" extends="struts-default" >
+		<!-- 显示属性列表 -->
+		<action name="listConfig" class="configAction" method="list"></action>
+		<!-- 保存角色-->
+		<action name="saveConfig" class="configAction" method="save"></action>
+	</package>
+</struts>

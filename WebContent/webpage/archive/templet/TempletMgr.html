@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../css/formStyle.css" />
+<link rel="stylesheet" type="text/css" href="../../images/images.css" />
+<link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />
+<script type="text/javascript" src="../../js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/json2.js"></script>
+<script type="text/javascript" src="../../js/pinyin.js"></script>
+<script type="text/javascript" src="../../js/jquery-easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="TempletMgr.js"></script>
+<script type="text/javascript" src="../../js/uuid.js"></script>
+<script type="text/javascript" src="../../js/jquery-easyui/validator.js"></script>
+<link rel="stylesheet" type="text/css" href="../../js/zebra-dialog/css/zebra_dialog.css" />
+<script type="text/javascript" src="../../js/zebra-dialog/js/zebra_dialog.js"></script>
+<script type="text/javascript" src="../../js/map.js"></script>
+<script type="text/javascript">
+var copyMap = new HashMap();
+</script>
+<title></title>
+</head>
+<body class="easyui-layout">
+	<div region="west" iconCls="icon-table" title="档案库维护" split="true" style="width:220px;padding1:0px;overflow:hidden;">
+		<div style="background:#efefef;padding:0px;width:100%;text-align:right;">
+			<a href="#" onClick="addTemplet()" title="新建档案库" class="easyui-linkbutton" plain="true" iconCls=icon-table_add></a>
+			<a href="#" onClick="editOrg()" title="编辑档案库" class="easyui-linkbutton" plain="true" iconCls=icon-table_edit></a>
+			<a href="#" onClick="delTemplet()" title="删除档案库" class="easyui-linkbutton" plain="true" iconCls=icon-table_delete></a>
+			<a href="#" onClick="treeManage()" title="档案树维护" class="easyui-linkbutton" plain="true" iconCls=icon-application_side_list></a>
+			<a href="#" onClick="reload()" title="刷新" class="easyui-linkbutton" plain="true" iconCls=icon_refresh></a>
+		</div>
+		<ul id="templettree" class="easyui-tree"></ul>
+	</div>
+	<div region="center"  style="overflow:hidden;" border="true">
+		<div id="tab" class="easyui-tabs" fit="true" border="false" plain="false">
+			<div title="操作帮助" style="padding:20px;overflow:hidden;"> 
+				<div style="margin-top:20px;">
+					<h3>帐户组操作：</h3>
+					<li>1.移动帐户组后，请手动刷新相关帐户组节点。</li> 
+					<li>2.移动帐户组，不能选择子几点。</li> 
+					<li></li> 
+				</div>
+			</div>
+		</div>
+	</div>
+	<input type="hidden" id="selectTempletName">
+	<div id="templetWindow" class="easyui-window" closed="true" title="新建档案库" style="display:none;width:300px;height:150px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false" style="padding:5px;background:#fff;border:1px solid #ccc;">
+				<form id="templetForm" method="post">
+					<TABLE width="100%" border="0" cellPadding="4" cellSpacing="1" class="table-Kang">
+						<TR>  
+		              		<TD class="tableTop-bg" colSpan="2">新建档案库内容</TD>
+		  				</TR>
+		           		<TR>
+		               		<TD class="table-TitleBG" width="15%">档案库名称:</TD>
+		               		<TD class="table-Sbg" width="35%"><input name="templetname" id="templetname" type="text" class="easyui-validatebox" required="true" validType="CHAndENS" missingMessage="请输入字段名称，不能为空，最多10个汉字！" size="20" maxlength="20"></TD>  
+		            	</TR>
+		              	<TR>
+		                  	<TD   class=table-TitleBG>参照模板:</TD>  
+		                  	<TD   class=table-Sbg>
+		                  		<select name="templettype" id="templettype" >
+							  		<option value="VARCHAR">字符串型</option>
+							  		<option value="INT">整数型</option>
+						  		</select>
+						  	</TD>
+		              	</TR>  
+					</TABLE>
+				</form>
+			</div>
+		    <div region="south" border="false" style="text-align:right;height:30px;line-height:30px;">
+	            <a href="#" class="easyui-linkbutton" icon="icon_ok" onclick="saveTemplet()" plain="true">保存</a>
+	            <a href="#" class="easyui-linkbutton" icon="icon_cancel" onclick="$('#templetWindow').window('close');" plain="true">取消</a>
+	        </div> 
+        </div>
+	</div>
+	<div id="treeManageWindow" class="easyui-window" title="档案树管理" closed="true" modal="true" iconCls="icon-application_side_list" style="display:none;width:300px;height:200px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false" style="padding:10px;background:#fff;border:1px solid #ccc;">
+				<ul id="tree" class="easyui-tree"></ul>
+			</div>
+			<div region="south" border="false" style="text-align:right;height:30px;line-height:30px;">
+				<a class="easyui-linkbutton" iconCls="icon_ok" href="javascript:void(0)" plain="true" onclick="saveSetFun()">保存</a>
+				<a class="easyui-linkbutton" iconCls="icon_cancel" href="#" plain="true" onclick="$('#setFunWindow').window('close');">取消</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

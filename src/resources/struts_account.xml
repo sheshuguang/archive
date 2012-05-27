@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 帐户管理 -->
+	<package name="account" extends="struts-default" >
+	
+		<action name="showListAccount" class="accountAction" method="showListAccount">
+			<result name="success">/webpage/system/account/AccountList.html</result>
+		</action>
+		
+		<!-- 显示用户列表 -->
+		<action name="listAccount" class="accountAction" method="list"></action>
+		<!-- 保存用户帐户-->
+		<action name="saveAccount" class="accountAction" method="save"></action>
+		<!-- 保存用户帐户-->
+		<action name="moveAccount" class="accountAction" method="moveAccount"></action>
+		
+		<!-- 保存用户权限-->
+		<action name="saveUserPop" class="userAction" method="saveUserPop"></action>
+		
+		<!-- 打开修改密码窗口 -->
+		<action name="pwdModify" class="userAction" method="load">
+			<result >/webpage/user/pwdModify.jsp</result>
+		</action>
+		<!-- 更新密码 -->
+		<action name="modifyPassword" class="userAction" method="modifyPassword"></action>
+		
+		<!-- 打开用户帐户权限窗口 -->
+		<action name="popUser" class="userAction" method="load">
+			<result >/webpage/user/userPop.jsp</result>
+		</action>
+		<!-- 事务测试 -->
+		<action name="testTr" class="userAction" method="testTr">
+			
+		</action>
+	</package>
+</struts>

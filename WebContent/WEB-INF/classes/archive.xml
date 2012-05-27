@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <description>Configuration for Archive Web Application</description>
+
+    <!-- DAO configuration -->
+    <bean id="accountDao" class="com.yapu.system.dao.impl.SysAccountDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="accountorgDao" class="com.yapu.system.dao.impl.SysAccountOrgDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="accountroleDao" class="com.yapu.system.dao.impl.SysAccountRoleDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="accounttreeDao" class="com.yapu.archive.dao.impl.SysAccountTreeDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="codeDao" class="com.yapu.archive.dao.impl.SysCodeDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="collectionDao" class="com.yapu.archive.dao.impl.ArCollectionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="configDao" class="com.yapu.system.dao.impl.SysConfigDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="docserverDao" class="com.yapu.archive.dao.impl.SysDocserverDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="docDao" class="com.yapu.archive.dao.impl.SysDocDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="dynamicDao" class="com.yapu.archive.dao.impl.DynamicDAOImpl">
+    	<property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="errorlogDao" class="com.yapu.system.dao.impl.SysErrorlogDAOImpl">
+    	<property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="functionDao" class="com.yapu.system.dao.impl.SysFunctionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="loginlogDao" class="com.yapu.system.dao.impl.SysLoginlogDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="orgDao" class="com.yapu.system.dao.impl.SysOrgDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="orgroleDao" class="com.yapu.system.dao.impl.SysOrgRoleDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="orgtreeDao" class="com.yapu.archive.dao.impl.SysOrgTreeDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="operatelogDao" class="com.yapu.system.dao.impl.SysOperatelogDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="releaseDao" class="com.yapu.archive.dao.impl.ArReleaseDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="roleDao" class="com.yapu.system.dao.impl.SysRoleDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="rolefunctionDao" class="com.yapu.system.dao.impl.SysRoleFunctionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="tableDao" class="com.yapu.archive.dao.impl.SysTableDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="treeDao" class="com.yapu.archive.dao.impl.SysTreeDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="treetempletDao" class="com.yapu.archive.dao.impl.SysTreeTempletDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+     <bean id="templetDao" class="com.yapu.archive.dao.impl.SysTempletDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    <bean id="templetfieldDao" class="com.yapu.archive.dao.impl.SysTempletfieldDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+    </bean>
+    
+
+    <!-- Services -->
+    <bean id="accountService" class="com.yapu.system.service.impl.AccountService">
+        <property name="accountDao" ref="accountDao" />
+        <property name="accountorgDao" ref="accountorgDao" />
+        <property name="accountroleDao" ref="accountroleDao" />
+        <property name="orgDao" ref="orgDao" />
+        <property name="roleDao" ref="roleDao" />
+    </bean>
+    <bean id="codeService" class="com.yapu.archive.service.impl.CodeService">
+        <property name="codeDao" ref="codeDao" />
+        <property name="templetfieldDao" ref="templetfieldDao" />
+    </bean>
+    <bean id="collectionService" class="com.yapu.archive.service.impl.CollectionService">
+        <property name="collectionDao" ref="collectionDao" />
+    </bean>
+    <bean id="configService" class="com.yapu.system.service.impl.ConfigService">
+        <property name="configDao" ref="configDao" />
+    </bean>
+    <bean id="docserverService" class="com.yapu.archive.service.impl.DocserverService">
+        <property name="docserverDao" ref="docserverDao" />
+    </bean>
+    <bean id="docService" class="com.yapu.archive.service.impl.DocService">
+        <property name="docDao" ref="docDao" />
+    </bean>
+    <bean id="functionService" class="com.yapu.system.service.impl.FunctionService">
+        <property name="functionDao" ref="functionDao" />
+        <property name="rolefunctionDao" ref="rolefunctionDao" />
+    </bean>
+    <bean id="logService" class="com.yapu.system.service.impl.LogService">
+        <property name="loginlogDao" ref="loginlogDao" />
+        <property name="errorlogDao" ref="errorlogDao" />
+        <property name="operatelogDao" ref="operatelogDao" />
+    </bean>
+    <bean id="orgService" class="com.yapu.system.service.impl.OrgService">
+        <property name="orgDao" ref="orgDao" />
+        <property name="accountDao" ref="accountDao" />
+        <property name="roleDao" ref="roleDao" />
+        <property name="accountorgDao" ref="accountorgDao" />
+        <property name="orgroleDao" ref="orgroleDao" />
+    </bean>
+    <bean id="releaseService" class="com.yapu.archive.service.impl.ReleaseService">
+        <property name="releaseDao" ref="releaseDao" />
+    </bean>
+    <bean id="roleService" class="com.yapu.system.service.impl.RoleService">
+        <property name="roleDao" ref="roleDao" />
+        <property name="accountroleDao" ref="accountroleDao" />
+        <property name="accountDao" ref="accountDao" />
+        <property name="orgroleDao" ref="orgroleDao" />
+        <property name="orgDao" ref="orgDao" />
+        <property name="rolefunctionDao" ref="rolefunctionDao" />
+        <property name="functionDao" ref="functionDao" />
+    </bean>
+    <bean id="tableService" class="com.yapu.archive.service.impl.TableService">
+        <property name="tableDao" ref="tableDao" />
+        <property name="templetfieldDao" ref="templetfieldDao" />
+    </bean>
+    <bean id="treeService" class="com.yapu.archive.service.impl.TreeService">
+        <property name="treeDao" ref="treeDao" />
+        <property name="accounttreeDao" ref="accounttreeDao" />
+        <property name="orgtreeDao" ref="orgtreeDao" />
+        <property name="treetempletDao" ref="treetempletDao" />
+        <property name="templetDao" ref="templetDao" />
+        <property name="tableDao" ref="tableDao" />
+        <property name="templetfieldDao" ref="templetfieldDao" />
+        <property name="dynamicDao" ref="dynamicDao" />
+    </bean>
+    <bean id="dynamicService" class="com.yapu.archive.service.impl.DynamicService">
+        <property name="dynamicDao" ref="dynamicDao" />
+    </bean>
+    <bean id="templetService" class="com.yapu.archive.service.impl.TempletService">
+        <property name="templetDao" ref="templetDao" />
+        <property name="templetfieldDao" ref="templetfieldDao" />
+        <property name="treetempletDao" ref="treetempletDao" />
+        <property name="tableDao" ref="tableDao" />
+        <property name="docDao" ref="docDao" />
+        <property name="codeDao" ref="codeDao" />
+        <property name="accounttreeDao" ref="accounttreeDao" />
+        <property name="orgtreeDao" ref="orgtreeDao" />
+        <property name="treeDao" ref="treeDao" />
+        <property name="collectionDao" ref="collectionDao" />
+        <property name="releaseDao" ref="releaseDao" />
+        <property name="dynamicDao" ref="dynamicDao" />
+    </bean>
+    <bean id="templetfieldService" class="com.yapu.archive.service.impl.TempletfieldService">
+        <property name="codeDao" ref="codeDao" />
+        <property name="tableDao" ref="tableDao" />
+        <property name="dynamicDao" ref="dynamicDao" />
+        <property name="templetfieldDao" ref="templetfieldDao" />
+        <property name="templetDao" ref="templetDao" />
+    </bean>
+    
+    <!-- PublisService -->
+    <bean id="publicAccountService" class="com.yapu.publics.service.PublicAccountService" parent="accountService">
+        <property name="treeDao" ref="treeDao" />
+        <property name="accounttreeDao" ref="accounttreeDao" />
+    </bean>
+    <bean id="publicOrgService" class="com.yapu.publics.service.PublicOrgService" parent="orgService">
+        <property name="orgtreeDao" ref="orgtreeDao" />
+        <property name="treeDao" ref="treeDao" />
+    </bean>
+
+    <!-- view <property name="accountService" ref="accountService" />-->
+    
+    <bean id="loginAction" class="com.yapu.system.action.LoginAction">
+        <property name="accountService" ref="publicAccountService" />
+        <property name="roleService" ref="roleService" />
+        <property name="functionService" ref="functionService" />
+    </bean>
+    <bean id="orgAction" class="com.yapu.system.action.OrgAction">
+        <property name="orgService" ref="publicOrgService" />
+    </bean>
+    
+    <bean id="accountAction" class="com.yapu.system.action.AccountAction">
+        <property name="accountService" ref="publicAccountService" />
+        <property name="orgService" ref="publicOrgService" />
+        <property name="configService" ref="configService" />
+    </bean>
+    <bean id="roleAction" class="com.yapu.system.action.RoleAction">
+        <property name="roleService" ref="roleService" />
+        <property name="functionService" ref="functionService" />
+    </bean>
+    <bean id="configAction" class="com.yapu.system.action.ConfigAction">
+        <property name="configService" ref="configService" />
+    </bean>
+    <bean id="docserverAction" class="com.yapu.archive.action.DocserverAction">
+        <property name="docserverService" ref="docserverService" />
+    </bean>
+    <bean id="ftpAction" class="com.yapu.archive.action.FtpAction">
+        <property name="docserverService" ref="docserverService" />
+    </bean>
+    <bean id="docAction" class="com.yapu.archive.action.DocAction">
+        <property name="docserverService" ref="docserverService" />
+        <property name="docService" ref="docService" />
+    </bean>
+    <bean id="templetAction" class="com.yapu.archive.action.TempletAction">
+        <property name="templetService" ref="templetService" />
+        <property name="tableService" ref="tableService" />
+    </bean>
+    <bean id="templetfieldAction" class="com.yapu.archive.action.TempletfieldAction">
+        <property name="templetfieldService" ref="templetfieldService" />
+    </bean>
+    <bean id="codeAction" class="com.yapu.archive.action.CodeAction">
+        <property name="codeService" ref="codeService" />
+    </bean>
+    <bean id="treeAction" class="com.yapu.archive.action.TreeAction">
+        <property name="treeService" ref="treeService" />
+    </bean>
+    <bean id="archiveAction" class="com.yapu.archive.action.ArchiveAction">
+        <property name="treeService" ref="treeService" />
+        <property name="dynamicService" ref="dynamicService" />
+        <property name="templetfieldService" ref="templetfieldService" />
+    </bean>
+    <bean id="importAction" class="com.yapu.archive.action.ImportAction">
+    	<property name="treeService" ref="treeService" />
+    	<property name="templetfieldService" ref="templetfieldService" />
+    </bean>
+    
+    
+    <bean id="dispatchAction" class="com.yapu.system.action.DispatchAction">
+    </bean>
+</beans>

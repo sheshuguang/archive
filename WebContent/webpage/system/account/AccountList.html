@@ -1,0 +1,15 @@
+
+<script type="text/javascript" src="AccountList.js"></script>
+
+<table id="tt"></table>
+<div id="moveAccountWindow" class="easyui-window" title="移动帐户" closed="true" modal="true" iconCls="icon_user_go" style="display:none;width:300px;height:200px;padding:5px;">
+	<div class="easyui-layout" fit="true">
+		<div region="center" border="false" style="padding:10px;background:#fff;border:1px solid #ccc;">
+			<ul id="accountmovetree" class="easyui-tree"></ul>
+		</div>
+		<div region="south" border="false" style="text-align:right;height:30px;line-height:30px;">
+			<a class="easyui-linkbutton" iconCls="icon_ok" href="javascript:void(0)" plain="true" onclick="saveMoveAccount()">移动</a>
+			<a class="easyui-linkbutton" iconCls="icon_cancel" href="#" plain="true" onclick="$('#moveAccountWindow').window('close');">取消</a>
+		</div>
+	</div>
+</div>

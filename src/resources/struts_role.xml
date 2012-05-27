@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 角色管理 -->
+	<package name="role" extends="struts-default" >
+	
+		<!-- <action name="showRoleList" class="roleAction" method="showRoleList">
+			<result name="success">/webpage/system/permissions/RoleList.html</result>
+		</action>
+		 -->
+		<!-- 显示角色列表 -->
+		<action name="listRole" class="roleAction" method="list"></action>
+		<!-- 保存角色-->
+		<action name="saveRole" class="roleAction" method="save"></action>
+		<!-- 显示角色对应的功能树 -->
+		<action name="listRoleFunction" class="roleAction" method="loadRoleFunctionTree"></action>
+		<!-- 保存角色对应的功能树 -->
+		<action name="saveRoleFun" class="roleAction" method="saveRoleFun"></action>
+		
+		
+	</package>
+</struts>
