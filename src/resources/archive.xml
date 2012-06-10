@@ -236,6 +236,7 @@
     <bean id="importAction" class="com.yapu.archive.action.ImportAction">
     	<property name="treeService" ref="treeService" />
     	<property name="templetfieldService" ref="templetfieldService" />
+    	<property name="dynamicService" ref="dynamicService" />
     </bean>
     
     

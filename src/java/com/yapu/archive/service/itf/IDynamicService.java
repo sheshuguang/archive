@@ -23,7 +23,8 @@ public interface IDynamicService {
 	
 	boolean update(String sql);
 	
-	boolean insert(String sql);
+//	boolean insert(String sql);
+	boolean insert(List<String> sqlList);
 	
 	int delete(String sql);
 	

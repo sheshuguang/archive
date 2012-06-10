@@ -79,9 +79,9 @@
         <action name="uploadFile" class="docAction" method="uploadFile"></action>
         <action name="listDoc" class="docAction" method="list"></action>
         <!-- 读取导入文件 -->
-        <action name="upload" class="importAction" method="upload">
-        	
-        </action>
+        <action name="upload" class="importAction" method="upload"></action>
+        <!-- 保存-->
+		<action name="saveImportArchive" class="importAction" method="insertImport"></action>
 
 	</package>
 </struts>

@@ -13,7 +13,7 @@ var options = {
 	editable : true,
 	enableAddRow : true,
 	enableCellNavigation : true,
-	autoEdit : false,
+	autoEdit : true,
 	enableColumnReorder : true,
 	topPanelHeight : 25
 };
@@ -67,19 +67,6 @@ $(function() {
 	for ( var i = 0; i < columns_fields.length; i++) {
 		columns.push(columns_fields[i]);
 	}
-
-	// 生成数据
-	// var data = [];
-//	for ( var i = 0; i < 500; i++) {
-//		data[i] = {
-//			id : i + 1,
-//			ROWNUM : i + 1,
-//			AJH : "ADSF"
-//
-//		};
-//	}
-	data = [{id:'1',ROWNUM:'1',AJH:'ADsdf'},{id:'2',ROWNUM:'2',AJH:'ADsdf'}];
-
 	// 创建dataview
 	dataView = new Slick.Data.DataView({
 		inlineFilters : true
@@ -111,72 +98,155 @@ $(function() {
 		grid.render();
 	});
 	
-	dataView.beginUpdate();
-	dataView.setItems(data);
-	dataView.endUpdate();
-	
 	//生成toolbar
 	$('#toolbar').toolbar({
 		items:[{
-			id:"test",
+			id:"select",
 			iconCls:"icon-page-add",
 			disabled:false,
-			text:"测试",
+			text:"选择文件",
 			handler:function(){
-				$("#selectfileWindow").show();
-				var $win;
-				$win = $('#selectfileWindow').window({
-					title : ' 字段代码管理',
-					width : 400,
-					height : 130,
-					top : ($(window).height() - 130) * 0.5,
-					left : ($(window).width() - 400) * 0.5,
-					shadow : true,
-					modal : true,
-					iconCls : 'icon-application_form_add',
-					closed : true,
-					minimizable : false,
-					maximizable : false,
-					collapsible : false,
-					onClose : function() {
+				$("#selectfilewindows").modal({
+					overlayId: 'osx-overlay',
+					containerId: 'osx-container',
+					closeHTML: null,
+					minHeight: 100,
+					minWidth: 410,
+					opacity: 40,
+					overlayClose: true,
+					onOpen : function (dialog) {
+						dialog.data.show();
+					    dialog.container.show();
+						dialog.overlay.fadeIn('slow');
+					},
+					onClose:function (dialog) {
+						dialog.data.fadeOut('slow', function () {
+							dialog.container.slideUp(50, function () {
+							  dialog.overlay.fadeOut(50, function () {
+								$.modal.close(); // must call this!
+							  });
+							});
+						  });
 					}
 				});
-				$("#selectfileWindow").window('open');
 			}
-		},"-",{
-			text:"测试1",
+		},{
+			text:"批量修改",
 			iconCls:"icon-page-delete",
 			handler:function(){
-				$("#facebox").overlay().load();
+				var selectRows = grid.getSelectedRows();
+				selectRows.sort(function compare(a, b) {
+					return b - a;
+				});
+				if (selectRows.length > 0) {
+					$("#selectupdatewindows").modal({
+						overlayId	: 'osx-overlay',
+						containerId	: 'osx-container',
+						closeHTML	: null,
+						minHeight	: 100,
+						minWidth	: 410,
+						opacity		: 40,
+						overlayClose: true,
+						onOpen : function (dialog) {
+							dialog.data.show();
+						    dialog.container.show();
+							dialog.overlay.fadeIn('slow');
+							for (var i=0;i<columns_fields.length;i++) {
+								if (columns_fields[i].id != "ROWNUM") {
+									$("#selectfield").append("<option value='"+columns_fields[i].id+"'>"+columns_fields[i].name+"</option>");
+								}
+							}
+						},
+						onClose:function (dialog) {
+							dialog.data.fadeOut('slow', function () {
+								dialog.container.slideUp(50, function () {
+								  dialog.overlay.fadeOut(50, function () {
+									$.modal.close(); // must call this!
+								  });
+								});
+							  });
+						}
+					});
+				}
+				else {
+					$.Zebra_Dialog('请选择要修改的数据。 ', {
+		                'type':     'information',
+		                'title':    '系统提示',
+		                'buttons':  ['确定']
+		            });
+				}
+			}
+		},{
+			text:"删除",
+			iconCls:"icon-page-delete",
+			handler:function(){
+				var selectRows = grid.getSelectedRows();
+				selectRows.sort(function compare(a, b) {
+					return b - a;
+				});
+				if (selectRows.length > 0) {
+					$.Zebra_Dialog('确定要删除选中的数据吗? ', {
+						'type':     'question',
+		                'title':    '系统提示',
+		                'buttons':  ['确定', '取消'],
+		                'onClose':  function(caption) {
+		                	if (caption == '确定') {
+		                		for ( var i = 0; i < selectRows.length; i++) {
+		        					var item = dataView.getItem(selectRows[i]);
+		        					dataView.deleteItem(item.id);
+		        				}
+		                	}
+		                }
+			        });
+				}
+				else {
+					$.Zebra_Dialog('请选择要删除的数据。 ', {
+		                'type':     'information',
+		                'title':    '系统提示',
+		                'buttons':  ['确定']
+		            });
+				}
+			}
+		},{
+			text:"保存",
+			iconCls:"icon-page-delete",
+			handler:function(){
+				grid.getEditController().cancelCurrentEdit();
+				var a = dataView.getItems();
+				if (a.length > 0) {
+					var par = "importData=" + JSON.stringify(a) + "&tableType=01";
+
+					$.post("saveImportArchive.action",par,function(data){
+							new $.Zebra_Dialog(data, {
+				  				'buttons':  false,
+				   			    'modal': false,
+				   			    'position': ['right - 20', 'top + 20'],
+				   			    'auto_close': 2500
+				            });
+						}
+					);
+				}
+				else {
+					$.Zebra_Dialog('没有找到导入数据.<br>请重新读取Excel导入文件或与管理员联系。 ', {
+		                'type':     'information',
+		                'title':    '系统提示',
+		                'buttons':  ['确定']
+		            });
+				}
 			}
 		}]
 	});
-	
-	$("#facebox").overlay({
-	    // custom top position
-	    top: 100,
-	    // some mask tweaks suitable for facebox-looking dialogs
-	    mask: {
-	    // you might also consider a "transparent" color for the mask
-	    color: '#fff',
-	    // load mask a little faster
-	    loadSpeed: 200,
-	    // very transparent
-	    opacity: 0.5
-	    },
-	    // disable this for modal dialog-type of overlays
-	    closeOnClick: true,
-	    // load it immediately after the construction
-	    load: false
-	});
-	
-});
+})
 
 function importArchive() {
+	var file = $('#selectfile').val();
+	if (!file) {
+		alert("请选择导入到文件。");
+		return;
+	}
 	// 判断上传文件类型
 	var a = selectfile_Validator($('#selectfile').val());
 	if (a) {
-//		$('#selectfileWindow').window('close');
 		$('#importArchiveForm').attr('action',
 				'upload.action?treeid=' + selectTreeid + '&tableType=01');
 		$('#importArchiveForm').submit();
@@ -188,15 +258,14 @@ function showCallback(backType, jsonStr) {
 	if (backType == "failure") {
 		alert(jsonStr);
 	} else {
-		//$('#archiveimporttable').datagrid('loading');
 		var json = JSON.parse(jsonStr);
-		alert(jsonStr);
 		dataView.beginUpdate();
-		dataView.setItems(jsonStr);
+		dataView.setItems(json);
 		dataView.endUpdate();
-		
+		grid.registerPlugin(new Slick.AutoTooltips());
 	}
-
+	//关闭windows
+	$.modal.close();
 }
 
 function selectfile_Validator(selectfile) {
@@ -212,4 +281,26 @@ function selectfile_Validator(selectfile) {
 		return false;
 	}
 	return true;
+}
+
+function importUpdate() {
+	var selectRows = grid.getSelectedRows();
+	selectRows.sort(function compare(a, b) {
+		return b - a;
+	});
+	
+	var selectFieldName = $("#selectfield").val(); 
+	var updateTxt = $("#updatetxt").val();
+	for ( var i = 0; i < selectRows.length; i++) {
+		var item = dataView.getItem(selectRows[i]);
+		for(p in item){
+//			alert(i);//i就是test的属性名
+//			alert(item[i]);//test.i就是属性值
+			if (p == selectFieldName) {
+				item[p] = updateTxt;
+				break;
+			}
+		}
+		dataView.updateItem(item.id,item);
+	}
 }

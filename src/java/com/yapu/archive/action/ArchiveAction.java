@@ -157,7 +157,7 @@ public class ArchiveAction extends BaseAction {
 	}
 	
 	/*
-	 * 获得档案动态字段
+	 * 获得档案动态字段   SlickGrid专用
 	 */
 	public String getField() throws IOException {
 		HttpServletResponse response = getResponse();
@@ -202,19 +202,19 @@ public class ArchiveAction extends BaseAction {
 //        {id: "start", name: "Start", field: "start", editor: Slick.Editors.Text},
         //增加行号字段
         result.append("{id:'ROWNUM',name:'行号',field:'ROWNUM',behavior:'select',cssClass:'cell-selection',width:40,cannotTriggerInsert:true,resizable:false,selectable:false},");
-		//返回字段特殊属性，例如默认值，在页面添加时，直接赋值
-		StringBuilder fieldsDefaultValue = new StringBuilder();
-		fieldsDefaultValue.append("; var fieldsDefaultValue = [");
+//		//返回字段特殊属性，例如默认值，在页面添加时，直接赋值
+//		StringBuilder fieldsDefaultValue = new StringBuilder();
+//		fieldsDefaultValue.append("; var fieldsDefaultValue = [");
 		for (SysTempletfield field : fieldList) {
-			if (!"".equals(field.getDefaultvalue())) {
-				fieldsDefaultValue.append("{fieldname:'");
-				fieldsDefaultValue.append(field.getEnglishname());
-				fieldsDefaultValue.append("',fieldtype:'");
-				fieldsDefaultValue.append(field.getFieldtype());
-				fieldsDefaultValue.append("',value:'");
-				fieldsDefaultValue.append(field.getDefaultvalue());
-				fieldsDefaultValue.append("'},");
-			}
+//			if (!"".equals(field.getDefaultvalue())) {
+//				fieldsDefaultValue.append("{fieldname:'");
+//				fieldsDefaultValue.append(field.getEnglishname());
+//				fieldsDefaultValue.append("',fieldtype:'");
+//				fieldsDefaultValue.append(field.getFieldtype());
+//				fieldsDefaultValue.append("',value:'");
+//				fieldsDefaultValue.append(field.getDefaultvalue());
+//				fieldsDefaultValue.append("'},");
+//			}
 			
 			if (field.getSort() >= 0 && field.getIsgridshow() == 1) {
 				result.append("{id:'");
@@ -227,9 +227,23 @@ public class ArchiveAction extends BaseAction {
 				result.append(field.getFieldsize() * 1.5);
 				if (field.getFieldtype().contains("INT")) {
 					result.append(",cssClass:'cell-center',editor:Slick.Editors.Integer");
+//					result.append(",formatter:function(row,column,value) {");
+//					result.append("if (value == '' || typeof (value) == 'undefined'){");
+//					result.append("return 0;");
+//					result.append("}");
+//					result.append("return value");
+//					result.append("}");
 				}
 				else if (field.getFieldtype().contains("VARCHAR")) {
 					result.append(",editor:Slick.Editors.Text");
+//					if (!"".equals(field.getDefaultvalue())) {
+//						result.append(",formatter:function(row,column,value) {");
+//						result.append("if (value == '' || typeof (value) == 'undefined'){");
+//						result.append("return '").append(field.getDefaultvalue()).append("';");
+//						result.append("}");
+//						result.append("return value");
+//						result.append("}");
+//					}
 				}
 				
 				if (field.getIsrequire() == 1) {
@@ -253,8 +267,8 @@ public class ArchiveAction extends BaseAction {
 			}
 		}
 		result.deleteCharAt(result.length() - 1).append("]");
-		fieldsDefaultValue.deleteCharAt(fieldsDefaultValue.length() - 1).append("]");
-		result.append(fieldsDefaultValue.toString());
+//		fieldsDefaultValue.deleteCharAt(fieldsDefaultValue.length() - 1).append("]");
+//		result.append(fieldsDefaultValue.toString());
 		out.write(result.toString());
 		return null;
 	}
@@ -422,7 +436,7 @@ public class ArchiveAction extends BaseAction {
 			value.deleteCharAt(value.length() - 1).append(" )");
 			
 			sb.append(value.toString());
-			b = dynamicService.insert(sb.toString());
+//			b = dynamicService.insert(sb.toString());
 			//清空sb和value ，进行创建下一条sql
 			sb.setLength(0);
 			value.setLength(0);
