@@ -21,7 +21,7 @@ public interface IDynamicService {
 	@SuppressWarnings("unchecked")
 	List selectByExample(DynamicExample example);
 	
-	boolean update(String sql);
+	boolean update(List<String> sqlList);
 	
 //	boolean insert(String sql);
 	boolean insert(List<String> sqlList);

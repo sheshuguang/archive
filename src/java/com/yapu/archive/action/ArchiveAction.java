@@ -11,6 +11,7 @@ import com.yapu.system.common.BaseAction;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,11 +161,8 @@ public class ArchiveAction extends BaseAction {
 	 * 获得档案动态字段   SlickGrid专用
 	 */
 	public String getField() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/javascript");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		
+		PrintWriter out = getPrintWriter();
 		
 		StringBuilder result = new StringBuilder();
 		//如果没有得到树节点id，返回error
@@ -178,35 +176,39 @@ public class ArchiveAction extends BaseAction {
         //添加【文件级】【是否有全文】2个固定不需要编辑的字段。
         //1。得到treeid对应的templet，templet的type如果是A，则是标准档案，是F则是纯文件级。标准档案才添加文件级按钮
         SysTemplet templet = treeService.getTreeOfTemplet(treeid);
+        
+      //增加行号字段
+        result.append("{id:'rownum',name:'行号',field:'rownum',behavior:'select',cssClass:'cell-selection',width:40,cannotTriggerInsert:true,resizable:false,selectable:false,formatter:function(row,column,value) {return row+1;}},");
         if ("0".equals(importType)) {
 	        if ("A".equals(templet.getTemplettype()) && "01".equals(tableType)) {
-	            result.append("{field:'files',title:'文件级',width:45,align:'center',");
-	            result.append("formatter:function(value){");
+	            result.append("{id:'files',name:'文件级',field:'files',width:45,cssClass:'cell-center',cannotTriggerInsert:true,resizable:false,selectable:false,");
+	            result.append("formatter:function(row,column,value){");
 	            result.append("return  '<img src=\"../../images/icons/page.png\" title=\"点击查看文件级\" onclick=\"showWjTab(\\''+ value +'\\')\" />'  }},");
 	//            result.append("return  '<a href=\"#\" onClick=\"showWjTab(\\''+ value +'\\')\" title=\"点击查看文件级\" class=\"easyui-linkbutton\" plain=\"true\" iconCls=icon-table_add></a>'  }},");
 	        }
 	        //添加【是否有全文】标识
-	        result.append("{field:'docs',title:'全文',width:30,align:'center',");
-	        result.append("formatter:function(value){");
+	        result.append("{id:'isdoc',name:'全文',field:'isdoc',title:'全文',width:40,cssClass:'cell-center',cannotTriggerInsert:true,resizable:false,selectable:false,");
+	        result.append("formatter:function(row,column,value){");
 	        //得到表名 ，为了电子全文
 	        List<SysTable> tableList = treeService.getTreeOfTable(treeid);
 	        String tableid = "";
 	        for (SysTable table :tableList) {
 	            if (tableType.endsWith(table.getTabletype())) {
 	                tableid = table.getTableid();
+	                break;
 	            }
 	        }
-	        result.append("if (value==1) {return  '<img src=\"../../images/icons/flag_blue.png\" title=\"点击查看电子文件\" onclick=\"showDocTab(\\''+ value +'\\',\\'"+tableid+"\\')\" />'  }}},");
+	        result.append("if (value==1) {return  '<img src=\"../../images/icons/flag_blue.png\" title=\"点击查看电子文件\" onclick=\"showDocTab(\\''+ value +'\\',\\'"+tableid+"\\')\" />'  } else { return \"\"}}},");
         }
         
-//        {id: "start", name: "Start", field: "start", editor: Slick.Editors.Text},
-        //增加行号字段
-        result.append("{id:'ROWNUM',name:'行号',field:'ROWNUM',behavior:'select',cssClass:'cell-selection',width:40,cannotTriggerInsert:true,resizable:false,selectable:false},");
 //		//返回字段特殊属性，例如默认值，在页面添加时，直接赋值
-//		StringBuilder fieldsDefaultValue = new StringBuilder();
-//		fieldsDefaultValue.append("; var fieldsDefaultValue = [");
+		StringBuilder fieldsDefaultValue = new StringBuilder();
+		fieldsDefaultValue.append("; var fieldsDefaultValue = {");
 		for (SysTempletfield field : fieldList) {
 //			if (!"".equals(field.getDefaultvalue())) {
+			if (field.getSort() >= 0) {
+				fieldsDefaultValue.append(field.getEnglishname().toLowerCase());
+				fieldsDefaultValue.append(":'").append(field.getDefaultvalue()).append("',");
 //				fieldsDefaultValue.append("{fieldname:'");
 //				fieldsDefaultValue.append(field.getEnglishname());
 //				fieldsDefaultValue.append("',fieldtype:'");
@@ -214,15 +216,15 @@ public class ArchiveAction extends BaseAction {
 //				fieldsDefaultValue.append("',value:'");
 //				fieldsDefaultValue.append(field.getDefaultvalue());
 //				fieldsDefaultValue.append("'},");
-//			}
+			}
 			
 			if (field.getSort() >= 0 && field.getIsgridshow() == 1) {
 				result.append("{id:'");
-				result.append(field.getEnglishname());
+				result.append(field.getEnglishname().toLowerCase());
 				result.append("',name:'");
 				result.append(field.getChinesename());
 				result.append("',field:'");
-				result.append(field.getEnglishname());
+				result.append(field.getEnglishname().toLowerCase());
 				result.append("',width:");
 				result.append(field.getFieldsize() * 1.5);
 				if (field.getFieldtype().contains("INT")) {
@@ -234,7 +236,7 @@ public class ArchiveAction extends BaseAction {
 //					result.append("return value");
 //					result.append("}");
 				}
-				else if (field.getFieldtype().contains("VARCHAR")) {
+				else if (field.getFieldtype().contains("VARCHAR") && field.getIscode() == 0) {
 					result.append(",editor:Slick.Editors.Text");
 //					if (!"".equals(field.getDefaultvalue())) {
 //						result.append(",formatter:function(row,column,value) {");
@@ -256,9 +258,10 @@ public class ArchiveAction extends BaseAction {
 					if (codeList.size() > 0) {
 						editTxt = ",options:'";
 						for (SysCode sysCode : codeList) {
-							editTxt += "sysCode.getColumndata(),";
+							editTxt += sysCode.getColumndata() + ",";
 						}
 						editTxt = editTxt.substring(0, editTxt.length() -1);
+						editTxt += "'";
 					}
 					result.append(editTxt).append(", editor: SelectCellEditor");
 				}
@@ -267,19 +270,15 @@ public class ArchiveAction extends BaseAction {
 			}
 		}
 		result.deleteCharAt(result.length() - 1).append("]");
-//		fieldsDefaultValue.deleteCharAt(fieldsDefaultValue.length() - 1).append("]");
-//		result.append(fieldsDefaultValue.toString());
+		fieldsDefaultValue.deleteCharAt(fieldsDefaultValue.length() - 1).append("}");
+		result.append(fieldsDefaultValue.toString());
 		out.write(result.toString());
 		return null;
 	}
 	
 	public String list() throws IOException {
 		
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out = getPrintWriter();
 		StringBuilder result = new StringBuilder();
 		//如果没有得到树节点id，返回error
 		if (null == treeid || "".equals(treeid)) {
@@ -288,8 +287,6 @@ public class ArchiveAction extends BaseAction {
 			return null;
 		}
 		
-//		SysTree tree = new SysTree();
-//		tree.setTreeid(treeid);
 		//得到树节点对应的表集合
 		List<SysTable> tableList = treeService.getTreeOfTable(treeid);
 		
@@ -299,11 +296,11 @@ public class ArchiveAction extends BaseAction {
         if ("02".equals(tableType)) {
             criteria.andEqualTo("parentid",selectAid);
         }
-//		de.createCriteria().andEqualTo("treeid", treeid);
 
 		for (int i=0;i<tableList.size();i++) {
 			if (tableList.get(i).getTabletype().equals(tableType)) {
 				de.setTableName(tableList.get(i).getTablename());
+				break;
 			}
 		}
 		List dynamicList = dynamicService.selectByExample(de);
@@ -312,36 +309,41 @@ public class ArchiveAction extends BaseAction {
 		List<SysTempletfield> templetfieldList = treeService.getTreeOfTempletfield(treeid, tableType);
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("{\"total\":").append(dynamicList.size()).append(",\"rows\":[");
-		
+//		sb.append("{\"total\":").append(dynamicList.size()).append(",\"rows\":[");
+		sb.append("var rowList = [");
+		SysTemplet templet = treeService.getTreeOfTemplet(treeid);
 		if(null!=dynamicList && dynamicList.size()>0){
 			for (int i =0; i< dynamicList.size();i++) {
 				HashMap tempMap = (HashMap) dynamicList.get(i);
 				sb.append("{");
                 //添加文件级标识
-                SysTemplet templet = treeService.getTreeOfTemplet(treeid);
                 if ("A".equals(templet.getTemplettype())) {
                     sb.append("\"files\":\"").append(tempMap.get("ID").toString()).append("\",");
                 }
                 //添加电子全文标识
-                sb.append("\"docs\":\"1\",");
+//                sb.append("\"docs\":\"1\",");
+//                sb.append("\"docs\":").append(tempMap.get("ISDOC").toString()).append(",");
+                sb.append("\"rownum\":\"").append(i+1).append("\",");
+                //grid控件需要小写的id。数据库中存的是大写的id，这里全部采用小写字段名
 				for (SysTempletfield sysTempletfield : templetfieldList) {
-					if (sysTempletfield.getFieldtype().contains("VARCHAR")) {
+//					if (sysTempletfield.getFieldtype().contains("VARCHAR")) {
 						if (null == tempMap.get(sysTempletfield.getEnglishname())) {
-							sb.append("\""+sysTempletfield.getEnglishname()+"\":\"\",");
+							sb.append("\""+sysTempletfield.getEnglishname().toLowerCase()+"\":\"\",");
 						}
 						else {
-							sb.append("\""+sysTempletfield.getEnglishname()+"\":\""+tempMap.get(sysTempletfield.getEnglishname())+"\",");
+							sb.append("\""+sysTempletfield.getEnglishname().toLowerCase()+"\":\""+tempMap.get(sysTempletfield.getEnglishname())+"\",");
 						}
-					}
-					else if (sysTempletfield.getFieldtype().contains("INT")) {
-						sb.append("\""+sysTempletfield.getEnglishname()+"\":"+tempMap.get(sysTempletfield.getEnglishname())+",");
-					}
+//					}
+//					else if (sysTempletfield.getFieldtype().contains("INT")) {
+////						sb.append("\""+sysTempletfield.getEnglishname().toLowerCase()+"\":"+tempMap.get(sysTempletfield.getEnglishname())+",");
+//						sb.append("\""+sysTempletfield.getEnglishname().toLowerCase()+"\":\""+tempMap.get(sysTempletfield.getEnglishname())+"\",");
+//					}
 				}
 				sb.deleteCharAt(sb.length() - 1).append("},");
 			}
 		}
-		sb.deleteCharAt(sb.length() - 1).append("]}");
+//		sb.deleteCharAt(sb.length() - 1).append("]}");
+		sb.deleteCharAt(sb.length() - 1).append("]");
 		out.write(sb.toString());
 		return null;
 	}
@@ -380,7 +382,7 @@ public class ArchiveAction extends BaseAction {
 			//处理删除
 			List<HashMap<String,String>> deleteList = archiveMap.get("deleted");
 			if (deleteList.size() > 0) {
-				delete(deleteList);
+//				delete(deleteList);
 			}
 		} catch (Exception e) {
 			result = "保存失败，请重新尝试，或与管理员联系。";
@@ -484,7 +486,7 @@ public class ArchiveAction extends BaseAction {
 				}
 			}
 			sb.deleteCharAt(sb.length() -1).append(" where id = '").append(row.get("ID").toString()).append("'");
-			b = dynamicService.update((sb.toString()));
+//			b = dynamicService.update((sb.toString()));
 			//清空sb ，进行创建下一条sql
 			sb.setLength(0);
 		}
@@ -496,12 +498,30 @@ public class ArchiveAction extends BaseAction {
 		return result;
 	}
 	
-	private boolean delete(List<HashMap<String,String>> rowList) {
-		boolean result = false;
-		if (rowList.size() <= 0) {
-			return result;
+	public String delete() throws IOException {
+		String result = "SUCCESS";
+		PrintWriter out = getPrintWriter();
+		
+		Gson gson = new Gson();
+		List<HashMap<String,String>> archiveList = new ArrayList<HashMap<String, String>>();
+		
+		try {
+			//将传入的json字符串，转换成list
+			archiveList = (List)gson.fromJson(par, new TypeToken<List<HashMap<String,String>>>(){}.getType());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			result = "保存失败，请重新尝试，或与管理员联系。";
+			out.write(result);
+			return null;
 		}
-		List<SysTable> tableList = treeService.getTreeOfTable(rowList.get(0).get("TREEID").toString());
+		
+		if (archiveList.size() <= 0) {
+			result = "没有找到数据，请重新尝试或与管理员联系。";
+			out.write(result);
+			return null;
+		}
+		
+		List<SysTable> tableList = treeService.getTreeOfTable(archiveList.get(0).get("treeid").toString());
 		//sb存储delete语句
 		StringBuffer sb = new StringBuffer();
 		String tableName = "";
@@ -509,23 +529,56 @@ public class ArchiveAction extends BaseAction {
 		for (int i=0;i<tableList.size();i++) {
 			if (tableList.get(i).getTabletype().equals(tableType)) {
 				tableName = tableList.get(i).getTablename();
+				break;
 			}
 		}
 		sb.append("delete from ").append(tableName).append(" where id in (");
-		for (int z=0;z<rowList.size();z++) {
+		for (int z=0;z<archiveList.size();z++) {
 			//得到id集合
-			HashMap<String,String> row = (HashMap<String,String>) rowList.get(z);
-			sb.append("'").append(row.get("ID").toString()).append("',");
+			HashMap<String,String> row = (HashMap<String,String>) archiveList.get(z);
+			sb.append("'").append(row.get("id").toString()).append("',");
 		}
 		sb.deleteCharAt(sb.length() - 1).append(")");
 		int b = dynamicService.delete((sb.toString()));
 		//TODO 要删除挂接的物理文件
-		if (b > 0) {
-			result = true;
+		if (b <= 0) {
+			result = "删除失败，请重新尝试或与管理员联系。";
 		}
 		
-		return result;
+		out.write(result);
+		return null;
 	}
+	
+//	private boolean delete(List<HashMap<String,String>> rowList) {
+//		boolean result = false;
+//		if (rowList.size() <= 0) {
+//			return result;
+//		}
+//		List<SysTable> tableList = treeService.getTreeOfTable(rowList.get(0).get("TREEID").toString());
+//		//sb存储delete语句
+//		StringBuffer sb = new StringBuffer();
+//		String tableName = "";
+//		//得到表名
+//		for (int i=0;i<tableList.size();i++) {
+//			if (tableList.get(i).getTabletype().equals(tableType)) {
+//				tableName = tableList.get(i).getTablename();
+//			}
+//		}
+//		sb.append("delete from ").append(tableName).append(" where id in (");
+//		for (int z=0;z<rowList.size();z++) {
+//			//得到id集合
+//			HashMap<String,String> row = (HashMap<String,String>) rowList.get(z);
+//			sb.append("'").append(row.get("ID").toString()).append("',");
+//		}
+//		sb.deleteCharAt(sb.length() - 1).append(")");
+//		int b = dynamicService.delete((sb.toString()));
+//		//TODO 要删除挂接的物理文件
+//		if (b > 0) {
+//			result = true;
+//		}
+//		
+//		return result;
+//	}
 	
 
 //	/**

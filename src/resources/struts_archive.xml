@@ -69,6 +69,8 @@
 		<action name="listArchive" class="archiveAction" method="list"></action>
 		<!-- 保存-->
 		<action name="saveArchive" class="archiveAction" method="save"></action>
+		<!-- 删除档案-->
+		<action name="deleteArchive" class="archiveAction" method="delete"></action>
 
         <!-- ======================doc =============================-->
         <!--打开电子全文页签-->
@@ -82,6 +84,8 @@
         <action name="upload" class="importAction" method="upload"></action>
         <!-- 保存-->
 		<action name="saveImportArchive" class="importAction" method="insertImport"></action>
+		<!-- 更新-->
+		<action name="updateImportArchive" class="importAction" method="updateImport"></action>
 
 	</package>
 </struts>

@@ -71,20 +71,12 @@ public class ImportAction extends BaseAction {
 		//存储没有出现在excel里的字段。
 		List<SysTempletfield> noImportFieldList = new ArrayList<SysTempletfield>();
 		//数据库字段名称与excel列头对比，找出需要导入哪些字段
-//		for (int i=0;i<excelField.size();i++) {
-//			for (SysTempletfield field : fieldList) {
-//				if (excelField.get(i).toString().equals(field.getChinesename())) {
-//					tmpFieldList.add(field.getEnglishname());
-//				}
-//			}
-//		}
 		String[] stringArr = new String[excelField.size()];
 		for (int i=0;i<fieldList.size();i++) {
 			String a = fieldList.get(i).getChinesename();
 			int num = excelField.indexOf(a);
 			if (num >= 0) {
 				stringArr[num] = fieldList.get(i).getEnglishname();
-				//tmpFieldList.add(num,fieldList.get(i).getEnglishname());
 			}
 			else if (fieldList.get(i).getSort() >= 0) {
 				noImportFieldList.add(fieldList.get(i));
@@ -105,12 +97,12 @@ public class ImportAction extends BaseAction {
 		for (int i=1;i<v.size();i++) {
 			List<String> row = Arrays.asList(v.get(i).toString().split(","));
 			//生成系统字段
-			sb.append("{").append("\"id\":\"").append(UUID.randomUUID()).append("\",\"TREEID\":\"");
-			sb.append(treeid).append("\",\"ISDOC\":\"0\",\"ROWNUM\":\"").append(i).append("\",");
+			sb.append("{").append("\"id\":\"").append(UUID.randomUUID()).append("\",\"treeid\":\"");
+			sb.append(treeid).append("\",\"isdoc\":\"0\",\"rownum\":\"").append(i).append("\",");
 			//生成excel导入字段数据
 			for (int j=0;j<tmpFieldList.size();j++) {
 				sb.append("\"");
-				sb.append(tmpFieldList.get(j).toString());
+				sb.append(tmpFieldList.get(j).toString().toLowerCase());
 				sb.append("\":");
 				sb.append("\"");
 				try {
@@ -125,7 +117,7 @@ public class ImportAction extends BaseAction {
 			for (SysTempletfield field : noImportFieldList) {
 				if (field.getFieldtype().equals("INT")) {
 					sb.append("\"");
-					sb.append(field.getEnglishname().toString());
+					sb.append(field.getEnglishname().toString().toLowerCase());
 					sb.append("\":");
 					sb.append("\"");
 					try {
@@ -135,10 +127,9 @@ public class ImportAction extends BaseAction {
 					}
 					sb.append("\",");
 				}
-//				else if (null != field.getDefaultvalue() || "".equals(field.getDefaultvalue())) {
 				else {
 					sb.append("\"");
-					sb.append(field.getEnglishname().toString());
+					sb.append(field.getEnglishname().toString().toLowerCase());
 					sb.append("\":");
 					sb.append("\"");
 					try {
@@ -161,9 +152,6 @@ public class ImportAction extends BaseAction {
 		String result = "保存完毕。";
 		PrintWriter out = getPrintWriter();
 		
-		
-		System.out.println(importData);
-		
 		Gson gson = new Gson();
 		List<HashMap<String,String>> archiveList = new ArrayList<HashMap<String, String>>();
 		
@@ -178,12 +166,12 @@ public class ImportAction extends BaseAction {
 		}
 		
 		if (archiveList.size() <= 0) {
-			result = "没有找到导入数据，请尝试重新导入或与管理员联系。";
+			result = "没有找到数据，请重新尝试或与管理员联系。";
 			out.write(result);
 			return null;
 		}
 		
-		List<SysTable> tableList = treeService.getTreeOfTable(archiveList.get(0).get("TREEID").toString());
+		List<SysTable> tableList = treeService.getTreeOfTable(archiveList.get(0).get("treeid").toString());
 		//sb存储insert语句values前的
 		StringBuffer sb = new StringBuffer();
 		//value 存储values之后的
@@ -196,7 +184,7 @@ public class ImportAction extends BaseAction {
 				break;
 			}
 		}
-		List<SysTempletfield> fieldList = treeService.getTreeOfTempletfield(archiveList.get(0).get("TREEID").toString(), tableType);
+		List<SysTempletfield> fieldList = treeService.getTreeOfTempletfield(archiveList.get(0).get("treeid").toString(), tableType);
 		boolean b = false;
 		
 		//存储sql语句
@@ -212,34 +200,17 @@ public class ImportAction extends BaseAction {
 				for (SysTempletfield field : fieldList) {
 					sb.append(field.getEnglishname()).append(",");
 					if (field.getFieldtype().contains("VARCHAR")) {
-						//因为SlickGrid控件需要小写id，而数据库中是大写的ID，这里转换一下，才能得到数据
-						if ("ID".equals(field.getEnglishname())) {
-							value.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
-						}
-						else {
-							value.append("'").append(row.get(field.getEnglishname())).append("',");
-						}
+						value.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
 					}
 					else {
-						if ("ID".equals(field.getEnglishname())) {
-							value.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
-						}
-						else {
-							value.append(row.get(field.getEnglishname())).append(",");
-						}
+						value.append(row.get(field.getEnglishname().toLowerCase())).append(",");
 					}
 				}
 				sb.deleteCharAt(sb.length() -1).append(" ) values ");
 				value.deleteCharAt(value.length() - 1).append(" )");
 				
 				sb.append(value.toString());
-//				b = dynamicService.insert(sb.toString());
 				sqlList.add(sb.toString());
-//				if (b) {
-//					result = "在第 " + String.valueOf(z+1) + " 行保存错误，导入中止，请检查数据并重新导入。";
-//					out.write(result);
-//					return null;
-//				}
 				//清空sb和value ，进行创建下一条sql
 				sb.setLength(0);
 				value.setLength(0);
@@ -248,13 +219,94 @@ public class ImportAction extends BaseAction {
 				b = dynamicService.insert(sqlList);
 				
 				if (b) {
-					result = "保存错误，导入中止，请检查数据并重新导入。";
+					result = "保存错误，操作中止，请检查数据。";
 					out.write(result);
 					return null;
 				}
 			}
 		} catch (Exception e) {
-			result = "保存错误，导入中止，请检查数据并重新导入。";
+			result = "保存错误，操作中止，请检查数据。";
+			out.write(result);
+			return null;
+		}
+		
+		out.write(result);
+		return null;
+	}
+	
+	public String updateImport() throws IOException {
+		String result = "保存完毕。";
+		PrintWriter out = getPrintWriter();
+		
+		Gson gson = new Gson();
+		List<HashMap<String,String>> archiveList = new ArrayList<HashMap<String, String>>();
+		
+		try {
+			//将传入的json字符串，转换成list
+			archiveList = (List)gson.fromJson(importData, new TypeToken<List<HashMap<String,String>>>(){}.getType());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			result = "保存失败，请重新尝试，或与管理员联系。";
+			out.write(result);
+			return null;
+		}
+		
+		if (archiveList.size() <= 0) {
+			result = "没有找到数据，请重新尝试或与管理员联系。";
+			out.write(result);
+			return null;
+		}
+		
+		List<SysTable> tableList = treeService.getTreeOfTable(archiveList.get(0).get("treeid").toString());
+		//sb存储update语句
+		StringBuffer sb = new StringBuffer();
+		String tableName = "";
+		//得到表名
+		for (int i=0;i<tableList.size();i++) {
+			if (tableList.get(i).getTabletype().equals(tableType)) {
+				tableName = tableList.get(i).getTablename();
+				break;
+			}
+		}
+		List<SysTempletfield> fieldList = treeService.getTreeOfTempletfield(archiveList.get(0).get("treeid").toString(), tableType);
+		boolean b = false;
+		
+		//存储sql语句
+		List<String> sqlList = new ArrayList<String>();
+		try {
+			for (int z=0;z<archiveList.size();z++) {
+				//创建insert sql
+				HashMap<String,String> row = (HashMap<String,String>) archiveList.get(z);
+				sb.append("update ").append(tableName).append(" set ");
+				
+				for (SysTempletfield field : fieldList) {
+					if (!"id".equals(field.getEnglishname().toLowerCase())) {
+						sb.append(field.getEnglishname().toLowerCase()).append("=");
+						if (field.getFieldtype().contains("VARCHAR")) {
+							sb.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
+						}
+						else {
+							sb.append(row.get(field.getEnglishname().toLowerCase())).append(",");
+						}
+					}
+				}
+				sb.deleteCharAt(sb.length() -1).append(" where id='").append(row.get("id").toString()).append("'");
+				
+				sqlList.add(sb.toString());
+				//清空sb，进行创建下一条sql
+				sb.setLength(0);
+			}
+			if (sqlList.size() > 0) {
+				b = dynamicService.update(sqlList);
+				
+				if (!b) {
+					result = "保存错误，操作中止，请检查数据。";
+					out.write(result);
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			result = "保存错误，操作中止，请检查数据。";
 			out.write(result);
 			return null;
 		}

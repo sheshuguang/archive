@@ -1,37 +1,38 @@
-// 动态字段添加时，附带条件。例如默认值
-var fieldsDefaultValue = [];
 
-// 声明列的数组
-var columns = [];
-var columns_fields = [];
-// 声明数据视图
-var dataView;
-var data = [];
-var grid;
-// 创建grid配置对象
-var options = {
-	editable : true,
-	enableAddRow : true,
-	enableCellNavigation : true,
-	autoEdit : true,
-	enableColumnReorder : true,
-	topPanelHeight : 25
-};
 
-// 创建字段验证
-function requiredFieldValidator(value) {
-	if (value == null || value == undefined || !value.length) {
-		return {
-			valid : false,
-			msg : "请填写内容，不能为空。"
-		};
-	} else {
-		return {
-			valid : true,
-			msg : null
-		};
-	}
-}
+//// 声明列的数组
+//var columns = [];
+//var columns_fields = [];
+//// 声明数据视图
+//var dataView;
+//var data = [];
+//var grid;
+//// 创建grid配置对象
+//var options = {
+//	editable : true,
+//	enableAddRow : false,
+//	enableCellNavigation : true,
+//	autoEdit : true,
+//	enableColumnReorder : true,
+//	topPanelHeight : 25
+//};
+
+var importGridConfig = new GridConfig();
+
+//// 创建字段验证
+//function requiredFieldValidator(value) {
+//	if (value == null || value == undefined || !value.length) {
+//		return {
+//			valid : false,
+//			msg : "请填写内容，不能为空。"
+//		};
+//	} else {
+//		return {
+//			valid : true,
+//			msg : null
+//		};
+//	}
+//}
 
 $(function() {
 	var par = "treeid=" + selectTreeid + "&tableType=01&importType=1";
@@ -42,8 +43,8 @@ $(function() {
 		dataType : 'script',
 		success : function(data) {
 			if (data != "error") {
-				columns_fields = fields;
-				fieldsDefaultValue = fieldsDefaultValue;
+				importGridConfig.columns_fields = fields;
+				importGridConfig.fieldsDefaultValue = fieldsDefaultValue;
 			} else {
 				new $.Zebra_Dialog('读取字段信息时出错，请关闭浏览器，重新登录尝试或与管理员联系!', {
 					'buttons' : false,
@@ -62,40 +63,40 @@ $(function() {
 		cssClass : "slick-cell-checkboxsel"
 	});
 	// 加入checkbox列
-	columns.push(checkboxSelector.getColumnDefinition());
+	importGridConfig.columns.push(checkboxSelector.getColumnDefinition());
 	// 加入其他列
-	for ( var i = 0; i < columns_fields.length; i++) {
-		columns.push(columns_fields[i]);
+	for ( var i = 0; i < importGridConfig.columns_fields.length; i++) {
+		importGridConfig.columns.push(importGridConfig.columns_fields[i]);
 	}
 	// 创建dataview
-	dataView = new Slick.Data.DataView({
+	importGridConfig.dataView = new Slick.Data.DataView({
 		inlineFilters : true
 	});
-	
+	importGridConfig.options.enableAddRow = false;
 	// 创建grid
-	grid = new Slick.Grid("#archiveImportDiv", dataView, columns, options);
+	importGridConfig.grid = new Slick.Grid("#archiveImportDiv", importGridConfig.dataView, importGridConfig.columns, importGridConfig.options);
 
 //	grid.onValidationError.subscribe(handleValidationError);
 	// 设置grid的选择模式。行选择
 	// grid.setSelectionModel(new Slick.RowSelectionModel());
-	grid.setSelectionModel(new Slick.RowSelectionModel({
+	importGridConfig.grid.setSelectionModel(new Slick.RowSelectionModel({
 		selectActiveRow : false
 	}));
 	// 设置分页控件
-	var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
+	var pager = new Slick.Controls.Pager(importGridConfig.dataView, importGridConfig.grid, $("#pager"));
 	// 注册grid的checkbox功能插件
-	grid.registerPlugin(checkboxSelector);
+	importGridConfig.grid.registerPlugin(checkboxSelector);
 	// 注册grid的自动提示插件。只在字段内容过长时出现省略号时提示
-	grid.registerPlugin(new Slick.AutoTooltips());
+	importGridConfig.grid.registerPlugin(new Slick.AutoTooltips());
 	
-	dataView.onRowCountChanged.subscribe(function(e, args) {
-		grid.updateRowCount();
-		grid.render();
+	importGridConfig.dataView.onRowCountChanged.subscribe(function(e, args) {
+		importGridConfig.grid.updateRowCount();
+		importGridConfig.grid.render();
 	});
 
-	dataView.onRowsChanged.subscribe(function(e, args) {
-		grid.invalidateRows(args.rows);
-		grid.render();
+	importGridConfig.dataView.onRowsChanged.subscribe(function(e, args) {
+		importGridConfig.grid.invalidateRows(args.rows);
+		importGridConfig.grid.render();
 	});
 	
 	//生成toolbar
@@ -134,12 +135,16 @@ $(function() {
 			text:"批量修改",
 			iconCls:"icon-page-delete",
 			handler:function(){
-				var selectRows = grid.getSelectedRows();
+				var selectRows = importGridConfig.grid.getSelectedRows();
 				selectRows.sort(function compare(a, b) {
 					return b - a;
 				});
 				if (selectRows.length > 0) {
-					$("#selectupdatewindows").modal({
+					$("#batchBtn").unbind("click"); 
+					$("#batchBtn").click( function(){
+						batchUpdate(importGridConfig.grid,importGridConfig.dataView,false);
+					});
+					$("#batchwindows").modal({
 						overlayId	: 'osx-overlay',
 						containerId	: 'osx-container',
 						closeHTML	: null,
@@ -151,9 +156,9 @@ $(function() {
 							dialog.data.show();
 						    dialog.container.show();
 							dialog.overlay.fadeIn('slow');
-							for (var i=0;i<columns_fields.length;i++) {
-								if (columns_fields[i].id != "ROWNUM") {
-									$("#selectfield").append("<option value='"+columns_fields[i].id+"'>"+columns_fields[i].name+"</option>");
+							for (var i=0;i<importGridConfig.columns_fields.length;i++) {
+								if (importGridConfig.columns_fields[i].id != "rownum") {
+									$("#selectfield").append("<option value='"+importGridConfig.columns_fields[i].id+"'>"+importGridConfig.columns_fields[i].name+"</option>");
 								}
 							}
 						},
@@ -180,7 +185,7 @@ $(function() {
 			text:"删除",
 			iconCls:"icon-page-delete",
 			handler:function(){
-				var selectRows = grid.getSelectedRows();
+				var selectRows = importGridConfig.grid.getSelectedRows();
 				selectRows.sort(function compare(a, b) {
 					return b - a;
 				});
@@ -192,8 +197,8 @@ $(function() {
 		                'onClose':  function(caption) {
 		                	if (caption == '确定') {
 		                		for ( var i = 0; i < selectRows.length; i++) {
-		        					var item = dataView.getItem(selectRows[i]);
-		        					dataView.deleteItem(item.id);
+		        					var item = importGridConfig.dataView.getItem(selectRows[i]);
+		        					importGridConfig.dataView.deleteItem(item.id);
 		        				}
 		                	}
 		                }
@@ -211,8 +216,8 @@ $(function() {
 			text:"保存",
 			iconCls:"icon-page-delete",
 			handler:function(){
-				grid.getEditController().cancelCurrentEdit();
-				var a = dataView.getItems();
+				importGridConfig.grid.getEditorLock().commitCurrentEdit();
+				var a = importGridConfig.dataView.getItems();
 				if (a.length > 0) {
 					var par = "importData=" + JSON.stringify(a) + "&tableType=01";
 
@@ -236,7 +241,7 @@ $(function() {
 			}
 		}]
 	});
-})
+});
 
 function importArchive() {
 	var file = $('#selectfile').val();
@@ -259,10 +264,10 @@ function showCallback(backType, jsonStr) {
 		alert(jsonStr);
 	} else {
 		var json = JSON.parse(jsonStr);
-		dataView.beginUpdate();
-		dataView.setItems(json);
-		dataView.endUpdate();
-		grid.registerPlugin(new Slick.AutoTooltips());
+		importGridConfig.dataView.beginUpdate();
+		importGridConfig.dataView.setItems(json);
+		importGridConfig.dataView.endUpdate();
+		importGridConfig.grid.registerPlugin(new Slick.AutoTooltips());
 	}
 	//关闭windows
 	$.modal.close();
@@ -283,24 +288,4 @@ function selectfile_Validator(selectfile) {
 	return true;
 }
 
-function importUpdate() {
-	var selectRows = grid.getSelectedRows();
-	selectRows.sort(function compare(a, b) {
-		return b - a;
-	});
-	
-	var selectFieldName = $("#selectfield").val(); 
-	var updateTxt = $("#updatetxt").val();
-	for ( var i = 0; i < selectRows.length; i++) {
-		var item = dataView.getItem(selectRows[i]);
-		for(p in item){
-//			alert(i);//i就是test的属性名
-//			alert(item[i]);//test.i就是属性值
-			if (p == selectFieldName) {
-				item[p] = updateTxt;
-				break;
-			}
-		}
-		dataView.updateItem(item.id,item);
-	}
-}
+
