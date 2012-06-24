@@ -108,53 +108,38 @@ function batchUpdate(grid,dataView,isSave) {
 	var batchUpdateItems = [];
 	for ( var i = 0; i < selectRows.length; i++) {
 		var item = dataView.getItem(selectRows[i]);
+        //将更改的内容更新到item
+        for(p in item){
+            if (p == selectFieldName) {
+                item[p] = updateTxt;
+                break;
+            }
+        }
 		batchUpdateItems.push(item);
 	}
+    //如果是保存到数据库
 	if (isSave) {
-		alert(JSON.stringify(batchUpdateItems));
-		//同步读取字段
 		var par = "importData=" + JSON.stringify(batchUpdateItems) + "&tableType=01";
-		$.ajax({
-			async : false,
-			url : "updateImportArchive.action?" + par,
-			type : 'post',
-			dataType : 'script',
-			success : function(data) {
-				if (data != "保存完毕。") {
-					$.Zebra_Dialog(data, {
-		                'type':     'information',
-		                'title':    '系统提示',
-		                'buttons':  ['确定']
-		            });
-				}
-				else {
-					for ( var i = 0; i < batchUpdateItems.length; i++) {
-						var item = batchUpdateItems[i];
-						for(p in item){
-//							alert(i);//i就是test的属性名
-//							alert(item[i]);//test.i就是属性值
-							if (p == selectFieldName) {
-								item[p] = updateTxt;
-								break;
-							}
-						}
-						dataView.updateItem(item.id,item);
-					}
-				}
-			}
-		});
+        $.post("updateImportArchive.action",par,function(data){
+                if (data != "保存完毕。") {
+                    $.Zebra_Dialog(data, {
+                        'type':     'information',
+                        'title':    '系统提示',
+                        'buttons':  ['确定']
+                    });
+                }
+                else {
+                    for ( var i = 0; i < batchUpdateItems.length; i++) {
+                        var item = batchUpdateItems[i];
+                        dataView.updateItem(item.id,item);
+                    }
+                }
+            }
+        );
 	}
 	else {
 		for ( var i = 0; i < batchUpdateItems.length; i++) {
 			var item = batchUpdateItems[i];
-			for(p in item){
-//				alert(i);//i就是test的属性名
-//				alert(item[i]);//test.i就是属性值
-				if (p == selectFieldName) {
-					item[p] = updateTxt;
-					break;
-				}
-			}
 			dataView.updateItem(item.id,item);
 		}
 	}

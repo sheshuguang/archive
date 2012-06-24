@@ -345,7 +345,7 @@ $(function(){
 			text:"刷新",
 			iconCls:"icon-page-copy",
 			handler:function(){
-
+                ajGridConfig.dataView.refresh();
 			}
 		}]
 	});
