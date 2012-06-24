@@ -17,7 +17,7 @@
 //	topPanelHeight : 25
 //};
 
-var importGridConfig = new GridConfig();
+var importGridConfig = new us.archive.GridConfig();
 
 //// 创建字段验证
 //function requiredFieldValidator(value) {

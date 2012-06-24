@@ -18,7 +18,7 @@
 //	topPanelHeight : 25
 //};
 
-var ajGridConfig = new GridConfig();
+var ajGridConfig = new us.archive.GridConfig();
 
 // 创建字段验证
 function requiredFieldValidator(value) {

@@ -8,6 +8,9 @@ var selectRowid = "";
 var selectTableid = "";
 var isLoadUploadify = false;
 
+var us = {};
+us.archive = {};
+
 $(function() {
 	$('#archivetree').tree({
 		checkbox : false,
