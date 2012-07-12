@@ -1,41 +1,10 @@
 
 
-//// 声明列的数组
-//var columns = [];
-//var columns_fields = [];
-//// 声明数据视图
-//var dataView;
-//var data = [];
-//var grid;
-//// 创建grid配置对象
-//var options = {
-//	editable : true,
-//	enableAddRow : false,
-//	enableCellNavigation : true,
-//	autoEdit : true,
-//	enableColumnReorder : true,
-//	topPanelHeight : 25
-//};
+var importGridConfig = new us.archive.ui.Gridconfig();
 
-var importGridConfig = new us.archive.GridConfig();
-
-//// 创建字段验证
-//function requiredFieldValidator(value) {
-//	if (value == null || value == undefined || !value.length) {
-//		return {
-//			valid : false,
-//			msg : "请填写内容，不能为空。"
-//		};
-//	} else {
-//		return {
-//			valid : true,
-//			msg : null
-//		};
-//	}
-//}
 
 $(function() {
-	var par = "treeid=" + selectTreeid + "&tableType=01&importType=1";
+	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";
 	$.ajax({
 		async : false,
 		url : "getField.action?" + par,
@@ -55,8 +24,15 @@ $(function() {
 			}
 		}
 	});
-	
-	$("#grid-header").html(selectTreeName + '_案卷导入');
+	var importTitle = "";
+	importTitle = archiveCommon.selectTreeName + '_文件导入';
+//	if (archiveCommon.tableType == '01') {
+//		importTitle = archiveCommon.selectTreeName + '_案卷导入';
+//	}
+//	else {
+//		importTitle = archiveCommon.selectTreeName + '_文件导入';
+//	}
+	$("#grid-header").html(importTitle);
 	
 	// 创建checkbox列
 	var checkboxSelector = new Slick.CheckboxSelectColumn({
@@ -107,28 +83,35 @@ $(function() {
 			disabled:false,
 			text:"选择文件",
 			handler:function(){
-				$("#selectfilewindows").modal({
-					overlayId: 'osx-overlay',
-					containerId: 'osx-container',
-					closeHTML: null,
-					minHeight: 100,
-					minWidth: 410,
-					opacity: 40,
-					overlayClose: true,
-					onOpen : function (dialog) {
-						dialog.data.show();
-					    dialog.container.show();
-						dialog.overlay.fadeIn('slow');
-					},
-					onClose:function (dialog) {
-						dialog.data.fadeOut('slow', function () {
-							dialog.container.slideUp(50, function () {
-							  dialog.overlay.fadeOut(50, function () {
-								$.modal.close(); // must call this!
-							  });
-							});
-						  });
-					}
+//				importBatchWindow = $.window({
+				$.window({
+					showModal	: true,
+		   			modalOpacity: 0.5,
+				    title		: "选择文件",
+				    content		: $("#selectfilewindows"),
+				    width		: 400,
+				    height		: 200,
+				    showFooter	: false,
+				    showRoundCorner: true,
+				    minimizable	: false,
+				    maximizable	: false,
+				    onShow		: function(wnd) {
+				    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+				    	//修改导入按钮点击事件
+				    	var importBtn = container.find("#importBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+				    	importBtn.unbind("click"); 
+				    	importBtn.click( function(){
+				    		importArchive(wnd);
+						});
+						//修改关闭按钮事件
+						var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+						closeBtn.unbind("click"); 
+						closeBtn.click( function(){
+							wnd.close();
+						});
+				    }
 				});
 			}
 		},{
@@ -140,37 +123,42 @@ $(function() {
 					return b - a;
 				});
 				if (selectRows.length > 0) {
-					$("#batchBtn").unbind("click"); 
-					$("#batchBtn").click( function(){
-						batchUpdate(importGridConfig.grid,importGridConfig.dataView,false);
-					});
-					$("#batchwindows").modal({
-						overlayId	: 'osx-overlay',
-						containerId	: 'osx-container',
-						closeHTML	: null,
-						minHeight	: 100,
-						minWidth	: 410,
-						opacity		: 40,
-						overlayClose: true,
-						onOpen : function (dialog) {
-							dialog.data.show();
-						    dialog.container.show();
-							dialog.overlay.fadeIn('slow');
+					$.window({
+						showModal	: true,
+			   			modalOpacity: 0.5,
+					    title		: "批量修改",
+					    content		: $("#batchwindows"),
+					    width		: 300,
+					    height		: 200,
+					    showFooter	: false,
+					    showRoundCorner: true,
+					    minimizable	: false,
+					    maximizable	: false,
+					    onShow		: function(wnd) {
+					    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+							var selectContent = container.find("#selectfield"); // 尋找container底下的指定select框
+							var batchBtn = container.find("#batchBtn"); // 尋找container底下的指定更改按钮
+							//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+							batchBtn.unbind("click"); 
+							batchBtn.click( function(){
+								batchUpdate(importGridConfig.grid,importGridConfig.dataView,false,wnd,archiveCommon.tableType);
+							});
+							//修改关闭按钮事件
+							var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+							//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+							closeBtn.unbind("click"); 
+							closeBtn.click( function(){
+								wnd.close();
+							});
+//							var value = inputer.val(); // 取得值
+							selectContent.empty();
+							
 							for (var i=0;i<importGridConfig.columns_fields.length;i++) {
-								if (importGridConfig.columns_fields[i].id != "rownum") {
-									$("#selectfield").append("<option value='"+importGridConfig.columns_fields[i].id+"'>"+importGridConfig.columns_fields[i].name+"</option>");
+								if (importGridConfig.columns_fields[i].id != "rownum" && importGridConfig.columns_fields[i].id != "isdoc" && importGridConfig.columns_fields[i].id != "files") {
+									selectContent.append("<option value='"+importGridConfig.columns_fields[i].id+"'>"+importGridConfig.columns_fields[i].name+"</option>");
 								}
 							}
-						},
-						onClose:function (dialog) {
-							dialog.data.fadeOut('slow', function () {
-								dialog.container.slideUp(50, function () {
-								  dialog.overlay.fadeOut(50, function () {
-									$.modal.close(); // must call this!
-								  });
-								});
-							  });
-						}
+					    }
 					});
 				}
 				else {
@@ -219,7 +207,7 @@ $(function() {
 				importGridConfig.grid.getEditorLock().commitCurrentEdit();
 				var a = importGridConfig.dataView.getItems();
 				if (a.length > 0) {
-					var par = "importData=" + JSON.stringify(a) + "&tableType=01";
+					var par = "importData=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType;
 
 					$.post("saveImportArchive.action",par,function(data){
 							new $.Zebra_Dialog(data, {
@@ -243,19 +231,35 @@ $(function() {
 	});
 });
 
-function importArchive() {
-	var file = $('#selectfile').val();
-	if (!file) {
+function importArchive(w) {
+	var wnds = $.window.getAll();
+	var aa = wnds[wnds.length -1].getContainer();
+	var bb = aa.find("#selectfile");
+	
+	
+	var container = w.getContainer(); // 抓到window裡最外層div物件
+	var fileContent = container.find("#selectfile"); // 尋找container底下的指定input element
+	var importArchiveForm = container.find("#importArchiveForm");
+	var filePath = fileContent.val();
+	if (!filePath) {
 		alert("请选择导入到文件。");
 		return;
 	}
 	// 判断上传文件类型
-	var a = selectfile_Validator($('#selectfile').val());
+	var a = selectfile_Validator(filePath);
 	if (a) {
-		$('#importArchiveForm').attr('action',
-				'upload.action?treeid=' + selectTreeid + '&tableType=01');
-		$('#importArchiveForm').submit();
+		var url = 'upload.action?treeid=' + archiveCommon.selectTreeid;
+		if (archiveCommon.tableType == "01") {
+			url += '&tableType=01';
+		}
+		else {
+			url += '&tableType=02&selectAid=' + archiveCommon.selectAid;
+		}
+//		importArchiveForm.attr('action','upload.action?treeid=' + archiveCommon.selectTreeid + '&tableType=01');
+		importArchiveForm.attr('action',url);
+		importArchiveForm.submit();
 	}
+//	wnd.close();
 }
 
 function showCallback(backType, jsonStr) {
@@ -270,7 +274,10 @@ function showCallback(backType, jsonStr) {
 		importGridConfig.grid.registerPlugin(new Slick.AutoTooltips());
 	}
 	//关闭windows
-	$.modal.close();
+//	$.modal.close();
+//	selectFileWindow.close();
+//	$.window.close();
+	$.window.closeAll();
 }
 
 function selectfile_Validator(selectfile) {

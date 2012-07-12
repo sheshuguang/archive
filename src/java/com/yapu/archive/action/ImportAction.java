@@ -7,12 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.Vector;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,10 +27,11 @@ public class ImportAction extends BaseAction {
 	private File selectfile;//得到上传的文件
 	private String treeid;
 	private String tableType;
+	//如果是文件导入，需要在生成导入数据时，增加父节点id，也就是所属案卷的id
+	private String selectAid;
 	
 	private String importData;
 	
-	private ITempletfieldService templetfieldService;
 	private ITreeService treeService;
 	private IDynamicService dynamicService;
 	
@@ -42,12 +39,8 @@ public class ImportAction extends BaseAction {
 	 * 接收上传文件，读取文件，返回数据
 	 */
 	public String upload() throws Exception {
-		
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+
+		PrintWriter out = getPrintWriter();
 		
 		//得到excel表内容
 		Excel e = new Excel();
@@ -99,6 +92,9 @@ public class ImportAction extends BaseAction {
 			//生成系统字段
 			sb.append("{").append("\"id\":\"").append(UUID.randomUUID()).append("\",\"treeid\":\"");
 			sb.append(treeid).append("\",\"isdoc\":\"0\",\"rownum\":\"").append(i).append("\",");
+			if (tableType.equals("02")) {
+				sb.append("\"parentid\":\"").append(selectAid).append("\",");
+			}
 			//生成excel导入字段数据
 			for (int j=0;j<tmpFieldList.size();j++) {
 				sb.append("\"");
@@ -334,10 +330,6 @@ public class ImportAction extends BaseAction {
 		this.tableType = tableType;
 	}
 
-	public void setTempletfieldService(ITempletfieldService templetfieldService) {
-		this.templetfieldService = templetfieldService;
-	}
-
 	public void setTreeService(ITreeService treeService) {
 		this.treeService = treeService;
 	}
@@ -352,6 +344,14 @@ public class ImportAction extends BaseAction {
 
 	public void setDynamicService(IDynamicService dynamicService) {
 		this.dynamicService = dynamicService;
+	}
+
+	public String getSelectAid() {
+		return selectAid;
+	}
+
+	public void setSelectAid(String selectAid) {
+		this.selectAid = selectAid;
 	}
 	
 	

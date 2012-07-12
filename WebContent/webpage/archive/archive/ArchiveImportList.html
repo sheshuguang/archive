@@ -7,29 +7,23 @@
 	</div>
 	<div id="toolbar"></div>
 	<div id="archiveImportDiv" class="grid-div"
-		style="width: 100%; height: 82%;"></div>
+		style="width: 100%; height: 83%;"></div>
 	<div id="pager" style="width: 100%; height: 20px;"></div>
 </div>
 
-<div id="selectfilewindows" class="osx-modal-content">
-	<div class="osx-modal-title">请选择格式为Excel的导入文件。</div>
-	<div class="osx-modal-close">
-		<a href="#" class="simplemodal-close">x</a>
-	</div>
-	<div class="osx-modal-data">
-		<div style="margin:10px 0px 0px 10px;">
-			<form id="importArchiveForm" enctype="multipart/form-data"
-				action="upload.action" method="post" target="hidden_frame">
-				<input type="file" size="40px" style="width: 300px" id="selectfile"
-					name="selectfile">
-				<iframe name="hidden_frame" id="hidden_frame" style="display: none"></iframe>
-				<p style="color: rgb(102, 102, 102);">点击关闭按钮或按Esc键退出。</p>
-				<p>
-					<button onclick="importArchive()">导入</button>
-					<button class="simplemodal-close">关闭</button>
-				</p>
-			</form>
-		</div>
+<div id="selectfilewindows" style="display:none;">
+	<div style="margin:10px 0px 0px 10px;">
+		<form id="importArchiveForm" enctype="multipart/form-data"
+			action="upload.action" method="post" target="hidden_frame">
+			<input type="file" size="40px" style="width: 300px" id="selectfile"
+				name="selectfile">
+			<iframe name="hidden_frame" id="hidden_frame" style="display: none"></iframe>
+			<p>
+				<button id="importBtn" >导入</button>
+				<button id="closeBtn">关闭</button>
+			</p>
+		</form>
 	</div>
 </div>
+
 

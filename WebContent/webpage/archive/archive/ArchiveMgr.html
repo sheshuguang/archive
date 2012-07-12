@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -6,7 +7,19 @@
 <link rel="stylesheet" type="text/css" href="../../css/formStyle.css" />
 <link rel="stylesheet" type="text/css" href="../../images/images.css" />
 <link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />
+
+<link rel="stylesheet" href="../../js/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css" />
+<!-- jquery-window css -->
+<link type="text/css" href="../../js/jquery-window/css/jquery.window.css" rel="stylesheet">
+		
 <script type="text/javascript" src="../../js/jquery-1.7.1.js"></script>
+
+<!-- archive的通用对象 -->
+<script type="text/javascript" src="../../js/us.archive.js"></script>
+<script type="text/javascript" src="../../js/us.archive.ui.js"></script>
+<script type="text/javascript" src="../../js/us.archive.util.js"></script>
+
+
 <script type="text/javascript" src="../../js/jquery.tmpl.min.js"></script>
 <script type="text/javascript" src="../../js/json2.js"></script>
 <script type="text/javascript" src="../../js/jquery-easyui/jquery.easyui.min.js"></script>
@@ -22,12 +35,15 @@
 <script type="text/javascript" src="../../js/simplemodal/jquery.simplemodal-1.4.2.js"></script>
 
 <link rel="stylesheet" href="../../js/SlickGrid/slick.grid.css" type="text/css" />
-<link rel="stylesheet" href="../../js/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css" />
+
 <link rel="stylesheet" href="../../js/SlickGrid/myGrid.css" type="text/css" />
 <!-- 分页插件-->
 <link rel="stylesheet" href="../../js/SlickGrid/controls/slick.pager.css" type="text/css" />
 <script type="text/javascript" src="../../js/SlickGrid/lib/firebugx.js"></script>
 <script type="text/javascript" src="../../js/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+
+
+
 <script type="text/javascript" src="../../js/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
 
 <script type="text/javascript" src="../../js/SlickGrid/slick.core.js"></script>
@@ -42,10 +58,14 @@
 <script type="text/javascript" src="../../js/SlickGrid/controls/slick.columnpicker.js"></script>
 <script type="text/javascript" src="../../js/SlickGrid/slick.grid.js"></script>
 
-<script type="text/javascript" src="../../js/gridconfig.js"></script>
+
+<!-- jqueyr-window js -->
+<script type="text/javascript" src="../../js/jquery-window/jquery.window.js"></script>
+
 
 
 <script type="text/javascript">
+//客户端实现 复制、粘贴 功能用的map
 var copyMap = new HashMap();
 </script>
 <title></title>
@@ -66,20 +86,17 @@ var copyMap = new HashMap();
 			</div>
 		</div>
 	</div>
-	<div id="batchwindows" class="osx-modal-content">
-		<div class="osx-modal-title">批量更改</div>
-		<div class="osx-modal-close">
-			<a href="#" class="simplemodal-close">x</a>
-		</div>
-		<div class="osx-modal-data">
-			<div style="margin:10px 0px 0px 10px;">
-				更改字段：<select id="selectfield"></select><br>
-				更改内容：<input type="text" id="updatetxt" />
-				<p style="color: rgb(102, 102, 102);">点击关闭按钮或按Esc键退出。</p>
-				<p>
-					<button id="batchBtn" onclick="">更改</button>
-					<button class="simplemodal-close">关闭</button>
-				</p>
+	<div id="batchwindows" style="display:none;">
+		<div style="padding:10px;">
+			<div>
+				<div style="margin:10px 0px 0px 10px;">
+					更改字段：<select id="selectfield"></select><br>
+					更改内容：<input type="text" id="updatetxt"/>
+					<p>
+						<button id="batchBtn" onclick="">更改</button>
+						<button id="closeBtn" onclick="">关闭</button>
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>

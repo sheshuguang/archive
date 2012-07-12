@@ -178,7 +178,8 @@ public class ArchiveAction extends BaseAction {
         SysTemplet templet = treeService.getTreeOfTemplet(treeid);
         
       //增加行号字段
-        result.append("{id:'rownum',name:'行号',field:'rownum',behavior:'select',cssClass:'cell-selection',width:40,cannotTriggerInsert:true,resizable:false,selectable:false,formatter:function(row,column,value) {return row+1;}},");
+//        result.append("{id:'rownum',name:'行号',field:'rownum',behavior:'select',cssClass:'cell-selection',width:40,cannotTriggerInsert:true,resizable:false,selectable:false,formatter:function(row,column,value) {return row+1;}},");
+        result.append("{id:'rownum',name:'行号',field:'rownum',behavior:'select',cssClass:'cell-selection',width:50,cannotTriggerInsert:true,resizable:false,selectable:false,sortable: true},");
         if ("0".equals(importType)) {
 	        if ("A".equals(templet.getTemplettype()) && "01".equals(tableType)) {
 	            result.append("{id:'files',name:'文件级',field:'files',width:45,cssClass:'cell-center',cannotTriggerInsert:true,resizable:false,selectable:false,");
@@ -227,6 +228,7 @@ public class ArchiveAction extends BaseAction {
 				result.append(field.getEnglishname().toLowerCase());
 				result.append("',width:");
 				result.append(field.getFieldsize() * 1.5);
+				result.append(",sortable: true");
 				if (field.getFieldtype().contains("INT")) {
 					result.append(",cssClass:'cell-center',editor:Slick.Editors.Integer");
 //					result.append(",formatter:function(row,column,value) {");
@@ -323,7 +325,7 @@ public class ArchiveAction extends BaseAction {
                 //添加电子全文标识
 //                sb.append("\"docs\":\"1\",");
 //                sb.append("\"docs\":").append(tempMap.get("ISDOC").toString()).append(",");
-                sb.append("\"rownum\":\"").append(i+1).append("\",");
+                sb.append("\"rownum\":").append(i+1).append(",");
                 //grid控件需要小写的id。数据库中存的是大写的id，这里全部采用小写字段名
 				for (SysTempletfield sysTempletfield : templetfieldList) {
 //					if (sysTempletfield.getFieldtype().contains("VARCHAR")) {
@@ -522,82 +524,61 @@ public class ArchiveAction extends BaseAction {
 		}
 		
 		List<SysTable> tableList = treeService.getTreeOfTable(archiveList.get(0).get("treeid").toString());
+		SysTemplet templet = treeService.getTreeOfTemplet(archiveList.get(0).get("treeid").toString());
 		//sb存储delete语句
 		StringBuffer sb = new StringBuffer();
 		String tableName = "";
+		String tableNameWj = "";
 		//得到表名
 		for (int i=0;i<tableList.size();i++) {
-			if (tableList.get(i).getTabletype().equals(tableType)) {
-				tableName = tableList.get(i).getTablename();
-				break;
+			if (templet.getTemplettype().equals("F")) {
+				if (tableList.get(i).getTabletype().equals(tableType)) {
+					tableName = tableList.get(i).getTablename();
+					break;
+				}
 			}
+			else if (templet.getTemplettype().equals("A")) {
+				if (tableList.get(i).getTabletype().equals(tableType) && tableType.equals("01")) {
+					tableName = tableList.get(i).getTablename();
+				}
+				else if (tableList.get(i).getTabletype().equals(tableType) && tableType.equals("02")){
+					tableName = tableList.get(i).getTablename();
+					break;
+				}
+				else {
+					tableNameWj = tableList.get(i).getTablename();
+				}
+			}
+
 		}
 		sb.append("delete from ").append(tableName).append(" where id in (");
+		StringBuffer sbSql = new StringBuffer();
 		for (int z=0;z<archiveList.size();z++) {
 			//得到id集合
 			HashMap<String,String> row = (HashMap<String,String>) archiveList.get(z);
-			sb.append("'").append(row.get("id").toString()).append("',");
+			sbSql.append("'").append(row.get("id").toString()).append("',");
+//			sb.append("'").append(row.get("id").toString()).append("',");
 		}
-		sb.deleteCharAt(sb.length() - 1).append(")");
+		sb.append(sbSql.deleteCharAt(sbSql.length() - 1)).append(")");
+//		sb.deleteCharAt(sbSql.length() - 1).append(")");
 		int b = dynamicService.delete((sb.toString()));
-		//TODO 要删除挂接的物理文件
+		
 		if (b <= 0) {
 			result = "删除失败，请重新尝试或与管理员联系。";
+		}
+		else {
+			if (templet.getTemplettype().equals("A") && tableType.equals("01")) {
+				sb.setLength(0);
+				sb.append("delete from ").append(tableNameWj).append(" where parentid in (").append(sbSql.toString()).append(")");
+				dynamicService.delete(sb.toString());
+			}
+			
+			//TODO 要删除挂接的物理文件
 		}
 		
 		out.write(result);
 		return null;
 	}
-	
-//	private boolean delete(List<HashMap<String,String>> rowList) {
-//		boolean result = false;
-//		if (rowList.size() <= 0) {
-//			return result;
-//		}
-//		List<SysTable> tableList = treeService.getTreeOfTable(rowList.get(0).get("TREEID").toString());
-//		//sb存储delete语句
-//		StringBuffer sb = new StringBuffer();
-//		String tableName = "";
-//		//得到表名
-//		for (int i=0;i<tableList.size();i++) {
-//			if (tableList.get(i).getTabletype().equals(tableType)) {
-//				tableName = tableList.get(i).getTablename();
-//			}
-//		}
-//		sb.append("delete from ").append(tableName).append(" where id in (");
-//		for (int z=0;z<rowList.size();z++) {
-//			//得到id集合
-//			HashMap<String,String> row = (HashMap<String,String>) rowList.get(z);
-//			sb.append("'").append(row.get("ID").toString()).append("',");
-//		}
-//		sb.deleteCharAt(sb.length() - 1).append(")");
-//		int b = dynamicService.delete((sb.toString()));
-//		//TODO 要删除挂接的物理文件
-//		if (b > 0) {
-//			result = true;
-//		}
-//		
-//		return result;
-//	}
-	
-
-//	/**
-//	 * 删除
-//	 * @param 
-//	 * @return
-//	 */
-//	public boolean delDocserver(String docserverid) {
-//		boolean result = false;
-//		if (null != docserverid && !"".equals(docserverid)) {
-//			int num = docserverService.deleteDocserver(docserverid);
-//			if (num >0) {
-//				result = true;
-//			}
-//		}
-//		return result;
-//	}
-
-
 
 	public String getTreeid() {
 		return treeid;
