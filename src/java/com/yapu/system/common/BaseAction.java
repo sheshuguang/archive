@@ -1,5 +1,8 @@
 package com.yapu.system.common;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -50,7 +53,19 @@ public class BaseAction extends ActionSupport {
 //		 WebContext context = WebContextManager.get(); 
 //		return context.getResponse();
 	}
-	
+	/**
+	 * 返回PrintWriter object
+	 * @return
+	 * @throws IOException
+	 */
+	protected PrintWriter getPrintWriter() throws IOException {
+		HttpServletResponse response = getResponse();
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html");
+		response.setHeader("Cache-Control", "no-cache");
+		PrintWriter out  = response.getWriter();
+		return out;
+	}
 
 }
 

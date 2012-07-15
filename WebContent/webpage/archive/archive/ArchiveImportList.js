@@ -1,40 +1,10 @@
-// 动态字段添加时，附带条件。例如默认值
-var fieldsDefaultValue = [];
 
-// 声明列的数组
-var columns = [];
-var columns_fields = [];
-// 声明数据视图
-var dataView;
-var data = [];
-var grid;
-// 创建grid配置对象
-var options = {
-	editable : true,
-	enableAddRow : true,
-	enableCellNavigation : true,
-	autoEdit : false,
-	enableColumnReorder : true,
-	topPanelHeight : 25
-};
 
-// 创建字段验证
-function requiredFieldValidator(value) {
-	if (value == null || value == undefined || !value.length) {
-		return {
-			valid : false,
-			msg : "请填写内容，不能为空。"
-		};
-	} else {
-		return {
-			valid : true,
-			msg : null
-		};
-	}
-}
+var importGridConfig = new us.archive.ui.Gridconfig();
+
 
 $(function() {
-	var par = "treeid=" + selectTreeid + "&tableType=01&importType=1";
+	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";
 	$.ajax({
 		async : false,
 		url : "getField.action?" + par,
@@ -42,8 +12,8 @@ $(function() {
 		dataType : 'script',
 		success : function(data) {
 			if (data != "error") {
-				columns_fields = fields;
-				fieldsDefaultValue = fieldsDefaultValue;
+				importGridConfig.columns_fields = fields;
+				importGridConfig.fieldsDefaultValue = fieldsDefaultValue;
 			} else {
 				new $.Zebra_Dialog('读取字段信息时出错，请关闭浏览器，重新登录尝试或与管理员联系!', {
 					'buttons' : false,
@@ -54,133 +24,242 @@ $(function() {
 			}
 		}
 	});
-	
-	$("#grid-header").html(selectTreeName + '_案卷导入');
+	var importTitle = "";
+	importTitle = archiveCommon.selectTreeName + '_文件导入';
+//	if (archiveCommon.tableType == '01') {
+//		importTitle = archiveCommon.selectTreeName + '_案卷导入';
+//	}
+//	else {
+//		importTitle = archiveCommon.selectTreeName + '_文件导入';
+//	}
+	$("#grid-header").html(importTitle);
 	
 	// 创建checkbox列
 	var checkboxSelector = new Slick.CheckboxSelectColumn({
 		cssClass : "slick-cell-checkboxsel"
 	});
 	// 加入checkbox列
-	columns.push(checkboxSelector.getColumnDefinition());
+	importGridConfig.columns.push(checkboxSelector.getColumnDefinition());
 	// 加入其他列
-	for ( var i = 0; i < columns_fields.length; i++) {
-		columns.push(columns_fields[i]);
+	for ( var i = 0; i < importGridConfig.columns_fields.length; i++) {
+		importGridConfig.columns.push(importGridConfig.columns_fields[i]);
 	}
-
-	// 生成数据
-	// var data = [];
-//	for ( var i = 0; i < 500; i++) {
-//		data[i] = {
-//			id : i + 1,
-//			ROWNUM : i + 1,
-//			AJH : "ADSF"
-//
-//		};
-//	}
-	data = [{id:'1',ROWNUM:'1',AJH:'ADsdf'},{id:'2',ROWNUM:'2',AJH:'ADsdf'}];
-
 	// 创建dataview
-	dataView = new Slick.Data.DataView({
+	importGridConfig.dataView = new Slick.Data.DataView({
 		inlineFilters : true
 	});
-	
+	importGridConfig.options.enableAddRow = false;
 	// 创建grid
-	grid = new Slick.Grid("#archiveImportDiv", dataView, columns, options);
+	importGridConfig.grid = new Slick.Grid("#archiveImportDiv", importGridConfig.dataView, importGridConfig.columns, importGridConfig.options);
 
 //	grid.onValidationError.subscribe(handleValidationError);
 	// 设置grid的选择模式。行选择
 	// grid.setSelectionModel(new Slick.RowSelectionModel());
-	grid.setSelectionModel(new Slick.RowSelectionModel({
+	importGridConfig.grid.setSelectionModel(new Slick.RowSelectionModel({
 		selectActiveRow : false
 	}));
 	// 设置分页控件
-	var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
+	var pager = new Slick.Controls.Pager(importGridConfig.dataView, importGridConfig.grid, $("#pager"));
 	// 注册grid的checkbox功能插件
-	grid.registerPlugin(checkboxSelector);
+	importGridConfig.grid.registerPlugin(checkboxSelector);
 	// 注册grid的自动提示插件。只在字段内容过长时出现省略号时提示
-	grid.registerPlugin(new Slick.AutoTooltips());
+	importGridConfig.grid.registerPlugin(new Slick.AutoTooltips());
 	
-	dataView.onRowCountChanged.subscribe(function(e, args) {
-		grid.updateRowCount();
-		grid.render();
+	importGridConfig.dataView.onRowCountChanged.subscribe(function(e, args) {
+		importGridConfig.grid.updateRowCount();
+		importGridConfig.grid.render();
 	});
 
-	dataView.onRowsChanged.subscribe(function(e, args) {
-		grid.invalidateRows(args.rows);
-		grid.render();
+	importGridConfig.dataView.onRowsChanged.subscribe(function(e, args) {
+		importGridConfig.grid.invalidateRows(args.rows);
+		importGridConfig.grid.render();
 	});
-	
-	dataView.beginUpdate();
-	dataView.setItems(data);
-	dataView.endUpdate();
 	
 	//生成toolbar
 	$('#toolbar').toolbar({
 		items:[{
-			id:"test",
+			id:"select",
 			iconCls:"icon-page-add",
 			disabled:false,
-			text:"测试",
+			text:"选择文件",
 			handler:function(){
-				$("#selectfileWindow").show();
-				var $win;
-				$win = $('#selectfileWindow').window({
-					title : ' 字段代码管理',
-					width : 400,
-					height : 130,
-					top : ($(window).height() - 130) * 0.5,
-					left : ($(window).width() - 400) * 0.5,
-					shadow : true,
-					modal : true,
-					iconCls : 'icon-application_form_add',
-					closed : true,
-					minimizable : false,
-					maximizable : false,
-					collapsible : false,
-					onClose : function() {
-					}
+//				importBatchWindow = $.window({
+				$.window({
+					showModal	: true,
+		   			modalOpacity: 0.5,
+				    title		: "选择文件",
+				    content		: $("#selectfilewindows"),
+				    width		: 400,
+				    height		: 200,
+				    showFooter	: false,
+				    showRoundCorner: true,
+				    minimizable	: false,
+				    maximizable	: false,
+				    onShow		: function(wnd) {
+				    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+				    	//修改导入按钮点击事件
+				    	var importBtn = container.find("#importBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+				    	importBtn.unbind("click"); 
+				    	importBtn.click( function(){
+				    		importArchive(wnd);
+						});
+						//修改关闭按钮事件
+						var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+						closeBtn.unbind("click"); 
+						closeBtn.click( function(){
+							wnd.close();
+						});
+				    }
 				});
-				$("#selectfileWindow").window('open');
 			}
-		},"-",{
-			text:"测试1",
+		},{
+			text:"批量修改",
 			iconCls:"icon-page-delete",
 			handler:function(){
-				$("#facebox").overlay().load();
+				var selectRows = importGridConfig.grid.getSelectedRows();
+				selectRows.sort(function compare(a, b) {
+					return b - a;
+				});
+				if (selectRows.length > 0) {
+					$.window({
+						showModal	: true,
+			   			modalOpacity: 0.5,
+					    title		: "批量修改",
+					    content		: $("#batchwindows"),
+					    width		: 300,
+					    height		: 200,
+					    showFooter	: false,
+					    showRoundCorner: true,
+					    minimizable	: false,
+					    maximizable	: false,
+					    onShow		: function(wnd) {
+					    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+							var selectContent = container.find("#selectfield"); // 尋找container底下的指定select框
+							var batchBtn = container.find("#batchBtn"); // 尋找container底下的指定更改按钮
+							//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+							batchBtn.unbind("click"); 
+							batchBtn.click( function(){
+								batchUpdate(importGridConfig.grid,importGridConfig.dataView,false,wnd,archiveCommon.tableType);
+							});
+							//修改关闭按钮事件
+							var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+							//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+							closeBtn.unbind("click"); 
+							closeBtn.click( function(){
+								wnd.close();
+							});
+//							var value = inputer.val(); // 取得值
+							selectContent.empty();
+							
+							for (var i=0;i<importGridConfig.columns_fields.length;i++) {
+								if (importGridConfig.columns_fields[i].id != "rownum" && importGridConfig.columns_fields[i].id != "isdoc" && importGridConfig.columns_fields[i].id != "files") {
+									selectContent.append("<option value='"+importGridConfig.columns_fields[i].id+"'>"+importGridConfig.columns_fields[i].name+"</option>");
+								}
+							}
+					    }
+					});
+				}
+				else {
+					$.Zebra_Dialog('请选择要修改的数据。 ', {
+		                'type':     'information',
+		                'title':    '系统提示',
+		                'buttons':  ['确定']
+		            });
+				}
+			}
+		},{
+			text:"删除",
+			iconCls:"icon-page-delete",
+			handler:function(){
+				var selectRows = importGridConfig.grid.getSelectedRows();
+				selectRows.sort(function compare(a, b) {
+					return b - a;
+				});
+				if (selectRows.length > 0) {
+					$.Zebra_Dialog('确定要删除选中的数据吗? ', {
+						'type':     'question',
+		                'title':    '系统提示',
+		                'buttons':  ['确定', '取消'],
+		                'onClose':  function(caption) {
+		                	if (caption == '确定') {
+		                		for ( var i = 0; i < selectRows.length; i++) {
+		        					var item = importGridConfig.dataView.getItem(selectRows[i]);
+		        					importGridConfig.dataView.deleteItem(item.id);
+		        				}
+		                	}
+		                }
+			        });
+				}
+				else {
+					$.Zebra_Dialog('请选择要删除的数据。 ', {
+		                'type':     'information',
+		                'title':    '系统提示',
+		                'buttons':  ['确定']
+		            });
+				}
+			}
+		},{
+			text:"保存",
+			iconCls:"icon-page-delete",
+			handler:function(){
+				importGridConfig.grid.getEditorLock().commitCurrentEdit();
+				var a = importGridConfig.dataView.getItems();
+				if (a.length > 0) {
+					var par = "importData=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType;
+
+					$.post("saveImportArchive.action",par,function(data){
+							new $.Zebra_Dialog(data, {
+				  				'buttons':  false,
+				   			    'modal': false,
+				   			    'position': ['right - 20', 'top + 20'],
+				   			    'auto_close': 2500
+				            });
+						}
+					);
+				}
+				else {
+					$.Zebra_Dialog('没有找到导入数据.<br>请重新读取Excel导入文件或与管理员联系。 ', {
+		                'type':     'information',
+		                'title':    '系统提示',
+		                'buttons':  ['确定']
+		            });
+				}
 			}
 		}]
 	});
-	
-	$("#facebox").overlay({
-	    // custom top position
-	    top: 100,
-	    // some mask tweaks suitable for facebox-looking dialogs
-	    mask: {
-	    // you might also consider a "transparent" color for the mask
-	    color: '#fff',
-	    // load mask a little faster
-	    loadSpeed: 200,
-	    // very transparent
-	    opacity: 0.5
-	    },
-	    // disable this for modal dialog-type of overlays
-	    closeOnClick: true,
-	    // load it immediately after the construction
-	    load: false
-	});
-	
 });
 
-function importArchive() {
-	// 判断上传文件类型
-	var a = selectfile_Validator($('#selectfile').val());
-	if (a) {
-//		$('#selectfileWindow').window('close');
-		$('#importArchiveForm').attr('action',
-				'upload.action?treeid=' + selectTreeid + '&tableType=01');
-		$('#importArchiveForm').submit();
+function importArchive(w) {
+	var wnds = $.window.getAll();
+	var aa = wnds[wnds.length -1].getContainer();
+	var bb = aa.find("#selectfile");
+	
+	
+	var container = w.getContainer(); // 抓到window裡最外層div物件
+	var fileContent = container.find("#selectfile"); // 尋找container底下的指定input element
+	var importArchiveForm = container.find("#importArchiveForm");
+	var filePath = fileContent.val();
+	if (!filePath) {
+		alert("请选择导入到文件。");
+		return;
 	}
+	// 判断上传文件类型
+	var a = selectfile_Validator(filePath);
+	if (a) {
+		var url = 'upload.action?treeid=' + archiveCommon.selectTreeid;
+		if (archiveCommon.tableType == "01") {
+			url += '&tableType=01';
+		}
+		else {
+			url += '&tableType=02&selectAid=' + archiveCommon.selectAid;
+		}
+//		importArchiveForm.attr('action','upload.action?treeid=' + archiveCommon.selectTreeid + '&tableType=01');
+		importArchiveForm.attr('action',url);
+		importArchiveForm.submit();
+	}
+//	wnd.close();
 }
 
 function showCallback(backType, jsonStr) {
@@ -188,15 +267,17 @@ function showCallback(backType, jsonStr) {
 	if (backType == "failure") {
 		alert(jsonStr);
 	} else {
-		//$('#archiveimporttable').datagrid('loading');
 		var json = JSON.parse(jsonStr);
-		alert(jsonStr);
-		dataView.beginUpdate();
-		dataView.setItems(jsonStr);
-		dataView.endUpdate();
-		
+		importGridConfig.dataView.beginUpdate();
+		importGridConfig.dataView.setItems(json);
+		importGridConfig.dataView.endUpdate();
+		importGridConfig.grid.registerPlugin(new Slick.AutoTooltips());
 	}
-
+	//关闭windows
+//	$.modal.close();
+//	selectFileWindow.close();
+//	$.window.close();
+	$.window.closeAll();
 }
 
 function selectfile_Validator(selectfile) {
@@ -213,3 +294,5 @@ function selectfile_Validator(selectfile) {
 	}
 	return true;
 }
+
+

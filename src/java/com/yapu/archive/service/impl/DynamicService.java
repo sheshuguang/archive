@@ -15,13 +15,13 @@ public class DynamicService implements IDynamicService {
 		return dynamicDao.selectByExample(example);
 	}
 	
-	public boolean insert(String sql) {
-		return dynamicDao.insert(sql);
-	}
+//	public boolean insert(String sql) {
+//		return dynamicDao.insert(sql);
+//	}
 
-	public boolean update(String sql) {
-		return dynamicDao.update(sql);
-	}
+//	public boolean update(String sql) {
+//		return dynamicDao.update(sql);
+//	}
 	
 	public int delete(String sql) {
 		return dynamicDao.delete(sql);
@@ -31,6 +31,27 @@ public class DynamicService implements IDynamicService {
 		this.dynamicDao = dynamicDao;
 	}
 
+	@Override
+	public boolean insert(List<String> sqlList) {
+		boolean result = false;
+		if (sqlList.size() > 0) {
+			for (String sql : sqlList) {
+				result = dynamicDao.insert(sql);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public boolean update(List<String> sqlList) {
+		boolean result = false;
+		if (sqlList.size() > 0) {
+			for (String sql : sqlList) {
+				result = dynamicDao.update(sql);
+			}
+		}
+		return result;
+	}
 	
 	
 }
