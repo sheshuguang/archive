@@ -1,1 +1,6 @@
 WebContent/WEB-INF/classes/*
+.idea/*
+.settings/*
+archive.iml
+.classpath
+.project
