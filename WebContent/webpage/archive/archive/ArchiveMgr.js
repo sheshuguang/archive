@@ -26,13 +26,18 @@ function showTreeList(node) {
 	archiveCommon.selectTreeName = node.text;
 	archiveCommon.selectTreeid = node.id;
 	var url = "showArchiveList.action?treeid=" + node.id;
-	showtab($('#tab'),url, '档案管理', 'icon-page');
+	us.showtab($('#tab'),url, '档案管理', 'icon-page');
 }
-
-function showWjTab(id) {
+/**
+ * 打开文件页签
+ * @param id		打开的文件所属案卷id
+ * @param isAllWj	是否现在该节点下全部文件。
+ */
+function showWjTab(id,isAllWj) {
 	archiveCommon.selectAid = id;
+	archiveCommon.isAllWj = isAllWj;
 	var url = "showArchiveWjList.action?treeid=" + archiveCommon.selectTreeid;
-	showtab($('#tab'),url, '文件管理', 'icon-page');
+	us.showtab($('#tab'),url, '文件管理', 'icon-page');
 }
 
 // 打开案卷导入tab
@@ -41,7 +46,7 @@ function showArchiveImportTab(tableType) {
 //	archiveCommon.selectTableid = tableid;
 	archiveCommon.tableType = tableType;
 	var url = "dispatch.action?page=/webpage/archive/archive/ArchiveImportList.html";
-	showtab($('#tab'),url, '案卷导入', 'icon-page');
+	us.showtab($('#tab'),url, '案卷导入', 'icon-page');
 }
 
 
@@ -51,5 +56,5 @@ function showDocTab(id, tableid) {
 	archiveCommon.selectRowid = id;
 	archiveCommon.selectTableid = tableid;
 	var url = "showDocListTab.action";
-	showtab($('#tab'),url, '电子文件管理', 'icon-page');
+	us.showtab($('#tab'),url, '电子文件管理', 'icon-page');
 }

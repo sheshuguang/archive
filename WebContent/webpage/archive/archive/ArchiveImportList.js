@@ -65,6 +65,13 @@ $(function() {
 	// 注册grid的自动提示插件。只在字段内容过长时出现省略号时提示
 	importGridConfig.grid.registerPlugin(new Slick.AutoTooltips());
 	
+	importGridConfig.grid.onSort.subscribe(function(e, args) {
+		archiveCommon.sortdir = args.sortAsc ? 1 : -1;
+		archiveCommon.sortcol = args.sortCol.field;
+		importGridConfig.dataView.sort(us.comparer, args.sortAsc);
+		
+	});
+	
 	importGridConfig.dataView.onRowCountChanged.subscribe(function(e, args) {
 		importGridConfig.grid.updateRowCount();
 		importGridConfig.grid.render();
@@ -141,7 +148,7 @@ $(function() {
 							//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
 							batchBtn.unbind("click"); 
 							batchBtn.click( function(){
-								batchUpdate(importGridConfig.grid,importGridConfig.dataView,false,wnd,archiveCommon.tableType);
+								us.batchUpdate(importGridConfig.grid,importGridConfig.dataView,false,wnd,archiveCommon.tableType);
 							});
 							//修改关闭按钮事件
 							var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮

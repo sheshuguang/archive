@@ -26,6 +26,7 @@ public class ArchiveAction extends BaseAction {
 	private String treeid;
 	private String tableType;
     private String selectAid;
+    private String isAllWj;
     //如果是导入类型，读取字段时，去掉文件级标识
     private String importType;
 	
@@ -184,7 +185,7 @@ public class ArchiveAction extends BaseAction {
 	        if ("A".equals(templet.getTemplettype()) && "01".equals(tableType)) {
 	            result.append("{id:'files',name:'文件级',field:'files',width:45,cssClass:'cell-center',cannotTriggerInsert:true,resizable:false,selectable:false,");
 	            result.append("formatter:function(row,column,value){");
-	            result.append("return  '<img src=\"../../images/icons/page.png\" title=\"点击查看文件级\" onclick=\"showWjTab(\\''+ value +'\\')\" />'  }},");
+	            result.append("return  '<img src=\"../../images/icons/page.png\" title=\"点击查看文件级\" onclick=\"showWjTab(\\''+ value +'\\',\\'0\\')\" />'  }},");
 	//            result.append("return  '<a href=\"#\" onClick=\"showWjTab(\\''+ value +'\\')\" title=\"点击查看文件级\" class=\"easyui-linkbutton\" plain=\"true\" iconCls=icon-table_add></a>'  }},");
 	        }
 	        //添加【是否有全文】标识
@@ -251,7 +252,7 @@ public class ArchiveAction extends BaseAction {
 				}
 				
 				if (field.getIsrequire() == 1) {
-					result.append(",validator:requiredFieldValidator");
+					result.append(",validator:us.requiredFieldValidator");
 				}
 				String editTxt = "";
 				//搞有代码的字段，我靠
@@ -295,7 +296,7 @@ public class ArchiveAction extends BaseAction {
 		DynamicExample de = new DynamicExample();
         DynamicExample.Criteria criteria = de.createCriteria();
         criteria.andEqualTo("treeid",treeid);
-        if ("02".equals(tableType)) {
+        if ("0".equals(isAllWj) && "02".equals(tableType)) {
             criteria.andEqualTo("parentid",selectAid);
         }
 
@@ -621,5 +622,14 @@ public class ArchiveAction extends BaseAction {
 	public void setImportType(String importType) {
 		this.importType = importType;
 	}
+
+	public String getIsAllWj() {
+		return isAllWj;
+	}
+
+	public void setIsAllWj(String isAllWj) {
+		this.isAllWj = isAllWj;
+	}
+	
     
 }

@@ -26,8 +26,10 @@ us.archive.ui.Gridconfig = function(a) {
 	this.rows = [];
 	this.grid;
 	this.fieldsDefaultValue = "";
-	this.sortcol = "title";
-	this.sortdir = 1;
+//	this.sortcol = "title";
+//	this.sortdir = 1;
+	//过滤条件
+	this.searchString = "";
 	// 创建grid配置对象
 	this.options = {
 		editable : true,

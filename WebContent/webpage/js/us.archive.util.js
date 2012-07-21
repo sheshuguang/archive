@@ -1,8 +1,11 @@
+
+
+
 /*===================================
  *               public
  ===================================*/
 // 打开、切换tab页签
-function showtab(tabObject,url, tabname, icon) {
+us.showtab=function(tabObject,url, tabname, icon) {
 	if (tabObject.tabs('exists', tabname)) {
 		tabObject.tabs('select', tabname);
 		var tab = tabObject.tabs('getSelected');
@@ -28,7 +31,7 @@ function showtab(tabObject,url, tabname, icon) {
 					  grid
 ==============================================*/
 // grid字段录入时创建字段验证是否为空
-function requiredFieldValidator(value) {
+us.requiredFieldValidator = function(value) {
 	if (value == null || value == undefined || !value.length) {
 		return {
 			valid : false,
@@ -42,13 +45,35 @@ function requiredFieldValidator(value) {
 	}
 }
 
+//grid 字段排序
+us.comparer = function(a, b) {
+  var x = a[archiveCommon.sortcol], y = b[archiveCommon.sortcol];
+  return (x == y ? 0 : (x > y ? 1 : -1));
+}
+
+//grid 过滤功能
+var clName = "ajh";
+us.myFilter = function(item, args) {//archiveCommon.clName
+	if (args.searchString != "" && item[archiveCommon.clName].indexOf(args.searchString) == -1) {
+		return false;
+	}
+	return true;
+}
+//grid 过滤功能
+us.updateFilter = function(dataView) {
+	dataView.setFilterArgs({
+		searchString : archiveCommon.searchString
+	});
+	dataView.refresh();
+}
+
 //grid批量修改  
 /*
  * grid  		是哪个grid对象
  * dataView  	是哪个view对象
  * isSave		批量修改时，是否保存到数据库。
  */
-function batchUpdate(grid,dataView,isSave,w,tabletype) {
+us.batchUpdate = function(grid,dataView,isSave,w,tabletype) {
 	var selectRows = grid.getSelectedRows();
 	selectRows.sort(function compare(a, b) {
 		return b - a;

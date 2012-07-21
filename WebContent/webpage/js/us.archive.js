@@ -22,7 +22,11 @@ us.archive.Archive = function() {
 	// 关于电子文件，选择的行id
 	this.selectRowid = "";
 	this.selectTableid = "";
-	
+	this.sortcol = "title";
+	this.sortdir = 1;
+	this.searchString = "";
+	this.clName = "";
+	this.isAllWj = false;
 	//点击导入按钮时，导入页面用来判断当前是案卷还是文件的导入。
 	this.tableType = "";
 }

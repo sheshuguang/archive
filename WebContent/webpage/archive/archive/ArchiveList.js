@@ -1,10 +1,6 @@
 
 
 var ajGridconfig = new us.archive.ui.Gridconfig();
-function comparer(a, b) {
-  var x = a[ajGridconfig.sortcol], y = b[ajGridconfig.sortcol];
-  return (x == y ? 0 : (x > y ? 1 : -1));
-}
 
 $(function(){
 	//同步读取字段
@@ -100,6 +96,24 @@ $(function(){
 	ajGridconfig.grid.registerPlugin(checkboxSelector);
 	// 注册grid的自动提示插件。只在字段内容过长时出现省略号时提示
 	ajGridconfig.grid.registerPlugin(new Slick.AutoTooltips());
+	$("#inlineFilterPanel_aj").appendTo(ajGridconfig.grid.getTopPanel()).show();
+	
+	$("#txtSearch_aj").keyup(function(e) {
+		Slick.GlobalEditorLock.cancelCurrentEdit();
+		// clear on Esc
+		if (e.which == 27) {
+			this.value = "";
+		}
+		archiveCommon.clName = $("#selectfield_aj").val();
+		archiveCommon.searchString = this.value;
+		us.updateFilter(ajGridconfig.dataView);
+	});
+	//生成过滤选择字段
+	for (var i=0;i<ajGridconfig.columns_fields.length;i++) {
+		if (ajGridconfig.columns_fields[i].id != "rownum" && ajGridconfig.columns_fields[i].id != "isdoc" && ajGridconfig.columns_fields[i].id != "files") {
+			$("#selectfield_aj").append("<option value='"+ajGridconfig.columns_fields[i].id+"'>"+ajGridconfig.columns_fields[i].name+"</option>");
+		}
+	}
 	//声明新建行的系统默认值
 	var newItemTemplate = {
 			treeid	: archiveCommon.selectTreeid,
@@ -145,9 +159,9 @@ $(function(){
 	});
 	
 	ajGridconfig.grid.onSort.subscribe(function(e, args) {
-		ajGridconfig.sortdir = args.sortAsc ? 1 : -1;
-		ajGridconfig.sortcol = args.sortCol.field;
-		ajGridconfig.dataView.sort(comparer, args.sortAsc);
+		archiveCommon.sortdir = args.sortAsc ? 1 : -1;
+		archiveCommon.sortcol = args.sortCol.field;
+		ajGridconfig.dataView.sort(us.comparer, args.sortAsc);
 		
 	});
 	
@@ -162,6 +176,10 @@ $(function(){
 	});
 	ajGridconfig.dataView.beginUpdate();
 	ajGridconfig.dataView.setItems(ajGridconfig.rows);
+	ajGridconfig.dataView.setFilterArgs({
+		searchString : archiveCommon.searchString
+	});
+	ajGridconfig.dataView.setFilter(us.myFilter);
 	ajGridconfig.dataView.endUpdate();
 	
 	ajGridconfig.dataView.syncGridSelection(ajGridconfig.grid, true);
@@ -227,7 +245,7 @@ $(function(){
 								//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
 								batchBtn.unbind("click"); 
 								batchBtn.click( function(){
-									batchUpdate(ajGridconfig.grid,ajGridconfig.dataView,true,wnd,'01');
+									us.batchUpdate(ajGridconfig.grid,ajGridconfig.dataView,true,wnd,'01');
 								});
 								//修改关闭按钮事件
 								var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
@@ -322,6 +340,22 @@ $(function(){
 			iconCls:"icon-page-copy",
 			handler:function(){
 				showArchiveImportTab('01');
+			}
+		},{
+			text:"过滤",
+			iconCls:"icon-page-copy",
+			handler:function(){
+				if ($(ajGridconfig.grid.getTopPanel()).is(":visible")) {
+					ajGridconfig.grid.hideTopPanel();
+				} else {
+					ajGridconfig.grid.showTopPanel();
+				}
+			}
+		},{
+			text:"全文件",
+			iconCls:"icon-page-copy",
+			handler:function(){
+				showWjTab("","1");
 			}
 		},{
 			text:"刷新",
