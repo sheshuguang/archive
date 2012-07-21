@@ -33,7 +33,12 @@
 		</action>
 		<!-- 事务测试 -->
 		<action name="testTr" class="userAction" method="testTr">
-			
+
 		</action>
-	</package>
+        <action name ="FileUpload" class ="com.yapu.archive.action.FileAction" method="upload">
+            <param name="savePath">/resources/files</param>
+            <result name ="success">/result.jsp</result>
+        </action >
+
+    </package>
 </struts>
