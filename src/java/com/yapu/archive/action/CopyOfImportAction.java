@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import com.yapu.archive.entity.SysTempletfield;
-import com.yapu.archive.service.itf.ITempletfieldService;
 import com.yapu.archive.service.itf.ITreeService;
 import com.yapu.system.common.BaseAction;
 import com.yapu.system.util.Excel;
@@ -23,11 +22,18 @@ public class CopyOfImportAction extends BaseAction {
 	
 	private File selectfile;//得到上传的文件
 	private String treeid;
-	private String tableType;
+
+    public ITreeService getTreeService() {
+        return treeService;
+    }
+
+    public void setTreeService(ITreeService treeService) {
+        this.treeService = treeService;
+    }
+
+    private String tableType;
 	
-	private ITempletfieldService templetfieldService;
 	private ITreeService treeService;
-	
 	public String upload() throws Exception {
 		
 		HttpServletResponse response = getResponse();
@@ -117,12 +123,6 @@ public class CopyOfImportAction extends BaseAction {
 		this.tableType = tableType;
 	}
 
-	public void setTempletfieldService(ITempletfieldService templetfieldService) {
-		this.templetfieldService = templetfieldService;
-	}
 
-	public void setTreeService(ITreeService treeService) {
-		this.treeService = treeService;
-	}
 	
 }

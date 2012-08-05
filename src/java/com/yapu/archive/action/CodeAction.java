@@ -13,7 +13,6 @@ import com.google.gson.reflect.TypeToken;
 import com.yapu.archive.entity.SysCode;
 import com.yapu.archive.entity.SysCodeExample;
 import com.yapu.archive.service.itf.ICodeService;
-import com.yapu.archive.service.itf.ITempletfieldService;
 import com.yapu.system.common.BaseAction;
 
 public class CodeAction extends BaseAction {
