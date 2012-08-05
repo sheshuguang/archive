@@ -1,0 +1,1 @@
+pdf2swf.exe %1 -o %2 -T 9 -p 1-100 -s languagedir=M:\eclipse3.5\DocManager\WebContent\WEB-INF\tools\xpdf-chinese-simplified
