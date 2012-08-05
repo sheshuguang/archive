@@ -33,7 +33,8 @@
 		</action>
 		<!-- 事务测试 -->
 		<action name="testTr" class="userAction" method="testTr">
-			
+
 		</action>
-	</package>
+
+    </package>
 </struts>

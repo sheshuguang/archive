@@ -28,15 +28,28 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	
-	<servlet>
+<!--	<servlet>
 		<servlet-name>JSPSupportServlet</servlet-name>
 		<servlet-class>
 			org.apache.struts2.views.JspSupportServlet
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
-	</servlet>
-	
-	
+	</servlet>-->
+
+    <servlet>
+        <description>Plupload</description>
+        <display-name>Plupload</display-name>
+        <servlet-name>PluploadServlet</servlet-name>
+        <servlet-class>
+            com.yapu.system.util.PluploadServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PluploadServlet</servlet-name>
+        <url-pattern>/servlet/Plupload</url-pattern>
+    </servlet-mapping>
+
 	<!-- struts过滤 -->
 	<filter>
         <filter-name>struts2</filter-name>
@@ -45,8 +58,9 @@
 
     <filter-mapping>
         <filter-name>struts2</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>*.action</url-pattern>
     </filter-mapping>
+
 	
   	<!-- 
 	<servlet> 

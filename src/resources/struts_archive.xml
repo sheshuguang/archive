@@ -86,6 +86,10 @@
 		<action name="saveImportArchive" class="importAction" method="insertImport"></action>
 		<!-- 更新-->
 		<action name="updateImportArchive" class="importAction" method="updateImport"></action>
+        <action name ="docUpload" class ="com.yapu.archive.action.DocAction" method="upload">
+            <param name="savePath">/resources/files</param>
+        </action >
 
-	</package>
+
+    </package>
 </struts>
