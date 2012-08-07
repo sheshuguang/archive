@@ -18,13 +18,13 @@ public class FileOperate {
      *            String 如 c:/fqf   
      * @return boolean   
      */  
-    public void newFolder(String folderPath) {   
+    public static void newFolder(String folderPath) {
         try {   
             String filePath = folderPath;   
             filePath = filePath.toString();   
             File myFilePath = new File(filePath);   
             if (!myFilePath.exists()) {   
-                myFilePath.mkdir();   
+                myFilePath.mkdir();
             }   
         } catch (Exception e) {   
             System.out.println("新建目录操作出错 ");   
@@ -41,7 +41,7 @@ public class FileOperate {
      *            String 文件内容   
      * @return boolean   
      */  
-    public void newFile(String filePathAndName, String fileContent) {   
+    public static void newFile(String filePathAndName, String fileContent) {
   
         try {   
             String filePath = filePathAndName;   
@@ -72,7 +72,7 @@ public class FileOperate {
      *            String   
      * @return boolean   
      */  
-    public void delFile(String filePathAndName) {   
+    public static void delFile(String filePathAndName) {
         try {   
             String filePath = filePathAndName;   
             filePath = filePath.toString();   
@@ -96,7 +96,7 @@ public class FileOperate {
      *            String   
      * @return boolean   
      */  
-    public void delFolder(String folderPath) {   
+    public static void delFolder(String folderPath) {
         try {   
             delAllFile(folderPath); // 删除完里面所有内容   
             String filePath = folderPath;   
@@ -118,7 +118,7 @@ public class FileOperate {
      * @param path   
      *            String 文件夹路径 如 c:/fqf   
      */  
-    public void delAllFile(String path) {   
+    public static void delAllFile(String path) {
         File file = new File(path);   
         if (!file.exists()) {   
             return;   
@@ -153,7 +153,7 @@ public class FileOperate {
      *            String 复制后路径 如：f:/fqf.txt   
      * @return boolean   
      */  
-    public void copyFile(String oldPath, String newPath) {   
+    public static void copyFile(String oldPath, String newPath) {
         try {   
             int bytesum = 0;   
             int byteread = 0;   
@@ -186,7 +186,7 @@ public class FileOperate {
      *            String 复制后路径 如：f:/fqf/ff   
      * @return boolean   
      */  
-    public void copyFolder(String oldPath, String newPath) {   
+    public static void copyFolder(String oldPath, String newPath) {
         try {   
             (new File(newPath)).mkdirs(); // 如果文件夹不存在 则建立新文件夹   
             File a = new File(oldPath);   
@@ -233,12 +233,15 @@ public class FileOperate {
      * @param newPath   
      *            String 如：d:/fqf.txt   
      */  
-    public void moveFile(String oldPath, String newPath) {   
+    public static void moveFile(String oldPath, String newPath) {
         copyFile(oldPath, newPath);   
         delFile(oldPath);   
   
-    }   
-  
+    }
+    public static void moveFile(File oldFile, File newFile) {
+        moveFile(oldFile.getPath(),newFile.getPath());
+    }
+
     /**   
      * 移动文件夹到指定目录   
      *    
@@ -247,8 +250,9 @@ public class FileOperate {
      * @param newPath   
      *            String 如：d:/fqf   
      */  
-    public void moveFolder(String oldPath, String newPath) {   
+    public static void moveFolder(String oldPath, String newPath) {
         copyFolder(oldPath, newPath);   
         delFolder(oldPath);   
-    }   
-}  
+    }
+
+}

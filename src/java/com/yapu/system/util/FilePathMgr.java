@@ -33,11 +33,8 @@ public class FilePathMgr {
 	public String getTempDir(){
 		return ctxDir+"WEB-INF"+File.separatorChar+"files"+File.separatorChar+"temp"+File.separatorChar;
 	}
-	public String getUploadDir(){		
+	public String getUploadDir(){
 		return  ctxDir +  "WEB-INF"+ File.separatorChar + "files" + File.separatorChar + "upload" + File.separatorChar;
-	}	
-	public String getDbParth(){
-		return  ctxDir +  "WEB-INF"+ File.separatorChar + "db" + File.separatorChar + "filedb";
 	}
 	public String getCtxDir() {
 		return ctxDir;

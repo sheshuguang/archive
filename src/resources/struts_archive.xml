@@ -86,10 +86,15 @@
 		<action name="saveImportArchive" class="importAction" method="insertImport"></action>
 		<!-- 更新-->
 		<action name="updateImportArchive" class="importAction" method="updateImport"></action>
-        <action name ="docUpload" class ="com.yapu.archive.action.DocAction" method="upload">
-            <param name="savePath">/resources/files</param>
-        </action >
 
+        <action name ="docUpload" class ="docAction" method="upload">
+            <param name="savePath">/WEB-INF/files/upload</param>
+        </action >
+        <action name ="docDelete" class ="docAction" method="delete">
+        </action >
+        <action name ="docRead" class ="docAction" method="read">
+            <param name="savePath">/WEB-INF/files/swfdoc</param>
+        </action >
 
     </package>
 </struts>

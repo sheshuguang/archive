@@ -22,6 +22,7 @@ insert into sys_function(FUNCTIONID,FUNCHINESENAME,FUNENGLISHNAME,FUNPATH,FUNORD
 insert into sys_function(FUNCTIONID,FUNCHINESENAME,FUNENGLISHNAME,FUNPATH,FUNORDER,FUNSYSTEM,FUNPARENT,FUNICON) values ('4','档案库维护','TEMPLET','webpage/archive/templet/TempletMgr.html',3,1,1,'icon-table');
 insert into sys_function(FUNCTIONID,FUNCHINESENAME,FUNENGLISHNAME,FUNPATH,FUNORDER,FUNSYSTEM,FUNPARENT,FUNICON) values ('5','档案管理','ARCHIVEMANAGE','',-1,1,0,'icon-page-gear');
 insert into sys_function(FUNCTIONID,FUNCHINESENAME,FUNENGLISHNAME,FUNPATH,FUNORDER,FUNSYSTEM,FUNPARENT,FUNICON) values ('6','档案管理','ARCHIVE','webpage/archive/archive/ArchiveMgr.html',1,1,5,'icon-page');
+INSERT INTO `SYS_FUNCTION` (`FUNCTIONID`,`FUNCHINESENAME`,`FUNENGLISHNAME`,`FUNPATH`,`FUNORDER`,`FUNSYSTEM`,`FUNPARENT`,`FUNICON`) VALUES ('7','文件管理','FILEMGR','webpage/archive/document/DocumentMgr.html',1,1,'5','icon-page');
 
 
 --sys_TEMPLET 模板表

@@ -9,6 +9,7 @@ import com.yapu.archive.service.itf.IDocService;
 import com.yapu.archive.service.itf.IDocserverService;
 import com.yapu.archive.vo.UploadVo;
 import com.yapu.system.common.BaseAction;
+import com.yapu.system.util.Coverter;
 import com.yapu.system.util.FtpUtil;
 import org.apache.struts2.ServletActionContext;
 
@@ -31,6 +32,7 @@ public class DocAction extends BaseAction{
 
     private IDocserverService docserverService;
     private IDocService docService;
+    private String docId;
 
     private String tableid;
     private String selectRowid;
@@ -88,7 +90,7 @@ public class DocAction extends BaseAction{
             doc.setDocnewname(newName);
             doc.setDoclength(String.valueOf(dstFile.getTotalSpace()));
             doc.setDocoldname(oldName);
-            doc.setDocpath(dstFile.getPath());
+            doc.setDocpath(contextPath+newName);
             doc.setDoctype(docType);
             doc.setCreater("上传者");
             doc.setCreatetime("");
@@ -97,6 +99,51 @@ public class DocAction extends BaseAction{
 
         }
         return null;
+    }
+    public String delete() throws Exception {
+        docService.deleteDoc(this.getDocId());
+        return null;
+    }
+    public String read() throws Exception {
+        String contextPath = ServletActionContext.getServletContext().getRealPath(this.getSavePath())+ File.separator;
+        SysDoc doc = docService.selectByPrimaryKey(this.getDocId());
+        String type =doc.getDoctype();
+        String swfPath="";
+        if(type.equals(".pdf"))        {
+            swfPath  =  contextPath+doc.getDocnewname()+".swf";
+        }else{
+            swfPath  =  contextPath+doc.getDocnewname()+".pdf.swf";
+        }
+        File swfFile = new File(swfPath);
+        //swf已经存在直接读取文件
+        if(swfFile.exists()) {
+            outSwf(swfFile);
+        }else{
+             //pdf 文件直接转换为swf
+            if(type.equals(".pdf")){
+                swfFile = Coverter.PdfToSwf(new File(doc.getDocpath()));
+                outSwf(swfFile);
+            }else if(type.equals(".doc")||type.equals(".docx")||
+                    type.equals(".ppt")||type.equals(".pptx")||
+                    type.equals(".xls")||type.equals(".xlsx")){
+                File pdf = Coverter.toPdf(new File(doc.getDocpath()));
+                swfFile = Coverter.PdfToSwf(pdf);
+                outSwf(swfFile);
+            }
+        }
+        return null;
+    }
+    private void outSwf(File file)throws Exception{
+        this.getResponse().setContentType("application/x-shockwave-flash");
+        OutputStream os = this.getResponse().getOutputStream(); // 页面输出流，jsp/servlet都可以
+        InputStream is = new FileInputStream(file); // 文件输入流
+        byte[] bs = new byte[BUFFER_SIZE];  // 读取缓冲区
+        int len;
+        while((len=is.read(bs))!=-1){ // 循环读取
+            os.write(bs,0,len); // 写入到输出流
+        }
+        is.close();  // 关闭
+        os.close(); // 关闭
     }
     public String uploadFile() throws IOException {
         String extName = "";//扩展名
@@ -271,4 +318,15 @@ public class DocAction extends BaseAction{
     public void setFile(File file) {
         this.file = file;
     }
+
+    public String getDocId() {
+        return docId;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
+    }
+
+
+
 }

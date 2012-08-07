@@ -48,12 +48,57 @@ jQuery(function($){
             iconCls:"icon-page-delete",
             disabled:false,
             text:"删除",
-            handler:function(){ }
+            handler:function(){
+                var selectedRows =  grid.getSelectedRows();
+                var item = dataView.getItem(selectedRows[0]);
+                $.ajax({
+                    async : false,
+                    url : "docDelete.action?r="+Math.random()+"&docId="+item.docid,
+                    type : 'post',
+                    dataType : 'script',
+                    success : function(data) {
+                        location.reload();
+                    }
+
+                });
+            }
         },{
             text:"刷新",
-            iconCls:"icon-page-copy",
+            iconCls:"icon_refresh",
             handler:function(){
                 location.reload();
+            }
+        },{
+            text:"查看",
+            iconCls:"icon-page-copy",
+            handler:function(){
+                var selectedRows =  grid.getSelectedRows();
+                var item = dataView.getItem(selectedRows[0]);
+               /* $.ajax({
+                    async : false,
+                    url : "docRead.action?r="+Math.random()+"&docId="+item.docid,
+                    type : 'post',
+                    dataType : 'script',
+                    success : function(data) {
+                        location.reload();
+                    }
+
+                });*/
+                $.window({
+                    showModal	: true,
+                    modalOpacity: 0.5,
+                    title		: "选择文件",
+                    url         : "./DocReader.html?docId="+item.docid,
+                    width		: 800,
+                    height		: 600,
+                    showFooter	: false,
+                    showRoundCorner: true,
+                    minimizable	: false,
+                    maximizable	: false,
+                    onClose	: function(wnd) {
+                        //location.reload();
+                    }
+                });
             }
         }
         ]});

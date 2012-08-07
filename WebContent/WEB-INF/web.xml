@@ -27,7 +27,9 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
+    <listener>
+        <listener-class>com.yapu.system.listener.SysInitListener</listener-class>
+    </listener>
 <!--	<servlet>
 		<servlet-name>JSPSupportServlet</servlet-name>
 		<servlet-class>
@@ -36,19 +38,7 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>-->
 
-    <servlet>
-        <description>Plupload</description>
-        <display-name>Plupload</display-name>
-        <servlet-name>PluploadServlet</servlet-name>
-        <servlet-class>
-            com.yapu.system.util.PluploadServlet
-        </servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>PluploadServlet</servlet-name>
-        <url-pattern>/servlet/Plupload</url-pattern>
-    </servlet-mapping>
+
 
 	<!-- struts过滤 -->
 	<filter>

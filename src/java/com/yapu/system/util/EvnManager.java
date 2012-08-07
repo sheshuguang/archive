@@ -1,11 +1,11 @@
 package com.yapu.system.util;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 
 public class EvnManager {
 	private static String contexdDir="";
@@ -26,7 +26,8 @@ public class EvnManager {
 		commandList.add("/min");
 		commandList.add("/D"+initbatDir);
 		commandList.add("init.bat");		
-		sysProcess.runCommandLine(commandList);
+		//sysProcess.runCommandLine(commandList);
+        sysProcess.initFlashPaperCreator();
 	}
 	public static void initPdf2swf(){
 		FilePathMgr fpm = new FilePathMgr();

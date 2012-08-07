@@ -13,7 +13,9 @@ jQuery(function($) {
         // Specify what files to browse for
         filters : [
             {title : "Image files", extensions : "jpg,gif,png"},
-            {title : "rar files", extensions : "rar,exe"},
+            {title : "rar files", extensions : "rar"},
+            {title : "pdf files", extensions : "pdf"},
+            {title : "office files", extensions : "doc,docx,ppt,pptx,xls,xlsx"},
             {title : "exe files", extensions : "exe"},
             {title : "Zip files", extensions : "zip,rar,exe"}
         ],

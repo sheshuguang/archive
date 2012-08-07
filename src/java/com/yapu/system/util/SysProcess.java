@@ -1,7 +1,6 @@
 package com.yapu.system.util;
 
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,10 +97,8 @@ public class SysProcess {
 	    }
 
 
-		public void initFlashPaperCreator(HttpServletRequest request) {		
-			
+		public void initFlashPaperCreator() {
 			try {
-				
 			FilePathMgr fpm = new FilePathMgr();
 			String fpcroot = fpm.getFlashPaperCreatorRoot();		
 			
