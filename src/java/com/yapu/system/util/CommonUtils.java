@@ -1,5 +1,7 @@
 package com.yapu.system.util;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +11,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 public class CommonUtils {
 	public CommonUtils() {
@@ -241,6 +240,18 @@ public class CommonUtils {
 		}
 		return false;
 	}
+
+    public static boolean  isPdfPrintType(String filename){
+        boolean flag = false;
+        filename = filename.toLowerCase();
+        if(filename.endsWith(".doc")) flag = true;
+        if(filename.endsWith(".docx")) flag = true;
+        if(filename.endsWith(".ppt")) flag = true;
+        if(filename.endsWith(".pptx")) flag = true;
+        if(filename.endsWith(".xls")) flag = true;
+        if(filename.endsWith(".xlsx")) flag = true;
+       return  flag;
+    }
 
 	public static void main(String[] args) {
 		System.out.println(isNumber("a123.123"));

@@ -43,7 +43,6 @@ public class EvnManager {
 		try {
 			FileUtils.writeLines(file, txt);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

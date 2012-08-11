@@ -9,7 +9,6 @@ public class SysProcess {
 	    public boolean excBat(String cmd){           
             try {
                     Process child = Runtime.getRuntime().exec(cmd);
-                   
                     InputStream in = child.getInputStream();
                     int c;
                     while ((c = in.read()) != -1) {
@@ -25,7 +24,6 @@ public class SysProcess {
             } catch (IOException e) {
                     e.printStackTrace();
             }
-    
 	    	return false;
 	    }
 	    public void runPdf2Swfexe(String fileInPath,String fileOutPath){
@@ -95,8 +93,6 @@ public class SysProcess {
             System.out.println("process.runCommandLine:" +process.exitValue()); 	
 	    	
 	    }
-
-
 		public void initFlashPaperCreator() {
 			try {
 			FilePathMgr fpm = new FilePathMgr();
@@ -132,9 +128,6 @@ public class SysProcess {
 			srcFile = new File(fpcroot+"init"+File.separatorChar+"flashpaperprinterui2.dll");		
 			destFile= new File(fpcroot+"flashpaperprinterui2.dll");
             FileOperate.moveFile(srcFile, destFile);
-			
-			
-			 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -163,9 +156,6 @@ public class SysProcess {
                   message.append(line + System.getProperty("line.separator"));
               }      
               process.waitFor();
-              
-              
-			 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -174,10 +164,7 @@ public class SysProcess {
                     process.destroy();
             }
             process.destroy();
-            
             System.out.println("process.exitValue():" +process.exitValue());
-	    	
-	    
 		}
 		
 	    public void runDll32(String fpcroot){
@@ -202,9 +189,6 @@ public class SysProcess {
                   message.append(line + System.getProperty("line.separator"));
               }      
               process.waitFor();
-              
-              
-			 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -213,7 +197,6 @@ public class SysProcess {
                     process.destroy();
             }
             process.destroy();
-            
             System.out.println("process.exitValue():" +process.exitValue());
 	    	
 	    }
@@ -238,9 +221,6 @@ public class SysProcess {
                   message.append(line + System.getProperty("line.separator"));
               }      
               process.waitFor();
-              
-              
-			 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -249,22 +229,8 @@ public class SysProcess {
                     process.destroy();
             }
             process.destroy();
-            
             System.out.println("process.exitValue():" +process.exitValue());
 	    	
-	    	
 	    }
-	    
-        public static void main(String[] args) {
-        	SysProcess sp = new SysProcess();
-        	
-        	//sp.initFlashPaperCreator("M:\\eclipse3.5\\DocManager\\WebContent\\");
-        	// String cmdd=" cmd /c start /D\"D:\\Tomcat5. 0 \\bin\\\"  startup.bat ";
-        	 String cmd = "cmd /c start /D\"M:\\eclipse3.5\\DocManager\\WebContent\\WEB-INF\\tools\\FlashPaperCreator\\init\\\" init.bat";
-        	 sp.excBat(cmd);
-        	
-}
-
-
 
 }

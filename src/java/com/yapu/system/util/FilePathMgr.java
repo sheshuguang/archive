@@ -5,7 +5,7 @@ import java.io.File;
 public class FilePathMgr {
 	private String ctxDir;	
 	public FilePathMgr(){		
-		this.ctxDir = EvnManager.getContexdDir();		
+		this.ctxDir = EvnManager.getContexdDir(); //"D:\\workspaces\\workspace\\archive\\WebContent\\"
 	}	
 	public String getFlashPaperCreatorRoot(){		
 		

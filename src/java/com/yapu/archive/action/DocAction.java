@@ -9,6 +9,7 @@ import com.yapu.archive.service.itf.IDocService;
 import com.yapu.archive.service.itf.IDocserverService;
 import com.yapu.archive.vo.UploadVo;
 import com.yapu.system.common.BaseAction;
+import com.yapu.system.util.CommonUtils;
 import com.yapu.system.util.Coverter;
 import com.yapu.system.util.FtpUtil;
 import org.apache.struts2.ServletActionContext;
@@ -107,30 +108,19 @@ public class DocAction extends BaseAction{
     public String read() throws Exception {
         String contextPath = ServletActionContext.getServletContext().getRealPath(this.getSavePath())+ File.separator;
         SysDoc doc = docService.selectByPrimaryKey(this.getDocId());
-        String type =doc.getDoctype();
-        String swfPath="";
-        if(type.equals(".pdf"))        {
-            swfPath  =  contextPath+doc.getDocnewname()+".swf";
-        }else{
-            swfPath  =  contextPath+doc.getDocnewname()+".pdf.swf";
-        }
-        File swfFile = new File(swfPath);
-        //swf已经存在直接读取文件
-        if(swfFile.exists()) {
-            outSwf(swfFile);
-        }else{
-             //pdf 文件直接转换为swf
-            if(type.equals(".pdf")){
-                swfFile = Coverter.PdfToSwf(new File(doc.getDocpath()));
-                outSwf(swfFile);
-            }else if(type.equals(".doc")||type.equals(".docx")||
-                    type.equals(".ppt")||type.equals(".pptx")||
-                    type.equals(".xls")||type.equals(".xlsx")){
+        String filename = doc.getDocnewname();
+        File swfFile = null;
+        if(filename.toLowerCase().endsWith(".pdf")) {
+            swfFile = new File(contextPath+filename+".swf");
+            if(!swfFile.exists()) swfFile =  Coverter.PdfToSwf(new File(doc.getDocpath()));
+        }else if(CommonUtils.isPdfPrintType(filename)){
+            swfFile = new File(contextPath+filename+".pdf.swf");
+            if(!swfFile.exists()) {
                 File pdf = Coverter.toPdf(new File(doc.getDocpath()));
                 swfFile = Coverter.PdfToSwf(pdf);
-                outSwf(swfFile);
             }
         }
+        outSwf(swfFile);
         return null;
     }
     private void outSwf(File file)throws Exception{
