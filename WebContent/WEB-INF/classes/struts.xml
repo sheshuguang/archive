@@ -15,6 +15,6 @@
 	<include file="struts_config.xml" />
 	<include file="struts_docserver.xml" />
 	<include file="struts_archive.xml" />
-	
+	<include file="struts_authority.xml" />
 	<!-- Add packages here -->
 </struts>
