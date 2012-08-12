@@ -19,5 +19,6 @@
 		<!-- 保存用户帐户-->
 		<action name="moveAccount" class="accountAction" method="moveAccount"></action>
 		
-	</package>
+
+    </package>
 </struts>

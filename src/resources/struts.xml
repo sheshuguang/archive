@@ -4,6 +4,7 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
     <constant name="struts.multipart.maxSize" value="100000000" />
+    <constant name="struts.multipart.saveDir" value="/tmp"></constant>
 
     <constant name="struts.convention.exclude.parentClassLoader" value="false" />
 	<constant name="struts.enable.DynamicMethodInvocation" value="false" />

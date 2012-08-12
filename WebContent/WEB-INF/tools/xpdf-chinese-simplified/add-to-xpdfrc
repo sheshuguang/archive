@@ -1,0 +1,6 @@
+cidToUnicode	Adobe-GB1	D:\workspaces\workspace\archive\WebContent\WEB-INF\tools\xpdf-chinese-simplified\Adobe-GB1.cidToUnicode
+unicodeMap	ISO-2022-CN	D:\workspaces\workspace\archive\WebContent\WEB-INF\tools\xpdf-chinese-simplified\ISO-2022-CN.unicodeMap
+unicodeMap	EUC-CN		D:\workspaces\workspace\archive\WebContent\WEB-INF\tools\xpdf-chinese-simplified\EUC-CN.unicodeMap
+unicodeMap	GBK		D:\workspaces\workspace\archive\WebContent\WEB-INF\tools\xpdf-chinese-simplified\GBK.unicodeMap
+cMapDir		Adobe-GB1	D:\workspaces\workspace\archive\WebContent\WEB-INF\tools\xpdf-chinese-simplified\CMap
+toUnicodeDir			D:\workspaces\workspace\archive\WebContent\WEB-INF\tools\xpdf-chinese-simplified\CMap
