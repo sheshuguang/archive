@@ -11,9 +11,11 @@ import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.entity.SysFunction;
 import com.yapu.system.entity.SysFunctionExample;
+import com.yapu.system.entity.SysOrg;
 import com.yapu.system.entity.SysRole;
 import com.yapu.system.service.itf.IAccountService;
 import com.yapu.system.service.itf.IFunctionService;
+import com.yapu.system.service.itf.IOrgService;
 import com.yapu.system.service.itf.IRoleService;
 import com.yapu.system.util.Constants;
 import com.yapu.system.util.Logger;
@@ -26,14 +28,15 @@ public class LoginAction extends BaseAction {
 	private Logger log = new Logger(LoginAction.class);
 	
 	private IAccountService accountService;
+	private IOrgService orgService;
 	private IRoleService roleService;
 	private IFunctionService functionService;
 	private String accountcode;
 	private String password;
 	
 	public String login(){
-		setAccountcode("admin");
-		setPassword("password");
+//		setAccountcode("admin");
+//		setPassword("password");
 		
 		//登录时先判断session里是否有该账户,防止同一台机器有2个session登录
 		SysAccount accountTmp = (SysAccount)this.getHttpSession().getAttribute(Constants.user_in_session);
@@ -98,7 +101,14 @@ public class LoginAction extends BaseAction {
 		}
 		else {
 			//得到帐户的角色
-			SysRole role = accountService.getAccountOfRole(account);
+			SysRole role = new SysRole();
+			role = accountService.getAccountOfRole(account);
+			
+			//如果帐户没有自己的角色，读取帐户所属组的角色
+			if (null == role) {
+				SysOrg org = accountService.getAccountOfOrg(account);
+				role = orgService.getOrgOfRole(org);
+			}
 //			String str = "";
 			if (null != role) {
 				//根据角色，得到角色对应的功能权限
@@ -147,6 +157,10 @@ public class LoginAction extends BaseAction {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setOrgService(IOrgService orgService) {
+		this.orgService = orgService;
 	}
 	
 }

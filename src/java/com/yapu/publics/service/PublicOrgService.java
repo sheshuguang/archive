@@ -11,6 +11,8 @@ import com.yapu.archive.dao.itf.SysOrgTreeDAO;
 import com.yapu.archive.dao.itf.SysTreeDAO;
 import com.yapu.archive.entity.SysOrgTree;
 import com.yapu.archive.entity.SysOrgTreeExample;
+import com.yapu.archive.entity.SysTree;
+import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.system.entity.SysOrg;
 import com.yapu.system.service.impl.OrgService;
 
@@ -66,6 +68,34 @@ public class PublicOrgService extends OrgService {
 		}
 		return null;
 	}
+	/*
+	 * (non-Javadoc)
+	 * @see com.yapu.system.service.impl.OrgService#getTree(java.lang.String)
+	 */
+	public List<SysTree> getTree(String id) {
+		if (null != id) {
+			//1、首先组id，得到该组与资源树关系表集合
+			SysOrgTreeExample orgTreeExample = new SysOrgTreeExample();
+			orgTreeExample.createCriteria().andOrgidEqualTo(id);
+			List<SysOrgTree> orgTreeList = orgtreeDao.selectByExample(orgTreeExample);
+			//如果该账户有跟资源树关联
+			if (null != orgTreeList && orgTreeList.size() >0 ) {
+				List<String> treeIDList = new ArrayList<String>();
+				//得到tree的id集合
+				for (int i=0;i<orgTreeList.size();i++) {
+					treeIDList.add(orgTreeList.get(i).getTreeid());
+				}
+				SysTreeExample treeExample = new SysTreeExample();
+				treeExample.createCriteria().andTreeidIn(treeIDList);
+				
+				List<SysTree> treeList = treeDao.selectByExample(treeExample);
+				return treeList;
+			}
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * 设置组与资源的关联
 	 * @param orgTreeList

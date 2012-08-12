@@ -11,7 +11,7 @@
 session.removeAttribute(Constants.user_in_session);
 session.invalidate();
 out.println("<script language='javascript'>");
-out.println("window.parent.location.href='/login.jsp'");
+out.println("window.parent.location.href='/archive/login.jsp'");
 out.println("</script>");
 %>	
 

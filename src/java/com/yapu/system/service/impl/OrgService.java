@@ -410,5 +410,10 @@ public class OrgService implements IOrgService {
 	public void setRoleDao(SysRoleDAO roleDao) {
 		this.roleDao = roleDao;
 	}
+	@Override
+	public List<SysTree> getTree(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

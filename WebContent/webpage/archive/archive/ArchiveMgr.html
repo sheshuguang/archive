@@ -101,32 +101,5 @@ var copyMap = new HashMap();
 			</div>
 		</div>
 	</div>
-	
-    <div id="uploadWindow" class="easyui-window" title="电子文件上传" closed="true" modal="true" iconCls="icon_user_go" style="display:none;width:300px;height:200px;padding:5px;">
-    	<div class="easyui-layout" fit="true">
-    		<div region="center" border="false" style="padding:1px;background:#fff;border:1px solid #ccc;">
-                <div class="easyui-layout" fit="true" style="background:#ccc;">
-                    <div region="center">
-                        <div id="fileQueue"></div>
-                    </div>
-                    <div region="east" split="true" style="width:200px;">
-                        <p>
-                        <p id="selectfiles" name="selectfiles">0 文件等待上传</p>
-                        <p id="kb" name="kb"> 0 文件总字节数</p>
-                        <p id="uploadfiles" name="uploadfiles">0 文件成功上传</p>
-                        </p>
-                    </div>
-                </div>
-
-    		</div>
-
-    		<div region="south" border="false" style="text-align:right;height:30px;line-height:30px;">
-                <input type="file" name="archive" id="uploadify" />
-    			<a class="easyui-linkbutton" iconCls="icon_ok" href="javascript:void(0)" plain="true" onclick="jQuery('#uploadify').uploadifyUpload()">开始上传</a>
-    			<a class="easyui-linkbutton" iconCls="icon_cancel" href="#" plain="true" onclick="jQuery('#uploadify').uploadifyClearQueue();">取消</a>
-                <a class="easyui-linkbutton" iconCls="icon_cancel" href="#" plain="true" onclick="$('#uploadWindow').window('close');">关闭</a>
-    		</div>
-    	</div>
-    </div>
 </body>
 </html>
