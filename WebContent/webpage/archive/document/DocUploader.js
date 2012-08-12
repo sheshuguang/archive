@@ -1,7 +1,7 @@
 jQuery(function($) {
     $("#uploader").pluploadQueue({
         // General settings
-        runtimes : 'gears,flash,silverlight,browserplus,html5',
+        runtimes : 'silverlight,gears,html5,flash,browserplus',
         url : 'docUpload.action',
         max_file_size : '200mb',
         chunk_size : '1mb',
@@ -26,9 +26,8 @@ jQuery(function($) {
         // Silverlight settings
         silverlight_xap_url : '../../js/plupload/js/plupload.silverlight.xap'
     });
-
     // Client side form validation
-    $('form').submit(function(e) {
+   /* $('form').submit(function(e) {
         var uploader = $('#uploader').pluploadQueue();
 
         // Files in queue upload them first
@@ -46,5 +45,5 @@ jQuery(function($) {
         }
 
         return false;
-    });
+    });*/
 });
