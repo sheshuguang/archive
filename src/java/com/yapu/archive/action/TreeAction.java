@@ -2,23 +2,30 @@ package com.yapu.archive.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.yapu.archive.entity.SysAccountTree;
 import com.yapu.archive.entity.SysTree;
 import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.archive.service.itf.ITreeService;
 import com.yapu.publics.service.PublicAccountService;
 import com.yapu.publics.service.PublicOrgService;
 import com.yapu.system.common.BaseAction;
+import com.yapu.system.entity.SysAccount;
 import com.yapu.system.entity.SysFunction;
 import com.yapu.system.entity.SysFunctionExample;
 import com.yapu.system.entity.SysOrg;
+import com.yapu.system.service.itf.IAccountService;
+import com.yapu.system.service.itf.IOrgService;
+import com.yapu.system.util.Constants;
 
 public class TreeAction extends BaseAction {
 	
 	private static final long serialVersionUID = 4266041911569683983L;
 	private ITreeService treeService;
-	
+	private IAccountService accountService;
+	private IOrgService orgService;
 	private String parentid;
 	private String treeid;
 	private String treename;
@@ -40,18 +47,57 @@ public class TreeAction extends BaseAction {
 		
 		StringBuilder resultStr = new StringBuilder();
 		
+		//获得帐户组或帐户的节点操作权限
+		SysAccount sessionAccount = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
+		
+		if (null == sessionAccount) {
+			return null;
+		}
+		
+		//首先得到帐户的档案树节点范围
+//		SysAccount account = new SysAccount();
+//		account.setAccountid(sessionAccount.getAccountid());
+		List<SysTree> authorityTree = new ArrayList<SysTree>();
+		authorityTree = accountService.getTree(sessionAccount.getAccountid());
+		
+		//判断帐户是否有档案树节点操作
+		if (null == authorityTree || authorityTree.size() < 1) {
+			//如果未设置帐户自己的树节点范围，读取所属组的范围
+			SysOrg org = accountService.getAccountOfOrg(sessionAccount);
+			authorityTree = orgService.getTree(org.getOrgid());
+			if (null == authorityTree && !"admin".equals(sessionAccount.getAccountcode())) {
+				resultStr.append("[{\"id\":\"0\",\"text\":\"档案结构树\",\"iconCls\":\"\",\"state\":\"open\",\"children\":[");
+				resultStr.append("]}]");
+				out.write(resultStr.toString());
+				return null;
+			}
+		}
+		List<String> treeidList = new ArrayList<String>();
+		if (null != authorityTree && authorityTree.size() > 0) {
+			for (SysTree tree : authorityTree) {
+				treeidList.add(tree.getTreeid());
+			}
+		}
+		
 		//获得父节点为nodeId的子节点
 		SysTreeExample example = new SysTreeExample();
-		example.createCriteria().andParentidEqualTo(tmpParent);
+		if ("admin".equals(sessionAccount.getAccountcode())) {
+			example.createCriteria().andParentidEqualTo(tmpParent);
+		}
+		else {
+			example.createCriteria().andParentidEqualTo(tmpParent).andTreeidIn(treeidList);
+		}
 		List<SysTree> treeList = treeService.selectByWhereNotPage(example);
 		
-		if(null!=treeList && treeList.size()>0){
-			if ("root".equals(parentid)) {
-				resultStr.append("[{\"id\":\"0\",\"text\":\"档案结构树\",\"iconCls\":\"\",\"state\":\"open\",\"children\":[");
-			}
-			else {
-				resultStr.append("[");
-			}
+		if ("root".equals(parentid)) {
+			resultStr.append("[{\"id\":\"0\",\"text\":\"档案结构树\",\"iconCls\":\"\",\"state\":\"open\",\"children\":[");
+			
+		}
+		else {
+			resultStr.append("[");
+		}
+		
+		if(null!=treeList && treeList.size()>0 ){
 			for(int i=0;i<treeList.size();i++){
 				SysTree temp =(SysTree)treeList.get(i);
 				resultStr.append("{");
@@ -70,6 +116,14 @@ public class TreeAction extends BaseAction {
 			if ("root".equals(parentid)) {
 				resultStr.append("}]");
 			}
+			out.write(resultStr.toString());
+		}
+		else {
+			resultStr.append("]");
+			if ("root".equals(parentid)) {
+				resultStr.append("}]");
+			}
+			System.out.println(resultStr.toString());
 			out.write(resultStr.toString());
 		}
 		return null;
@@ -163,6 +217,12 @@ public class TreeAction extends BaseAction {
 	}
 	public void setTreetype(String treetype) {
 		this.treetype = treetype;
+	}
+	public void setAccountService(IAccountService accountService) {
+		this.accountService = accountService;
+	}
+	public void setOrgService(IOrgService orgService) {
+		this.orgService = orgService;
 	}
 
 }

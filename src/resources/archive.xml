@@ -186,6 +186,7 @@
     
     <bean id="loginAction" class="com.yapu.system.action.LoginAction">
         <property name="accountService" ref="publicAccountService" />
+        <property name="orgService" ref="publicOrgService" />
         <property name="roleService" ref="roleService" />
         <property name="functionService" ref="functionService" />
     </bean>
@@ -229,6 +230,8 @@
     </bean>
     <bean id="treeAction" class="com.yapu.archive.action.TreeAction">
         <property name="treeService" ref="treeService" />
+        <property name="accountService" ref="publicAccountService" />
+        <property name="orgService" ref="publicOrgService" />
     </bean>
     <bean id="archiveAction" class="com.yapu.archive.action.ArchiveAction">
         <property name="treeService" ref="treeService" />

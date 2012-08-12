@@ -140,6 +140,8 @@ public interface IOrgService {
 	
 	SysOrgTree getOrgOfTree(String id);
 	
+	List<SysTree> getTree(String id);
+	
 	int updateOrgOfTree(SysOrgTree record,SysOrgTreeExample ex);
 	
 }

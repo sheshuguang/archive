@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.yapu.archive.entity.SysAccountTree;
 import com.yapu.archive.entity.SysAccountTreeExample;
+import com.yapu.archive.entity.SysTree;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.entity.SysAccountExample;
 import com.yapu.system.entity.SysOrg;
@@ -167,6 +168,8 @@ public interface IAccountService {
 	int updateAccountOfTree(SysAccountTree AccountTree);
 	
 	SysAccountTree getAccountOfTree(String id);
+	
+	List<SysTree> getTree(String id);
 	
 	int updateAccountOfTree(SysAccountTree record,SysAccountTreeExample ex);
 	

@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import com.yapu.archive.entity.SysAccountTree;
 import com.yapu.archive.entity.SysAccountTreeExample;
+import com.yapu.archive.entity.SysTree;
 import com.yapu.system.dao.itf.SysAccountDAO;
 import com.yapu.system.dao.itf.SysAccountOrgDAO;
 import com.yapu.system.dao.itf.SysAccountRoleDAO;
@@ -559,5 +560,11 @@ public class AccountService implements IAccountService {
 			SysAccountTreeExample ex) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public List<SysTree> getTree(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
