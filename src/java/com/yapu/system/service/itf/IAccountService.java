@@ -10,7 +10,7 @@ package com.yapu.system.service.itf;
 import java.util.List;
 
 import com.yapu.archive.entity.SysAccountTree;
-import com.yapu.archive.entity.SysTree;
+import com.yapu.archive.entity.SysAccountTreeExample;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.entity.SysAccountExample;
 import com.yapu.system.entity.SysOrg;
@@ -149,5 +149,25 @@ public interface IAccountService {
 	 * @return
 	 */
 	boolean deleteAccountOfRole(SysAccount account);
+	
+	//======================组与档案树=======================
+	/**
+	 * 根据组对象，得到组对应的档案树列表。这个方法在accountservice的继承类publicaccountservice里实现
+	 * @param account
+	 * @return
+	 */
+	List<SysAccountTree> getAccountOfTree(SysAccount account);
+	
+	Boolean deleteAccountOfTree(List<SysAccountTree> list);
+	
+	Boolean deleteAccountOfTree(SysAccountTreeExample example);
+	
+	Boolean insertAccountOfTree(List<SysAccountTree> list);
+	
+	int updateAccountOfTree(SysAccountTree AccountTree);
+	
+	SysAccountTree getAccountOfTree(String id);
+	
+	int updateAccountOfTree(SysAccountTree record,SysAccountTreeExample ex);
 	
 }

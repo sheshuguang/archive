@@ -242,7 +242,6 @@ $(function(){
 						changesRows.deleted.push(deleteRows[j]);
 					}
 				}
-				//alert(JSON.stringify(changesRows));
 				var par = "par=" + JSON.stringify(changesRows);
 
 				$.post("saveAccount.action",par,function(data){

@@ -71,11 +71,7 @@ public class LoginAction extends BaseAction {
 	 * @throws IOException
 	 */
 	public String menu() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out  = this.getPrintWriter();
 		
 		SysAccount account = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
 		if (null == account) {

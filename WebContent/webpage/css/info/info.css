@@ -1,0 +1,28 @@
+/* CSS Document */
+ul,li{margin:0;padding:0;list-style:none;}
+.right{width:98%;overflow:hidden;_float:right;font-size:12px;line-height:150%;}
+
+.right h3{ background:#deedf9;height:24px;line-height:24px;padding-left:13px;}
+
+.right h3 a{font-weight:400;font-size:12px;float:right;margin-right:10px}
+.right h3.help_tit{background:url("pp.gif") repeat-x;height:14px;line-height:14px;padding-left:20px;}
+.right h3.help_tit strong{float:left;height:16px;line-height:16px;top:-1px;top:0px\9;*top:0px;position:relative;padding:0 4px;background:#fff;font-size:14px;color:#333333;}
+.right h3.help_tit a{font-weight:400;height:14px;line-height:14px;font-size:12px;float:right;margin-right:10px}
+
+.help_box{padding:10px 10px 10px 20px;}
+
+.help_zybox{border:#e5e5e5 1px solid;padding:10px;margin-bottom:10px;font-size:12px;}
+.help_zybox .tit{height:26px;color:#cc0000;font-weight:bold;;border-bottom:#dddddd 1px dashed;}
+
+
+
+.infoul{padding:10px 15px 0 15px;}
+.infoul li{width:100%;color:#666666;line-height:32px;}
+.infoul li strong,.help_zybox ul li font{color:#cc0000;font-size:12px;}
+
+.margin_l10{margin-left:10px}
+
+.margin_t5{margin-top:5px}
+
+.List_Number li{ list-style-type:decimal; margin-left:25px;margin-bottom:3px;line-height:21px;}
+

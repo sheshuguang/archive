@@ -3,7 +3,8 @@
 
 
 .grid-div {
-  background: white;
+  background: none repeat scroll 0 0 white;
+  border: 1px solid gray;
   outline: 0;
 }
 

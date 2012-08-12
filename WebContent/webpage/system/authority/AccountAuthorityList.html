@@ -1,0 +1,54 @@
+
+
+<script type="text/javascript" src="AccountAuthorityList.js"></script>
+
+<div class="right" id="top">
+	<h3 class="help_tit">
+		<strong>帐户权限信息</strong>
+	</h3>
+	<div class="help_box">
+		<div class="help_zybox">
+			<div class="tit">帐户基本信息</div>
+			<ul class="infoul">
+				<li><strong>1.</strong>帐户名称: <span id="accountName"></span></li>
+				<li><strong>2.</strong>帐户角色：<span id="accountRole"></span>
+					<span style="float:right">
+						<ul class="blue">
+							<li><a onclick="javascript:authorityCommon.openSelectRoleWindows('account');" title="设置角色"><span></span>设置角色</a></li>
+						</ul>
+					</span>
+					<div class="margin_l10 margin_t5">
+						A. 帐户在未设置角色的情况下，继承所属组的角色。<br>
+						B. 帐户如果单独设置了角色，系统将按照帐户自己的角色进行配置。
+					</div></li>
+			</ul>
+		</div>
+		<div class="help_zybox">
+			<div class="tit">档案节点的帐户访问权限</div>
+			<div id="toolbar_account_tree"></div>
+			<div class="help_zybox"><div id="accounttree" class="easyui-tree"></div></div>
+			<div class="tit">档案节点电子全文的帐户权限</div>
+			<div id="toolbar_account_doc"></div>
+			<div class="help_zybox">
+				<input type="checkbox" name="account_filescan" id="account_filescan" value ="1" disabled>在线浏览电子全文    
+			 	<input type="checkbox" name="account_filedown" id="account_filedown" value ="1" disabled>下载电子全文   
+			 	<input type="checkbox"  name="account_fileprint" id="account_fileprint" value ="1" disabled>打印电子全文   
+			</div>
+			<ul class="infoul">
+				<li><strong>1.</strong>只有赋予了档案节点访问权限，在所有档案管理、查询、检索、电子全文中才有权力浏览档案。</li>
+				<li><strong>2.</strong>档案节点访问权限的范围说明
+					<div class="margin_l10 margin_t5">
+						A. 帐户在未设置档案节点访问权限的情况下，继承所属组的访问权限。<br>
+						B. 帐户如果单独设置了档案节点访问权限，系统将按照帐户自己的访问权限进行配置。
+					</div>
+				</li>
+				<li><strong>3.</strong>操作说明
+					<div class="margin_l10 margin_t5">
+						A. 勾选帐户的档案树节点权限，保存。<br>
+						B. 保存成功后，选中树节点，进行电子全文权限选择，保存。
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

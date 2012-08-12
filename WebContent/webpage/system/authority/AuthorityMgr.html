@@ -1,0 +1,83 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- 系统基本css -->
+<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+<!-- 信息展示的样式。临时的，可以换 -->
+<link rel="stylesheet" type="text/css" href="../../css/info/info.css" />
+<!-- 按钮样式 -->
+<link rel="stylesheet" type="text/css" href="../../css/button/sliding.css" />
+<link rel="stylesheet" type="text/css" href="../../images/images.css" />
+<link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />
+<!-- jquery ui css 有一些插件用到了jquery ui。例如新的grid -->
+<link rel="stylesheet" href="../../js/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css" />
+<!-- jquery-window css 弹出式windows css-->
+<link type="text/css" href="../../js/jquery-window/css/jquery.window.css" rel="stylesheet">
+<script type="text/javascript" src="../../js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/jquery-easyui/jquery.toolbar.js"></script>
+<!-- archive的通用对象 -->
+<script type="text/javascript" src="../../js/us.archive.js"></script>
+<script type="text/javascript" src="../../js/us.archive.ui.js"></script>
+<script type="text/javascript" src="../../js/us.archive.util.js"></script>
+
+<script type="text/javascript" src="../../js/json2.js"></script>
+<script type="text/javascript" src="../../js/jquery-easyui/jquery.easyui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../../js/zebra-dialog/css/zebra_dialog.css" />
+<script type="text/javascript" src="../../js/zebra-dialog/js/zebra_dialog.js"></script>
+<script type="text/javascript" src="../../js/uuid.js"></script>
+<script type="text/javascript" src="AuthorityMgr.js"></script>
+
+<!-- slick grid -->
+<link rel="stylesheet" href="../../js/SlickGrid/slick.grid.css" type="text/css" />
+<link rel="stylesheet" href="../../js/SlickGrid/myGrid.css" type="text/css" />
+<!-- slick grid分页插件-->
+<link rel="stylesheet" href="../../js/SlickGrid/controls/slick.pager.css" type="text/css" />
+<script type="text/javascript" src="../../js/SlickGrid/lib/firebugx.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+
+<script type="text/javascript" src="../../js/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+
+<script type="text/javascript" src="../../js/SlickGrid/slick.core.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/plugins/slick.checkboxselectcolumn.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/plugins/slick.autotooltips.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/plugins/slick.rowselectionmodel.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/slick.dataview.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/slick.formatters.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/slick.editors.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/SelectCellEditor.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/controls/slick.pager.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/controls/slick.columnpicker.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/slick.grid.js"></script>
+
+<!-- jqueyr-window js -->
+<script type="text/javascript" src="../../js/jquery-window/jquery.window.js"></script>
+
+
+<title></title>
+</head>
+<body class="easyui-layout">
+	<div region="west" iconCls="icon-table" title="权限管理-帐户组列表" split="true" style="width:220px;padding1:0px;overflow:hidden;">
+		<ul id="orgtree" class="easyui-tree"></ul>
+	</div>
+	<div region="center"  style="overflow:hidden;" border="true">
+		<div id="tab" class="easyui-tabs" fit="true" border="false" plain="false">
+			<div title="操作帮助" style="padding:20px;overflow:hidden;"> 
+				<div style="margin-top:20px;">
+					<h3>帐户组操作：</h3>
+					<li>1.移动帐户组后，请手动刷新相关帐户组节点。</li> 
+					<li>2.移动帐户组，不能选择子几点。</li> 
+					<li></li>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="selectRoleWindows" style="display:none;">
+		<div style="position: relative; width: 100%; height: 350px; overflow: hidden">
+			<div id="toolbar"></div>
+			<div id="selectRoleDiv" class="grid-div" style="width: 100%; height: 290px"></div>
+		</div>
+	</div>
+</body>
+</html>

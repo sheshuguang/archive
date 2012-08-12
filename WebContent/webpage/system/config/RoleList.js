@@ -202,7 +202,6 @@
 	   							changesRows.inserted.push(insertRows[i]);
 	   						}
 	   					}
-	
 	   					if (updateRows.length>0) {
 	   						for (var k=0;k<updateRows.length;k++) {
 	   							changesRows.updated.push(updateRows[k]);

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.yapu.archive.entity.SysOrgTree;
+import com.yapu.archive.entity.SysOrgTreeExample;
+import com.yapu.archive.entity.SysTree;
 import com.yapu.system.dao.itf.SysAccountDAO;
 import com.yapu.system.dao.itf.SysAccountOrgDAO;
 import com.yapu.system.dao.itf.SysOrgDAO;
@@ -265,9 +268,9 @@ public class OrgService implements IOrgService {
 	}
 	/*
 	 * (non-Javadoc)
-	 * @see com.yapu.system.service.itf.IOrgService#setOrgOfRole(com.yapu.system.entity.SysOrg, java.lang.Long)
+	 * @see com.yapu.system.service.itf.IOrgService#updateOrgOfRole(com.yapu.system.entity.SysOrg, java.lang.String)
 	 */
-	public Boolean setOrgOfRole(SysOrg org, String roleID) {
+	public Boolean updateOrgOfRole(SysOrg org, String roleID) {
 		
 		if (null != org) {
 			SysOrgRoleExample orgRoleExample = new SysOrgRoleExample();
@@ -300,15 +303,15 @@ public class OrgService implements IOrgService {
 	}
 	/*
 	 * (non-Javadoc)
-	 * @see com.yapu.system.service.itf.IOrgService#setOrgOfRole(java.util.List, java.lang.Long)
+	 * @see com.yapu.system.service.itf.IOrgService#updateOrgOfRole(java.util.List, java.lang.String)
 	 */
-	public Boolean setOrgOfRole(List<String> orgIDList, String roleID) {
+	public Boolean updateOrgOfRole(List<String> orgIDList, String roleID) {
 		if (null != orgIDList && orgIDList.size() >0) {
 			if (null != roleID && !"".equals(roleID)) {
 				for (int i=0;i<orgIDList.size();i++) {
 					SysOrg org = new SysOrg();
 					org.setOrgid(orgIDList.get(i));
-					setOrgOfRole(org,roleID);
+					updateOrgOfRole(org,roleID);
 				}
 				return true;
 			}
@@ -334,6 +337,63 @@ public class OrgService implements IOrgService {
 		}
 		return false;
 	}
+	/**
+	 * 继承类publicorgservice实现
+	 */
+	@Override
+	public List<SysOrgTree> getOrgOfTree(SysOrg org) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * 继承类publicorgservice实现
+	 */
+	@Override
+	public Boolean deleteOrgOfTree(List<SysOrgTree> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * 继承类publicorgservice实现
+	 */
+	@Override
+	public Boolean insertOrgOfTree(List<SysOrgTree> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * 继承类publicorgservice实现
+	 */
+	@Override
+	public int updateOrgOfTree(SysOrgTree orgTree) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	/**
+	 * 继承类publicorgservice实现
+	 */
+	@Override
+	public Boolean deleteOrgOfTree(SysOrgTreeExample example) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * 继承类publicorgservice实现
+	 */
+	@Override
+	public SysOrgTree getOrgOfTree(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * 继承类publicorgservice实现
+	 */
+	@Override
+	public int updateOrgOfTree(SysOrgTree record, SysOrgTreeExample ex) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	public void setOrgDao(SysOrgDAO orgDao) {
 		this.orgDao = orgDao;
@@ -350,4 +410,5 @@ public class OrgService implements IOrgService {
 	public void setRoleDao(SysRoleDAO roleDao) {
 		this.roleDao = roleDao;
 	}
+	
 }

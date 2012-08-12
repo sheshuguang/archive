@@ -6,8 +6,6 @@
 	<!-- 帐户组管理 -->
 	<package name="org" extends="struts-default" >
 		
-		<!-- 读取帐户组树 -->
-		<action name="orgtreeAction" class="orgAction" method="loadOrgTreeData"></action>
 		<!-- 新建账户组 -->
 		<action name="addOrg" class="orgAction" method="addOrg"></action>
 		<!-- 修改账户组 -->
@@ -16,5 +14,6 @@
 		<action name="delOrg" class="orgAction" method="deleteOrg"></action>
 		<!-- 移动账户组 -->
 		<action name="moveOrg" class="orgAction" method="moveOrg"></action>
+		
 	</package>
 </struts>

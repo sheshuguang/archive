@@ -13,8 +13,6 @@ import com.yapu.archive.dao.itf.SysAccountTreeDAO;
 import com.yapu.archive.dao.itf.SysTreeDAO;
 import com.yapu.archive.entity.SysAccountTree;
 import com.yapu.archive.entity.SysAccountTreeExample;
-import com.yapu.archive.entity.SysTree;
-import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.service.impl.AccountService;
 
@@ -43,14 +41,14 @@ public class PublicAccountService extends AccountService {
 	
 	/**
 	 * 更新账户的资源树关联
-	 * @param accountTreeList	账户与资源树关系表实体的集合。
+	 * @param list	账户与资源树关系表实体的集合。
 	 * @return 					tree or false
 	 */
-	public Boolean updateAccountOfTree(List<SysAccountTree> accountTreeList) {
-		if (null != accountTreeList && accountTreeList.size() > 0) {
+	public Boolean insertAccountOfTree(List<SysAccountTree> list) {
+		if (null != list && list.size() > 0) {
 			try {
-				for (int i=0;i<accountTreeList.size();i++) {
-					SysAccountTree accountTree = accountTreeList.get(i);
+				for (int i=0;i<list.size();i++) {
+					SysAccountTree accountTree = list.get(i);
 					accounttreeDao.insertSelective(accountTree);
 				}
 				return true;
@@ -67,10 +65,46 @@ public class PublicAccountService extends AccountService {
 	 * @param accountTree
 	 * @return
 	 */
-	public Boolean updateAccountOfTree(SysAccountTree accountTree) {
+	public int updateAccountOfTree(SysAccountTree accountTree) {
+		
 		if (null != accountTree) {
 			try {
-				accounttreeDao.updateByPrimaryKey(accountTree);
+				return accounttreeDao.updateByPrimaryKeySelective(accountTree);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				return 0;
+			}
+		}
+		return 0;
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see com.yapu.system.service.impl.AccountService#updateAccountOfTree(com.yapu.archive.entity.SysAccountTree, com.yapu.archive.entity.SysAccountTreeExample)
+	 */
+	public int updateAccountOfTree(SysAccountTree record,SysAccountTreeExample ex) {
+		if (null != ex) {
+			try {
+				return accounttreeDao.updateByExampleSelective(record, ex);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * 删除账户与资源树的关联
+	 * @param accountTree
+	 * @return
+	 */
+	public Boolean deleteAccountOfTree(List<SysAccountTree> list) {
+		
+		if (list.size() > 0) {
+			try {
+				for (int i=0;i<list.size();i++) {
+					SysAccountTree accountTree = list.get(i);
+					accounttreeDao.deleteByPrimaryKey(accountTree.getAccountTreeId());
+				}
 				return true;
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -79,21 +113,18 @@ public class PublicAccountService extends AccountService {
 		}
 		return false;
 	}
-	/**
-	 * 删除账户与资源树的关联
-	 * @param accountTree
-	 * @return
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.yapu.system.service.impl.AccountService#deleteAccountOfTree(com.yapu.archive.entity.SysAccountTreeExample)
 	 */
-	public int deleteAccountOfTree(SysAccountTree accountTree) {
-		if (null != accountTree) {
-			try {
-				return accounttreeDao.deleteByPrimaryKey(accountTree.getAccountTreeId());
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				return 0;
-			}
+	public Boolean deleteAccountOfTree(SysAccountTreeExample example) {
+		try {
+			accounttreeDao.deleteByExample(example);
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		return 0;
+		return true;
 	}
 	
 	
@@ -102,25 +133,37 @@ public class PublicAccountService extends AccountService {
 	 * @param account
 	 * @return
 	 */
-	public List<SysTree> getAccountOfTree(SysAccount account) {
+	public List<SysAccountTree> getAccountOfTree(SysAccount account) {
 		if (null != account) {
 			//1、首先按账户id，得到该账户与资源树关系表集合
 			SysAccountTreeExample accountTreeExample = new SysAccountTreeExample();
 			accountTreeExample.createCriteria().andAccountidEqualTo(account.getAccountid());
 			List<SysAccountTree> accountTreeList = accounttreeDao.selectByExample(accountTreeExample);
-			//如果该账户有跟资源树关联
-			if (null != accountTreeList && accountTreeList.size() >0 ) {
-				List<String> treeIDList = new ArrayList<String>();
-				//得到tree的id集合
-				for (int i=0;i<accountTreeList.size();i++) {
-					treeIDList.add(accountTreeList.get(i).getTreeid());
-				}
-				SysTreeExample treeExample = new SysTreeExample();
-				treeExample.createCriteria().andTreeidIn(treeIDList);
-				
-				List<SysTree> treeList = treeDao.selectByExample(treeExample);
-				return treeList;
-			}
+			return accountTreeList;
+//			//如果该账户有跟资源树关联
+//			if (null != accountTreeList && accountTreeList.size() >0 ) {
+//				List<String> treeIDList = new ArrayList<String>();
+//				//得到tree的id集合
+//				for (int i=0;i<accountTreeList.size();i++) {
+//					treeIDList.add(accountTreeList.get(i).getTreeid());
+//				}
+//				SysTreeExample treeExample = new SysTreeExample();
+//				treeExample.createCriteria().andTreeidIn(treeIDList);
+//				
+//				List<SysTree> treeList = treeDao.selectByExample(treeExample);
+//				return treeList;
+//			}
+		}
+		return null;
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see com.yapu.system.service.impl.AccountService#getAccountOfTree(java.lang.String)
+	 */
+	public SysAccountTree getAccountOfTree(String id) {
+		if (null != id && !"".equals(id)) {
+			SysAccountTree o = accounttreeDao.selectByPrimaryKey(id);
+			return o;
 		}
 		return null;
 	}

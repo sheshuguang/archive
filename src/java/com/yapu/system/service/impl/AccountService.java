@@ -10,6 +10,9 @@ package com.yapu.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.yapu.archive.entity.SysAccountTree;
+import com.yapu.archive.entity.SysAccountTreeExample;
 import com.yapu.system.dao.itf.SysAccountDAO;
 import com.yapu.system.dao.itf.SysAccountOrgDAO;
 import com.yapu.system.dao.itf.SysAccountRoleDAO;
@@ -513,5 +516,48 @@ public class AccountService implements IAccountService {
 	}
 	public void setRoleDao(SysRoleDAO roleDao) {
 		this.roleDao = roleDao;
+	}
+
+	@Override
+	public List<SysAccountTree> getAccountOfTree(SysAccount account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean deleteAccountOfTree(List<SysAccountTree> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean deleteAccountOfTree(SysAccountTreeExample example) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean insertAccountOfTree(List<SysAccountTree> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateAccountOfTree(SysAccountTree AccountTree) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public SysAccountTree getAccountOfTree(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateAccountOfTree(SysAccountTree record,
+			SysAccountTreeExample ex) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

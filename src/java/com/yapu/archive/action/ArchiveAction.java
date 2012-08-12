@@ -43,11 +43,13 @@ public class ArchiveAction extends BaseAction {
 	 * 创建档案动态字段
 	 */
 	public String createField() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/javascript");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+//		HttpServletResponse response = getResponse();
+//		response.setCharacterEncoding("UTF-8");
+//		response.setContentType("application/javascript");
+//		response.setHeader("Cache-Control", "no-cache");
+//		PrintWriter out  = response.getWriter();
+		
+		PrintWriter out = this.getPrintWriter();
 		
 		StringBuilder result = new StringBuilder();
 		//如果没有得到树节点id，返回error

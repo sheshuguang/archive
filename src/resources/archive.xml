@@ -191,12 +191,14 @@
     </bean>
     <bean id="orgAction" class="com.yapu.system.action.OrgAction">
         <property name="orgService" ref="publicOrgService" />
+        <property name="treeService" ref="treeService" />
     </bean>
     
     <bean id="accountAction" class="com.yapu.system.action.AccountAction">
         <property name="accountService" ref="publicAccountService" />
         <property name="orgService" ref="publicOrgService" />
         <property name="configService" ref="configService" />
+        <property name="treeService" ref="treeService" />
     </bean>
     <bean id="roleAction" class="com.yapu.system.action.RoleAction">
         <property name="roleService" ref="roleService" />
@@ -236,6 +238,12 @@
     <bean id="importAction" class="com.yapu.archive.action.ImportAction">
     	<property name="treeService" ref="treeService" />
     	<property name="dynamicService" ref="dynamicService" />
+    </bean>
+    <bean id="authorityAction" class="com.yapu.system.action.AuthorityAction">
+    	<property name="orgService" ref="publicOrgService" />
+    	<property name="roleService" ref="roleService" />
+    	<property name="treeService" ref="treeService" />
+    	<property name="accountService" ref="publicAccountService" />
     </bean>
     
     

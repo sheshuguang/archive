@@ -8,12 +8,23 @@ package com.yapu.system.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+import com.yapu.archive.entity.SysOrgTree;
+import com.yapu.archive.entity.SysTree;
+import com.yapu.archive.entity.SysTreeExample;
+import com.yapu.archive.service.itf.ITreeService;
+import com.yapu.publics.service.PublicAccountService;
+import com.yapu.publics.service.PublicOrgService;
 import com.yapu.system.common.BaseAction;
+import com.yapu.system.entity.SysFunction;
+import com.yapu.system.entity.SysFunctionExample;
 import com.yapu.system.entity.SysOrg;
 import com.yapu.system.entity.SysOrgExample;
 import com.yapu.system.service.itf.IOrgService;
@@ -23,6 +34,7 @@ public class OrgAction extends BaseAction {
 	private static final long serialVersionUID = 1L;
 
 	private IOrgService orgService;
+	private ITreeService treeService;
 	
 	private String nodeId;
 	private String orgid;
@@ -37,33 +49,24 @@ public class OrgAction extends BaseAction {
 	 */
 	public String loadOrgTreeData() throws IOException {
 		
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
-		
-		StringBuilder resultStr = new StringBuilder();
+		PrintWriter out  = this.getPrintWriter();
 		
 		//获得父节点为nodeId的子节点
 		SysOrgExample example = new SysOrgExample();
 		example.createCriteria().andParentidEqualTo(nodeId);
 		List<SysOrg> orgs = orgService.selectByWhereNotPage(example);
 
-        resultStr.append("[");
-		if(null!=orgs && orgs.size()>0){
-
-			for(int i=0;i<orgs.size();i++){
-				SysOrg temp =(SysOrg)orgs.get(i);
-				resultStr.append("{");
-				resultStr.append("\"id\": \""+temp.getOrgid()+"\", \"text\": \""+temp.getOrgname()+"\", \"iconCls\": \"\", \"state\": \"closed\"");
-				resultStr.append("},");
-			}
-			resultStr.deleteCharAt(resultStr.length() - 1);
-
+		List<HashMap<String, String>> temp = new ArrayList<HashMap<String, String>>();
+		for (SysOrg org :orgs) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("id", org.getOrgid());
+			map.put("text", org.getOrgname());
+			map.put("iconCls", "");
+			map.put("state", "closed");
+			temp.add(map);
 		}
-        resultStr.append("]");
-        out.write(resultStr.toString());
+		Gson gson = new Gson();
+        out.write(gson.toJson(temp));
 		return null;
 	}
 	/**
@@ -73,11 +76,8 @@ public class OrgAction extends BaseAction {
 	 */
 	public String addOrg() throws IOException {
 		String result =	"failure";
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		
+		PrintWriter out  = this.getPrintWriter();
 		
 		if (orgname == null) {
 			out.write(result);
@@ -182,6 +182,103 @@ public class OrgAction extends BaseAction {
 		return null;
 	}
 	
+	public String getOrgTree() throws IOException {
+		PrintWriter out = this.getPrintWriter();
+		SysOrg org = new SysOrg();
+		org.setOrgid(orgid);
+		List<SysOrgTree> treeList = orgService.getOrgOfTree(org);
+		Gson gson = new Gson();
+		out.write(gson.toJson(treeList));
+		return null;
+		
+	}
+	
+	/**
+	 * 读取档案节点树，全部读取。分别为组和帐户
+	 * @return
+	 * @throws IOException 
+	 */
+	public String loadOrgOfTreeData() throws IOException {
+		PrintWriter out  = this.getPrintWriter();
+		
+		SysOrg org = new SysOrg();
+		org.setOrgid(orgid);
+		List<SysOrgTree> treeList = orgService.getOrgOfTree(org);
+		
+//		StringBuilder resultStr = new StringBuilder();
+//		//创建根节点
+//		resultStr.append("[{\"id\":\"0\",\"text\":\"档案节点树\",\"iconCls\":\"\",\"state\":\"open\",\"children\":");
+		List temp = new ArrayList();
+		HashMap map = new HashMap();
+		map.put("id", "0");
+		map.put("text", "档案节点树");
+		map.put("iconCls", "");
+		map.put("state", "open");
+		List list = getTreeJson("0",treeList);
+		map.put("children", list);
+		temp.add(map);
+		Gson gson = new Gson();
+		out.write(gson.toJson(temp));
+		return null;
+	}
+	
+	/**  
+     * 无限递归获得tree的json字串  
+     *   
+     * @param parentId  
+     *            父权限id 
+     * @return  
+     */  
+    private List getTreeJson(String parentId,List<SysOrgTree> treeList)
+    {
+    	//得到节点
+		SysTreeExample example = new SysTreeExample();
+		example.createCriteria().andParentidEqualTo(parentId);
+		List<SysTree> trees = treeService.selectByWhereNotPage(example);
+		List list = new ArrayList();
+		if(null!=trees && trees.size()>0){
+			for(int i=0;i<trees.size();i++){
+				HashMap temp = new HashMap();
+				SysTree tree =(SysTree)trees.get(i);
+				String ico = "";
+				if ("0".equals(tree.getParentid())) {
+					ico = "icon-book-open";
+				}
+				else if ("F".equals(tree.getTreetype())) {
+					ico = "";
+				}
+				else {
+					ico = "icon-page";
+				}
+				//判断该节点下是否有子节点
+				example.clear();
+				example.createCriteria().andParentidEqualTo(tree.getTreeid());
+				if (treeService.selectByWhereNotPage(example).size() >0) {
+					temp.put("id", tree.getTreeid());
+					temp.put("text", tree.getTreename());
+					temp.put("iconCls", ico);
+					temp.put("state", "closed");
+					temp.put("children", this.getTreeJson(tree.getTreeid(),treeList));
+				}
+				else {
+					temp.put("id", tree.getTreeid());
+					temp.put("text", tree.getTreename());
+					temp.put("iconCls", ico);
+					if (null != treeList) {
+						for (int j=0;j<treeList.size();j++) {
+							if (treeList.get(j).getTreeid().equals(tree.getTreeid())) {
+								temp.put("checked", true);
+							}
+						}
+					}
+				}
+				list.add(temp);
+			}
+		}
+        
+        return list;
+    }
+	
 	public void setOrgService(IOrgService orgService) {
 		this.orgService = orgService;
 	}
@@ -215,53 +312,8 @@ public class OrgAction extends BaseAction {
 	public void setNewParentid(String newParentid) {
 		this.newParentid = newParentid;
 	}
+	public void setTreeService(ITreeService treeService) {
+		this.treeService = treeService;
+	}
 	
-	
-
-//	@DirectFormPostMethod
-//	public String importExcel(Map<String,String> param,Map<String,FileItem> files) throws Exception {
-//		assert param != null;
-//		assert files != null;
-//		try {
-//			
-//			FileItem f = files.get("uploadfile");
-//			String fileName = f.getName();
-//			jxl.Workbook rwb = Workbook.getWorkbook(f.getInputStream());
-//			int a = rwb.getNumberOfSheets();
-//			Sheet rs = rwb.getSheet(0);
-//			int aaaa = rs.getRows();
-//			System.out.println(String.valueOf(aaaa));
-//			Cell c11 = rs.getCell(1, 1);
-//			String strc11 = c11.getContents();
-//			System.out.println(strc11);
-//			rwb.close();
-//			
-////			File file = new File("D:\\aa.xls");
-////			f.write(file);   //TODO 为什么这里写文件报错呢，Cannot write uploaded file to disk!  问阿佘这是为什么
-//			
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//		
-////		files.get("uploadfile").write(file);
-//		
-////		BufferedInputStream bis=new BufferedInputStream(request.getInputStream());
-////		BufferedOutputStream bos=new BufferedOutputStream(new FileOutputStream("e:\\test.txt",true));
-////		PrintWriter out= getResponse().getWriter();
-////		if(bis!=null){
-////			int ch;
-////			while((ch=bis.read())!=-1)
-////			{
-////				bos.write(ch);
-////			}
-////			bis.close();
-////			bos.close();
-////			out.write("上传成功");
-////		}
-////		out.write("上传失败");
-//
-//		return null;
-//		
-//	}
-
 }

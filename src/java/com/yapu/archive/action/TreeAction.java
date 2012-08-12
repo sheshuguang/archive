@@ -2,15 +2,17 @@ package com.yapu.archive.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
 
 import com.yapu.archive.entity.SysTree;
 import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.archive.service.itf.ITreeService;
+import com.yapu.publics.service.PublicAccountService;
+import com.yapu.publics.service.PublicOrgService;
 import com.yapu.system.common.BaseAction;
+import com.yapu.system.entity.SysFunction;
+import com.yapu.system.entity.SysFunctionExample;
+import com.yapu.system.entity.SysOrg;
 
 public class TreeAction extends BaseAction {
 	
@@ -21,20 +23,16 @@ public class TreeAction extends BaseAction {
 	private String treeid;
 	private String treename;
 	private String treetype;
+
 	
 	
 	/**
-	 * 读取指定节点下的组，以树节点形式返回json。
+	 * 以树节点形式返回json,ajax方式加载子节点。
 	 * @return
 	 */
 	public String loadTreeData() throws IOException {
 		
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
-		
+		PrintWriter out  = this.getPrintWriter();
 		String tmpParent = parentid;
 		if ("".equals(parentid) || null == parentid || "root".equals(parentid)) {
 			tmpParent = "0";
@@ -77,12 +75,10 @@ public class TreeAction extends BaseAction {
 		return null;
 	}
 	
+	
+	
 	public String add() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out  = this.getPrintWriter();
 		
 		String result = "failed";
 		
@@ -104,11 +100,7 @@ public class TreeAction extends BaseAction {
 	}
 	
 	public String delete() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out  = this.getPrintWriter();
 		
 		String result = "删除失败，请重新尝试或与管理员联系！";
 		if (null == treeid || "".equals(treeid)) {
@@ -124,11 +116,7 @@ public class TreeAction extends BaseAction {
 	}
 	
 	public String update() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out  = this.getPrintWriter();
 		
 		String result = "更新失败，请重新尝试或与管理员联系！";
 		if (null == treeid || "".equals(treeid)) {

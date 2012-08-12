@@ -11,8 +11,6 @@ import com.yapu.archive.dao.itf.SysOrgTreeDAO;
 import com.yapu.archive.dao.itf.SysTreeDAO;
 import com.yapu.archive.entity.SysOrgTree;
 import com.yapu.archive.entity.SysOrgTreeExample;
-import com.yapu.archive.entity.SysTree;
-import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.system.entity.SysOrg;
 import com.yapu.system.service.impl.OrgService;
 
@@ -45,25 +43,26 @@ public class PublicOrgService extends OrgService {
 	 * @param org
 	 * @return
 	 */
-	public List<SysTree> getOrgOfTree(SysOrg org) {
+	public List<SysOrgTree> getOrgOfTree(SysOrg org) {
 		if (null != org) {
 			//1、首先组id，得到该组与资源树关系表集合
 			SysOrgTreeExample orgTreeExample = new SysOrgTreeExample();
 			orgTreeExample.createCriteria().andOrgidEqualTo(org.getOrgid());
 			List<SysOrgTree> orgTreeList = orgtreeDao.selectByExample(orgTreeExample);
-			//如果该账户有跟资源树关联
-			if (null != orgTreeList && orgTreeList.size() >0 ) {
-				List<String> treeIDList = new ArrayList<String>();
-				//得到tree的id集合
-				for (int i=0;i<orgTreeList.size();i++) {
-					treeIDList.add(orgTreeList.get(i).getTreeid());
-				}
-				SysTreeExample treeExample = new SysTreeExample();
-				treeExample.createCriteria().andTreeidIn(treeIDList);
-				
-				List<SysTree> treeList = treeDao.selectByExample(treeExample);
-				return treeList;
-			}
+			return orgTreeList;
+//			//如果该账户有跟资源树关联
+//			if (null != orgTreeList && orgTreeList.size() >0 ) {
+//				List<String> treeIDList = new ArrayList<String>();
+//				//得到tree的id集合
+//				for (int i=0;i<orgTreeList.size();i++) {
+//					treeIDList.add(orgTreeList.get(i).getTreeid());
+//				}
+//				SysTreeExample treeExample = new SysTreeExample();
+//				treeExample.createCriteria().andTreeidIn(treeIDList);
+//				
+//				List<SysTree> treeList = treeDao.selectByExample(treeExample);
+//				return treeList;
+//			}
 		}
 		return null;
 	}
@@ -72,7 +71,11 @@ public class PublicOrgService extends OrgService {
 	 * @param orgTreeList
 	 * @return
 	 */
-	public Boolean setOrgOfTree(List<SysOrgTree> orgTreeList) {
+	/*
+	 * (non-Javadoc)
+	 * @see com.yapu.system.service.impl.OrgService#insertOrgOfTree(java.util.List)
+	 */
+	public Boolean insertOrgOfTree(List<SysOrgTree> orgTreeList) {
 		if (orgTreeList.size() > 0) {
 			try {
 				for (int i=0;i<orgTreeList.size();i++) {
@@ -93,18 +96,36 @@ public class PublicOrgService extends OrgService {
 	 * @param orgTree
 	 * @return
 	 */
-	public int deleteOrgOfTree(SysOrgTree orgTree) {
-		if (null != orgTree) {
+	
+	public Boolean deleteOrgOfTree(List<SysOrgTree> list) {
+		if (list.size() > 0) {
 			try {
-				return orgtreeDao.deleteByPrimaryKey(orgTree.getOrgTreeId());
+				for (int i=0;i<list.size();i++) {
+					SysOrgTree orgTree = list.get(i);
+					orgtreeDao.deleteByPrimaryKey(orgTree.getOrgTreeId());
+				}
+				return true;
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
-				return 0;
+				return false;
 			}
-			
 		}
-		return 0;
+		return false;
 	}
+	/*
+	 * (non-Javadoc)
+	 * @see com.yapu.system.service.impl.OrgService#deleteOrgOfTree(com.yapu.archive.entity.SysOrgTreeExample)
+	 */
+	public Boolean deleteOrgOfTree(SysOrgTreeExample example) {
+		try {
+			orgtreeDao.deleteByExample(example);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return true;
+	}
+	
+	
 	/**
 	 * 更新组与资源树的关联
 	 * @param orgTree
@@ -113,7 +134,7 @@ public class PublicOrgService extends OrgService {
 	public int updateOrgOfTree(SysOrgTree orgTree) {
 		if (null != orgTree) {
 			try {
-				return orgtreeDao.updateByPrimaryKey(orgTree);
+				return orgtreeDao.updateByPrimaryKeySelective(orgTree);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				return 0;
@@ -121,6 +142,27 @@ public class PublicOrgService extends OrgService {
 		}
 		return 0;
 	}
+	
+	public int updateOrgOfTree(SysOrgTree record,SysOrgTreeExample ex) {
+		if (null != ex) {
+			try {
+				return orgtreeDao.updateByExampleSelective(record, ex);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return 0;
+	}
+	
+	public SysOrgTree getOrgOfTree(String id) {
+		if (null != id && !"".equals(id)) {
+			SysOrgTree o = orgtreeDao.selectByPrimaryKey(id);
+			return o;
+		}
+		return null;
+	}
+	
+	
 
 	public void setOrgtreeDao(SysOrgTreeDAO orgtreeDao) {
 		this.orgtreeDao = orgtreeDao;

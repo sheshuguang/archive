@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 权限管理 -->
+	<package name="authority" extends="struts-default" >
+		
+		<!-- 读取组的权限信息-->
+		<action name="getOrgAuthorityInfo" class="authorityAction" method="getOrgAuthorityInfo"></action>
+		<!-- 显示角色供选择 -->
+		<action name="listRoleForAuthority" class="authorityAction" method="listRoleForAuthority"></action>
+		<!-- 保存帐户组角色 -->
+		<action name="setOrgRole" class="authorityAction" method="setOrgRole"></action>
+		
+		<!-- 得到帐户组的档案树节点 用于显示节点树-->
+		<action name="loadOrgOfTreeData" class="orgAction" method="loadOrgOfTreeData"></action>
+		
+		<!-- 读取帐户组树 -->
+		<action name="orgtreeAction" class="orgAction" method="loadOrgTreeData"></action>
+		
+		<!-- 得到帐户组的档案树节点 用于提交时判断节点的已有权限。-->
+		<action name="getOrgTree" class="orgAction" method="getOrgTree"></action>
+		
+		<!-- 保存帐户组的档案树节点权限-->
+		<action name="setOrgTree" class="authorityAction" method="insertOrgTree"></action>
+		
+		<!-- 修改帐户组的档案树节点权限-->
+		<action name="updateOrgTree" class="authorityAction" method="updateOrgTree"></action>
+		
+		
+		
+		
+		<!-- 读取帐户的权限信息-->
+		<action name="getAccountAuthorityInfo" class="authorityAction" method="getAccountAuthorityInfo"></action>
+		<!-- 保存帐户角色 -->
+		<action name="setAccountRole" class="authorityAction" method="setAccountRole"></action>
+		<!-- 得到帐户的档案树节点 用于显示节点树-->
+		<action name="loadAccountOfTreeData" class="accountAction" method="loadAccountTreeData"></action>
+		<!-- 得到帐户的档案树节点 用于提交时判断节点的已有权限。-->
+		<action name="getAccountTree" class="accountAction" method="getAccountTree"></action>
+		
+		<!-- 保存帐户组的档案树节点权限-->
+		<action name="setAccountTree" class="authorityAction" method="insertAccountTree"></action>
+		
+		<!-- 修改帐户组的档案树节点权限-->
+		<action name="updateAccountTree" class="authorityAction" method="updateAccountTree"></action>
+	</package>
+</struts>

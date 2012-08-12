@@ -60,6 +60,10 @@ $(function(){
 	wjGridconfig.dataView = new Slick.Data.DataView({
 		inlineFilters : true
 	});
+	
+	if (archiveCommon.isAllWj == '1') {
+		wjGridconfig.options.enableAddRow = false;
+	}
 	// 创建grid
 	wjGridconfig.grid = new Slick.Grid("#wjdiv", wjGridconfig.dataView, wjGridconfig.columns, wjGridconfig.options);
 	//设置录入错误时提示。例如不能为空的字段

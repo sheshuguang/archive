@@ -35,11 +35,7 @@ public class RoleAction extends BaseAction {
 	 */
 	public String list() throws IOException {
 		
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out = this.getPrintWriter();
 		
 		SysRoleExample example = new SysRoleExample();
 		List<SysRole> rolesList = roleService.selectByWhereNotPage(example);
@@ -67,11 +63,7 @@ public class RoleAction extends BaseAction {
 	}
 	
 	public String save() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out  = this.getPrintWriter();
 		
 		String result = "保存完毕。";
 		Gson gson = new Gson();
@@ -162,11 +154,7 @@ public class RoleAction extends BaseAction {
 	 */
 	public String loadRoleFunctionTree() throws IOException {
 		
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out  = this.getPrintWriter();
 		
 		SysRole role = new SysRole();
 		role.setRoleid(roleid);
@@ -247,12 +235,7 @@ public class RoleAction extends BaseAction {
 	 */
 	public String saveRoleFun() throws IOException {
 		
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
-		
+		PrintWriter out  = this.getPrintWriter();
 		String result =	"failure";
 		if (null != roleid && !"".equals(roleid)) {
 			boolean boo = roleService.insertRoleOfFunction(roleid, functionids);

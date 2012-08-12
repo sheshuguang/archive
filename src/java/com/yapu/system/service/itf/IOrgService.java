@@ -9,6 +9,9 @@ package com.yapu.system.service.itf;
 
 import java.util.List;
 
+import com.yapu.archive.entity.SysOrgTree;
+import com.yapu.archive.entity.SysOrgTreeExample;
+import com.yapu.archive.entity.SysTree;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.entity.SysOrg;
 import com.yapu.system.entity.SysOrgExample;
@@ -104,13 +107,13 @@ public interface IOrgService {
 	 * @param roleID
 	 * @return
 	 */
-	Boolean setOrgOfRole(SysOrg org,String roleID);
+	Boolean updateOrgOfRole(SysOrg org,String roleID);
 	/**
 	 * 设置账户组的角色
 	 * @param orgIDList
 	 * @return
 	 */
-	Boolean setOrgOfRole(List<String> orgIDList,String roleID);
+	Boolean updateOrgOfRole(List<String> orgIDList,String roleID);
 	
 	/**
 	 * 删除帐户组的角色
@@ -118,5 +121,25 @@ public interface IOrgService {
 	 * @return
 	 */
 	boolean deleteOrgOfRole(SysOrg org);
+	
+	//======================组与档案树=======================
+	/**
+	 * 根据组对象，得到组对应的档案树列表。这个方法在orgservice的继承类publicorgservice里实现
+	 * @param org
+	 * @return
+	 */
+	List<SysOrgTree> getOrgOfTree(SysOrg org);
+	
+	Boolean deleteOrgOfTree(List<SysOrgTree> list);
+	
+	Boolean deleteOrgOfTree(SysOrgTreeExample example);
+	
+	Boolean insertOrgOfTree(List<SysOrgTree> list);
+	
+	int updateOrgOfTree(SysOrgTree orgTree);
+	
+	SysOrgTree getOrgOfTree(String id);
+	
+	int updateOrgOfTree(SysOrgTree record,SysOrgTreeExample ex);
 	
 }
