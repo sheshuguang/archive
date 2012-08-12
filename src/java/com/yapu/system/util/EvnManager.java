@@ -26,8 +26,8 @@ public class EvnManager {
 		commandList.add("/min");
 		commandList.add("/D"+initbatDir);
 		commandList.add("init.bat");		
-		//sysProcess.runCommandLine(commandList);
-        sysProcess.initFlashPaperCreator();
+		sysProcess.runCommandLine(commandList);
+        //sysProcess.initFlashPaperCreator();
 	}
 	public static void initPdf2swf(){
 		FilePathMgr fpm = new FilePathMgr();

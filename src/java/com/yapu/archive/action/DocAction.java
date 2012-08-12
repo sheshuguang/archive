@@ -1,5 +1,6 @@
 package com.yapu.archive.action;
 
+import DBstep.iMsgServer2000;
 import com.google.gson.Gson;
 import com.yapu.archive.entity.SysDoc;
 import com.yapu.archive.entity.SysDocExample;
@@ -121,6 +122,27 @@ public class DocAction extends BaseAction{
             }
         }
         outSwf(swfFile);
+        return null;
+    }
+    public String iwebRead() throws Exception{
+        SysDoc doc = docService.selectByPrimaryKey(this.getDocId());
+        iMsgServer2000 MsgObj = new iMsgServer2000();
+        MsgObj.Load(this.getRequest());
+        if (MsgObj.GetMsgByName("DBSTEP").equalsIgnoreCase("DBSTEP")) {         //判断是否是合法的信息包，或者数据包信息是否完整
+            String mRecordID=MsgObj.GetMsgByName("RECORDID");		//取得文档编号
+            String mOption = MsgObj.GetMsgByName("OPTION");                              //取得操作信息
+            if (mOption.equalsIgnoreCase("LOADFILE")) {                           //下面的代码为打开服务器数据库里的文件
+               MsgObj.MsgTextClear();                                              //清除文本信息
+               if (MsgObj.MsgFileLoad(doc.getDocpath())){			            //从文件夹调入文档
+                    MsgObj.SetMsgByName("STATUS", "打开成功!");                       //设置状态信息
+                    MsgObj.MsgError("");                                              //清除错误信息
+                }
+                else {
+                    MsgObj.MsgError("打开失败!");                                     //设置错误信息
+                }
+            }
+        }
+        MsgObj.Send(this.getResponse());                                                    //8.1.0.2新版后台类新增的功能接口，返回信息包数据
         return null;
     }
     private void outSwf(File file)throws Exception{

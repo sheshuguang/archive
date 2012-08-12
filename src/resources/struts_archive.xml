@@ -95,6 +95,7 @@
         <action name ="docRead" class ="docAction" method="read">
             <param name="savePath">/WEB-INF/files/swfdoc</param>
         </action >
+        <action name = "docAction_*" class = "docAction" method = "{1}"/>
 
     </package>
 </struts>

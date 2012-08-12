@@ -103,8 +103,9 @@ public class SysProcess {
             FileOperate.moveFile(srcFile, destFile);
 			
 			runDll32(fpcroot);
-			regsvr32(fpcroot+"Flash.ocx");  
-			regsvr32(fpcroot+"OfficePrintAddIn.dll");  
+			//regsvr32(fpcroot+"Flash.ocx");     注意版本有冲突
+            regsvr32(fpcroot+"Flash10e.ocx");
+			regsvr32(fpcroot+"OfficePrintAddIn.dll");
 			regsvr32(fpcroot+"FlashPaperContextMenu.dll");  
 			
 			srcFile = new File(fpcroot+"license.inf");

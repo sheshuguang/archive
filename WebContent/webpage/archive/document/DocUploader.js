@@ -1,7 +1,7 @@
 jQuery(function($) {
     $("#uploader").pluploadQueue({
         // General settings
-        runtimes : 'silverlight,gears,html5,flash,browserplus',
+        runtimes : 'flash,html5,silverlight,gears,browserplus',
         url : 'docUpload.action',
         max_file_size : '200mb',
         chunk_size : '1mb',
