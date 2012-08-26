@@ -5,16 +5,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yapu.archive.entity.SysAccountTree;
 import com.yapu.archive.entity.SysTree;
 import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.archive.service.itf.ITreeService;
-import com.yapu.publics.service.PublicAccountService;
-import com.yapu.publics.service.PublicOrgService;
 import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
-import com.yapu.system.entity.SysFunction;
-import com.yapu.system.entity.SysFunctionExample;
 import com.yapu.system.entity.SysOrg;
 import com.yapu.system.service.itf.IAccountService;
 import com.yapu.system.service.itf.IOrgService;
@@ -54,30 +49,32 @@ public class TreeAction extends BaseAction {
 			return null;
 		}
 		
-		//首先得到帐户的档案树节点范围
-//		SysAccount account = new SysAccount();
-//		account.setAccountid(sessionAccount.getAccountid());
-		List<SysTree> authorityTree = new ArrayList<SysTree>();
-		authorityTree = accountService.getTree(sessionAccount.getAccountid());
-		
-		//判断帐户是否有档案树节点操作
-		if (null == authorityTree || authorityTree.size() < 1) {
-			//如果未设置帐户自己的树节点范围，读取所属组的范围
-			SysOrg org = accountService.getAccountOfOrg(sessionAccount);
-			authorityTree = orgService.getTree(org.getOrgid());
-			if (null == authorityTree && !"admin".equals(sessionAccount.getAccountcode())) {
-				resultStr.append("[{\"id\":\"0\",\"text\":\"档案结构树\",\"iconCls\":\"\",\"state\":\"open\",\"children\":[");
-				resultStr.append("]}]");
-				out.write(resultStr.toString());
-				return null;
-			}
-		}
 		List<String> treeidList = new ArrayList<String>();
-		if (null != authorityTree && authorityTree.size() > 0) {
-			for (SysTree tree : authorityTree) {
-				treeidList.add(tree.getTreeid());
+		if (!"admin".equals(sessionAccount.getAccountcode())) {
+			//首先得到帐户的档案树节点范围
+			List<SysTree> authorityTree = new ArrayList<SysTree>();
+			authorityTree = accountService.getTree(sessionAccount.getAccountid());
+			
+			//判断帐户是否有档案树节点操作
+			if (null == authorityTree || authorityTree.size() < 1) {
+				//如果未设置帐户自己的树节点范围，读取所属组的范围
+				SysOrg org = accountService.getAccountOfOrg(sessionAccount);
+				authorityTree = orgService.getTree(org.getOrgid());
+				if (null == authorityTree ) {
+					resultStr.append("[{\"id\":\"0\",\"text\":\"档案结构树\",\"iconCls\":\"\",\"state\":\"open\",\"children\":[");
+					resultStr.append("]}]");
+					out.write(resultStr.toString());
+					return null;
+				}
+			}
+			
+			if (null != authorityTree && authorityTree.size() > 0) {
+				for (SysTree tree : authorityTree) {
+					treeidList.add(tree.getTreeid());
+				}
 			}
 		}
+		
 		
 		//获得父节点为nodeId的子节点
 		SysTreeExample example = new SysTreeExample();

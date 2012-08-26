@@ -29,7 +29,30 @@ us.archive.Archive = function() {
 	this.isAllWj = false;
 	//点击导入按钮时，导入页面用来判断当前是案卷还是文件的导入。
 	this.tableType = "";
+	//点击批量挂接时，将选择的rows存在这里，打开批量挂接tab时，读取
+	this.items = [];
+	
+	//批量挂接对应关系之档案字段
+	this.archiveField = "ajh";
+	//皮昂挂接对应关系之未挂接文件字段
+	this.fileField = "docoldname";
 }
+
+/**
+ * 打开批量挂接tab
+ */
+us.archive.Archive.prototype.showBatchAttachment = function(grid,tableType,rows) {
+	archiveCommon.tableType = tableType;
+	archiveCommon.items.length = 0;
+	for ( var i = 0; i < rows.length; i++) {
+		var item = grid.dataView.getItem(rows[i]);
+		archiveCommon.items.push(item);
+	};
+	var url = "dispatch.action?page=/webpage/archive/archive/ArchiveBatchAttachment.html";
+	us.showtab($('#tab'),url, '批量挂接', 'icon-page');
+	
+}
+
 ////私有函数
 //us.archive.Archive.prototype._aaa = function() {
 //	

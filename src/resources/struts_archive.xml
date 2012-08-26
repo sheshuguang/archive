@@ -73,6 +73,8 @@
 		<action name="deleteArchive" class="archiveAction" method="delete"></action>
 
         <!-- ======================doc =============================-->
+        <!-- 读取当前登录帐户上传的全文库中未挂接的电子全文数据 -->
+        <action name="listAsAccount" class="docAction" method="listAsAccount"></action>
         <!--打开电子全文页签-->
         <action name="showDocListTab" class="docAction" method="showDocListTab">
             <result name="success">/webpage/archive/archive/DocList.html</result>

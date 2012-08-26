@@ -1,0 +1,44 @@
+
+<script type="text/javascript" src="ArchiveBatchAttachment.js"></script>
+
+<div class="easyui-layout" style="width:100%;height:100%">
+	<div id="file" region="north" split="true" style="overflow:hidden;height:230px;padding:0px; width:100%">
+		<div style="position: relative; width: 100%; height: 230px; overflow: hidden">
+			<div id="grid-header-attachment" class="grid-header" style="width: 100%">批量挂接</div>
+			<div id="toolbar-attachment"></div>
+			<div id="archiveAttachmentDiv" class="grid-div" style="width: 100%; height: 70%"></div>
+		</div>
+	</div>
+	
+	<div id="nofile" region="east" split="true" style="width:300px;">
+		<div id="nofilediv" style="position: relative; width: 100%; height: 260px; overflow: hidden">
+			<div class="grid-header" style="width: 100%">未挂接文件</div>
+			<div id="toolbar-attachment-no"></div>
+			<div id="archiveAttachmentDiv-no" class="grid-div" style="width: 100%; height: 76%"></div>
+		</div>
+	</div>
+	<div region="center"  style="background:#fafafa;overflow:hidden">
+		<div style="position: relative; width: 100%; height: 260px; overflow: hidden">
+			<div class="grid-header" style="width: 100%">已挂接文件</div>
+			<div id="toolbar-attachment-yes"></div>
+			<div id="archiveAttachmentDiv-yes" class="grid-div" style="width: 100%; height: 76%"></div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div id="setrequwindows" style="display:none;">
+	<div style="margin:10px 0px 0px 10px;">
+		<form id="importArchiveForm" action="upload.action" method="post">
+			
+			<p>
+				<button id="importBtn" >导入</button>
+				<button id="closeBtn">关闭</button>
+			</p>
+		</form>
+	</div>
+</div>
+
+

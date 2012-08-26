@@ -35,8 +35,8 @@ public class LoginAction extends BaseAction {
 	private String password;
 	
 	public String login(){
-//		setAccountcode("admin");
-//		setPassword("password");
+		setAccountcode("admin");
+		setPassword("password");
 		
 		//登录时先判断session里是否有该账户,防止同一台机器有2个session登录
 		SysAccount accountTmp = (SysAccount)this.getHttpSession().getAttribute(Constants.user_in_session);

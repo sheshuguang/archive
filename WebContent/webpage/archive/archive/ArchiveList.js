@@ -75,6 +75,7 @@ $(function(){
 	ajGridconfig.grid.setSelectionModel(new Slick.RowSelectionModel({
 		selectActiveRow : false
 	}));
+//	ajGridconfig.grid.setSelectionModel(new Slick.CellSelectionModel());
 	
 	//设置键盘监听。ctrl + a 全选
 	ajGridconfig.grid.onKeyDown.subscribe(function(e) {
@@ -356,6 +357,26 @@ $(function(){
 			iconCls:"icon-page-copy",
 			handler:function(){
 				showWjTab("","1");
+			}
+		},{
+			text:"批量挂接",
+			iconCls:"icon-page-copy",
+			handler:function(){
+				var selectRows = ajGridconfig.grid.getSelectedRows();
+				if (selectRows.length > 0) {
+					selectRows.sort(function compare(a, b) {
+						return a - b;
+					});
+					archiveCommon.showBatchAttachment(ajGridconfig,'01',selectRows);
+				}
+				else {
+					$.Zebra_Dialog('请选择要批量挂接的档案记录! ', {
+		                'type':     'information',
+		                'title':    '系统提示',
+		                'buttons':  ['确定']
+		            });
+				}
+				
 			}
 		},{
 			text:"刷新",

@@ -10,7 +10,9 @@ import com.yapu.archive.service.itf.IDocService;
 import com.yapu.archive.service.itf.IDocserverService;
 import com.yapu.archive.vo.UploadVo;
 import com.yapu.system.common.BaseAction;
+import com.yapu.system.entity.SysAccount;
 import com.yapu.system.util.CommonUtils;
+import com.yapu.system.util.Constants;
 import com.yapu.system.util.Coverter;
 import com.yapu.system.util.FtpUtil;
 import org.apache.struts2.ServletActionContext;
@@ -62,6 +64,29 @@ public class DocAction extends BaseAction{
        // SysDocExample.Criteria criteria = example.createCriteria();
        // criteria.andFileidEqualTo(selectRowid);
        // criteria.andTableidEqualTo(tableid);
+    	List<SysDoc> docList = docService.selectByWhereNotPage(example);
+    	Gson gson = new Gson();
+    	out.write(gson.toJson(docList));
+    	return null;
+    }
+    /**
+     * 得到当前帐户上传的未挂接的电子全文
+     * @return
+     * @throws IOException
+     */
+    public String listAsAccount() throws IOException {
+    	PrintWriter out = this.getPrintWriter();
+    	//得到当前登录帐户
+    	SysAccount sessionAccount = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
+    	if (null == sessionAccount) {
+    		out.write("error");
+    		return null;
+    	}
+        SysDocExample example = new SysDocExample();
+        SysDocExample.Criteria criteria = example.createCriteria();
+        criteria.andCreaterEqualTo(sessionAccount.getAccountcode());
+        criteria.andFileidEqualTo("");
+        criteria.andTableidEqualTo("");
     	List<SysDoc> docList = docService.selectByWhereNotPage(example);
     	Gson gson = new Gson();
     	out.write(gson.toJson(docList));

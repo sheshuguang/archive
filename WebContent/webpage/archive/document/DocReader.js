@@ -16,8 +16,8 @@ jQuery(function($) {
     swfobject.embedSWF(
         "../../swf/reader.swf",
         "SWF",
-        "800",
         "600",
+        "400",
         swfVersionStr,
         xiSwfUrlStr,
         flashvars,

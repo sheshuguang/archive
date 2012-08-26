@@ -149,3 +149,7 @@ us.request= function(paras)
         return returnValue;
     }
 }
+
+us.batchAttachment = function() {
+	
+}

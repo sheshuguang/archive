@@ -322,7 +322,7 @@ public class ArchiveAction extends BaseAction {
                 }
                 //添加电子全文标识
 //                sb.append("\"docs\":\"1\",");
-//                sb.append("\"docs\":").append(tempMap.get("ISDOC").toString()).append(",");
+                sb.append("\"docs\":").append(tempMap.get("ISDOC").toString()).append(",");
                 sb.append("\"rownum\":").append(i+1).append(",");
                 //grid控件需要小写的id。数据库中存的是大写的id，这里全部采用小写字段名
 				for (SysTempletfield sysTempletfield : templetfieldList) {
@@ -350,11 +350,7 @@ public class ArchiveAction extends BaseAction {
 	
 	@SuppressWarnings("unchecked")
 	public String save() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+		PrintWriter out  = this.getPrintWriter();
 		
 		String result = "保存完毕。";
 		try {
