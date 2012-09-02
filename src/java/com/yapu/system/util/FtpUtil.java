@@ -4,21 +4,15 @@ package com.yapu.system.util;
  * author  wangf
  * date    2012-1-14
  */
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+
+import java.io.*;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FtpUtil {
     private FTPClient ftpClient;

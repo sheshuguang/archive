@@ -9,6 +9,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 
@@ -17,8 +20,10 @@ public class CommonUtils {
 	}
 
 	private final static Logger log = new Logger(CommonUtils.class);
+    private static final String DATE_STYLE = "yyyy-MM-dd";
+    private static final String TIME_STYLE = "yyyy-MM-dd HH:mm:ss";
 
-	public static String getMACAddress() throws Exception {
+    public static String getMACAddress() throws Exception {
 		InputStream in = null;
 		String message = null;
 		try {
@@ -253,7 +258,51 @@ public class CommonUtils {
        return  flag;
     }
 
-	public static void main(String[] args) {
+    /**
+     * 日期型时间转换为字符串
+     * @param dt
+     * @return
+     */
+    public static String Time2String(Date dt) {
+        if (dt == null)
+            return "";
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_STYLE);
+        try {
+            return sdf.format(dt);
+        } catch (Exception ex) {
+            log.error("==ComUtil:Time2String==：" + ex);
+            return "";
+        }
+    }
+    /**
+     *	获取应用服务器系统日期、时间
+     *	@return	日期+时间字符串。格式“yyyy-mm-dd hh:mm:ss”
+     */
+    public static  String getTimeStamp() {
+        return Time2String(new Date());
+    }
+
+    /**
+     * 转换文件大小单位 将字节转换为K M G
+     * @param fileS
+     * @return
+     */
+    public static String formatFileSize(long fileS) {//转换文件大小
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fileSizeString = "";
+        if (fileS < 1024) {
+            fileSizeString = df.format((double) fileS) + "B";
+        } else if (fileS < 1048576) {
+            fileSizeString = df.format((double) fileS / 1024) + "K";
+        } else if (fileS < 1073741824) {
+            fileSizeString = df.format((double) fileS / 1048576) + "M";
+        } else {
+            fileSizeString = df.format((double) fileS / 1073741824) + "G";
+        }
+        return fileSizeString;
+    }
+
+    public static void main(String[] args) {
 		System.out.println(isNumber("a123.123"));
 	}
 }

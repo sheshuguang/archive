@@ -93,6 +93,11 @@ public class DocAction extends BaseAction{
     	return null;
     }
     public String upload() throws Exception {
+        //得到当前登录帐户
+        SysAccount sessionAccount = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
+        if (null == sessionAccount) {
+            return null;
+        }
         String contextPath = ServletActionContext.getServletContext().getRealPath(this.getSavePath())+ File.separator;
         String dstPath =  contextPath+ this.getName();
         File dstFile = new File(dstPath);
@@ -111,17 +116,45 @@ public class DocAction extends BaseAction{
                 docType = oldName.substring(oldName.lastIndexOf("."));
             }
             String newName = docId+docType;
-            dstFile.renameTo(new File(contextPath+newName));
+            File newFile =new File(contextPath+newName);
+            dstFile.renameTo(newFile);
             SysDoc doc = new SysDoc();
             doc.setDocid(docId);
             doc.setDocnewname(newName);
-            doc.setDoclength(String.valueOf(dstFile.getTotalSpace()));
+            doc.setDoclength(CommonUtils.formatFileSize(newFile.length()));
             doc.setDocoldname(oldName);
-            doc.setDocpath(contextPath+newName);
             doc.setDoctype(docType);
-            doc.setCreater("上传者");
-            doc.setCreatetime("");
-            doc.setDocserverid("");
+            doc.setCreater(sessionAccount.getAccountcode());
+            doc.setCreatetime(CommonUtils.getTimeStamp());
+            SysDocserverExample example = new SysDocserverExample();
+            example.createCriteria().andServerstateEqualTo(1);
+            List<SysDocserver> docserverList = docserverService.selectByWhereNotPage(example);
+            SysDocserver docserver = docserverList.get(0);
+            if ("FTP".equals(docserver.getServertype())) {
+                FtpUtil util = new FtpUtil();
+                util.connectServer(docserver.getServerip(),
+                        docserver.getServerport(),
+                        docserver.getFtpuser(),
+                        docserver.getFtppassword(),
+                        docserver.getServerpath());
+                FileInputStream s = new FileInputStream(newFile);
+                util.uploadFile(s, newName);
+                util.closeServer();
+            } else if ("LOCAL".equals(docserver.getServertype())){
+                String serverPath = docserver.getServerpath();
+                String savePath = docserver.getServerpath();
+                if (null == serverPath || "".equals(serverPath)) {
+                        return null;
+                }
+                else {
+                    if (!serverPath.substring(serverPath.length()-1,serverPath.length()).equals("/")) {
+                        savePath += "/";
+                    }
+                }
+                newFile.renameTo(new File(savePath + newName));
+            }
+            doc.setDocpath( docserver.getServerpath() + newName);
+            doc.setDocserverid(docserver.getDocserverid());
             docService.insertDoc(doc);
 
         }
@@ -248,6 +281,12 @@ public class DocAction extends BaseAction{
         response.getWriter().print(0);
         return null;
     }
+
+    /**
+     * 将原文件，拼接到目标文件dst
+     * @param src
+     * @param dst
+     */
     private void cat(File src, File dst) {
         InputStream in = null;
         OutputStream out = null;
