@@ -187,7 +187,7 @@ public class ArchiveAction extends BaseAction {
 	        }
 	        //添加【是否有全文】标识
 	        result.append("{id:'isdoc',name:'全文',field:'isdoc',title:'全文',width:40,cssClass:'cell-center',cannotTriggerInsert:true,resizable:false,selectable:false,");
-	        result.append("formatter:function(row,column,value){");
+	        result.append("formatter:function(row,column,value,columnDef, dataContext){");
 	        //得到表名 ，为了电子全文
 	        List<SysTable> tableList = treeService.getTreeOfTable(treeid);
 	        String tableid = "";
@@ -197,7 +197,7 @@ public class ArchiveAction extends BaseAction {
 	                break;
 	            }
 	        }
-	        result.append("if (value==1) {return  '<img src=\"../../images/icons/flag_blue.png\" title=\"点击查看电子文件\" onclick=\"showDocTab(\\''+ value +'\\',\\'"+tableid+"\\')\" />'  } else { return \"\"}}},");
+	        result.append("if (value>0) {return  '<img src=\"../../images/icons/flag_blue.png\" title=\"点击查看电子文件\" onclick=\"showDocwindow(\\''+ dataContext.id + '\\',\\'"+tableid+"\\')\" />'  } else { return \"\"}}},");
         }
         
 //		//返回字段特殊属性，例如默认值，在页面添加时，直接赋值

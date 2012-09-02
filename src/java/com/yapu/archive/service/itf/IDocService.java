@@ -20,6 +20,8 @@ public interface IDocService {
 	 * @return					
 	 */
 	int updateDoc(SysDoc doc);
+	
+	int updateDoc(List<SysDoc> docList);
 	/**
 	 * 删除电子文件。
 	 * @param docID			电子文件ID。

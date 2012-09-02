@@ -6,8 +6,34 @@ var attNoGridConfig = new us.archive.ui.Gridconfig();
 //对应的全文grid
 var attYesGridConfig = new us.archive.ui.Gridconfig();
 
+archiveCommon.yesItems = [];
+
 
 $(function() {
+	
+	pageLayout = $('#batchlayout').layout({
+		applyDefaultStyles: false,
+		north: {
+			size		:	"230",
+			spacing_open:	2,
+			closable	:	false,
+			resizable	:	true
+		},
+		center: {
+			size		:	"30",
+			spacing_open:	2,
+			closable	:	false,
+			resizable	:	true
+		},
+		east: {
+			size		:	"300",
+			spacing_open:	2,
+			closable	:	false,
+			resizable	:	true
+		}
+	});
+	
+	
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";
 	$.ajax({
 		async : false,
@@ -60,7 +86,7 @@ $(function() {
 //	});
 	
 	attGridConfig.grid.onSelectedRowsChanged.subscribe(function(e,args) {
-		var attYesItems = attYesGridConfig.dataView.getItems();
+		var attYesItems = archiveCommon.yesItems;  //attYesGridConfig.dataView.getItems();
 		if (attYesItems.length > 0) {
 			if (args.rows.length > 0) {
 				attYesGridConfig.dataView.setItems([]);
@@ -88,7 +114,7 @@ $(function() {
   //同步读取当前帐户上传到全文库中的电子文件数据
 	$.ajax({
 		async : false,
-		url : "listAsAccount.action",
+		url : "listNoLinkDocAsAccount.action",
 		type : 'post',
 		dataType : 'script',
 		success : function(data) {
@@ -241,12 +267,11 @@ $(function() {
 			text:"保存",
 			iconCls:"icon-page-delete",
 			handler:function(){
-				importGridConfig.grid.getEditorLock().commitCurrentEdit();
-				var a = importGridConfig.dataView.getItems();
+				var a = archiveCommon.yesItems;
 				if (a.length > 0) {
-					var par = "importData=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType;
+					var par = "items=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType + "&treeid=" + archiveCommon.selectTreeid;
 
-					$.post("saveImportArchive.action",par,function(data){
+					$.post("saveBatchAttArchive.action",par,function(data){
 							new $.Zebra_Dialog(data, {
 				  				'buttons':  false,
 				   			    'modal': false,
@@ -257,7 +282,7 @@ $(function() {
 					);
 				}
 				else {
-					$.Zebra_Dialog('没有找到导入数据.<br>请重新读取Excel导入文件或与管理员联系。 ', {
+					$.Zebra_Dialog('没有找到导入数据.<br>请重新挂接或与管理员联系。 ', {
 		                'type':     'information',
 		                'title':    '系统提示',
 		                'buttons':  ['确定']
@@ -312,6 +337,7 @@ $(function() {
 						
 					}
 				}
+				archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
 			}
 		},{
 			text:"手动挂接",
@@ -356,6 +382,7 @@ $(function() {
 		                'buttons':  ['确定']
 		            });
 				}
+				archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
 			}
 		},{
 			id:"select",
@@ -450,6 +477,7 @@ $(function() {
 		                'buttons':  ['确定']
 		            });
 				}
+				archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
 			}
 		}]
 	});

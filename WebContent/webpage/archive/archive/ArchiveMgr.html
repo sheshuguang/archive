@@ -10,10 +10,11 @@
 <!-- 各种图标 按钮 tab等 -->
 <link rel="stylesheet" type="text/css" href="../../images/images.css" />
 
+<!-- jquery-easyui css 
+<link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />-->
 <!-- jquery ui css 有一些插件用到了jquery ui。例如新的grid -->
 <link rel="stylesheet" href="../../js/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css" />
-<!-- jquery-easyui css -->
-<link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />
+<!-- <link rel="stylesheet" type="text/css" href="../../js/jquery-ui/css/smoothness/jquery-ui-1.8.23.custom.css" />-->
 <!-- jquery-window css 弹出式windows css-->
 <link type="text/css" href="../../js/jquery-window/css/jquery.window.css" rel="stylesheet">
 <!-- jquery -->
@@ -28,7 +29,6 @@
 <script type="text/javascript" src="../../js/json2.js"></script>
 
 <script type="text/javascript" src="../../js/jquery-easyui/jquery.toolbar.js"></script>
-<script type="text/javascript" src="../../js/jquery-easyui/validator.js"></script>
 <!-- 模块专用 -->
 <script type="text/javascript" src="ArchiveMgr.js"></script>
 <script type="text/javascript" src="../../js/uuid.js"></script>
@@ -43,9 +43,11 @@
 <!-- slick grid分页插件-->
 <link rel="stylesheet" href="../../js/SlickGrid/controls/slick.pager.css" type="text/css" />
 <script type="text/javascript" src="../../js/SlickGrid/lib/firebugx.js"></script>
-<!-- jquery easyui -->
-<script type="text/javascript" src="../../js/jquery-easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="../../js/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+<!-- jquery easyui 
+<script type="text/javascript" src="../../js/jquery-easyui/jquery.easyui.min.js"></script>-->
+<script type="text/javascript" src="../../js/jquery-easyui/easyloader.js"></script>
+<script type="text/javascript" src="../../js/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script> 
+ <!--<script type="text/javascript" src="../../js/jquery-ui/jquery-ui-1.8.23.custom.min.js"></script>-->
 
 
 
@@ -67,7 +69,8 @@
 <!-- jqueyr-window js -->
 <script type="text/javascript" src="../../js/jquery-window/jquery.window.js"></script>
 
-
+<link rel="stylesheet" type="text/css" href="../../js/jquery.layout/layout-default-latest.css" />
+<script type="text/javascript" src="../../js/jquery.layout/jquery.layout-latest.js"></script>
 
 <script type="text/javascript">
 //客户端实现 复制、粘贴 功能用的map
@@ -75,11 +78,12 @@ var copyMap = new HashMap();
 </script>
 <title></title>
 </head>
-<body class="easyui-layout">
-	<div region="west" iconCls="icon-table" title="档案管理" split="true" style="width:220px;padding1:0px;overflow:hidden;">
+<body>
+	<div class="ui-layout-west" style="width:220px;padding1:0px;overflow:hidden;">
+		<div class="grid-header" style="width: 100%">档案树</div>
 		<ul id="archivetree" class="easyui-tree"></ul>
 	</div>
-	<div region="center"  style="overflow:hidden;" border="true">
+	<div  class="ui-layout-center" style="overflow:hidden;" border="true">
 		<div id="tab" class="easyui-tabs" fit="true" border="false" plain="false">
 			<div title="操作帮助" style="padding:20px;overflow:hidden;"> 
 				<div style="margin-top:20px;">
@@ -89,6 +93,7 @@ var copyMap = new HashMap();
 					<li></li>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 	<div id="batchwindows" style="display:none;">
@@ -105,5 +110,13 @@ var copyMap = new HashMap();
 			</div>
 		</div>
 	</div>
+	<!-- -->
+	<div id="docwindows" title="电子全文列表">
+		<input type="button" onclick="window.location.href='readDoc.action?docId=1f4fe3f4-c285-4600-884c-2fd57f2e0d3a'" value="open"/>
+		<ul id="doclist">
+		<li>a</li>
+		<li>b</li>
+		</ul>
+	</div> 
 </body>
 </html>
