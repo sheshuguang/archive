@@ -109,21 +109,21 @@ function showDocwindow(id, tableid) {
 		}
 	});
 //	$( "#docwindows" ).dialog( "open" );
-//	$.window({
-//		showModal	: true,
-//		modalOpacity: 0.5,
-//	    title		: "电子全文列表",
-//	    content		: $("#docwindows"),
-//	    width		: 300,
-//	    height		: 200,
-//	    showFooter	: false,
-//	    showRoundCorner: true,
-//	    minimizable	: false,
-//	    maximizable	: false,
-//	    onShow		: function(wnd) {
-//	    	
-//	    }
-//	});
+	$.window({
+		showModal	: true,
+		modalOpacity: 0.5,
+	    title		: "电子全文列表",
+	    content		: $("#docwindows"),
+	    width		: 300,
+	    height		: 200,
+	    showFooter	: false,
+	    showRoundCorner: true,
+	    minimizable	: false,
+	    maximizable	: false,
+	    onShow		: function(wnd) {
+	    	
+	    }
+	});
 //	var url = "showDocListTab.action";
 //	us.showtab($('#tab'),url, '电子文件管理', 'icon-page');
 }
