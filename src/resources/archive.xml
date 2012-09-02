@@ -104,6 +104,8 @@
     </bean>
     <bean id="docService" class="com.yapu.archive.service.impl.DocService">
         <property name="docDao" ref="docDao" />
+        <property name="tableDao" ref="tableDao" />
+        <property name="dynamicDao" ref="dynamicDao" />
     </bean>
     <bean id="functionService" class="com.yapu.system.service.impl.FunctionService">
         <property name="functionDao" ref="functionDao" />
@@ -248,7 +250,10 @@
     	<property name="treeService" ref="treeService" />
     	<property name="accountService" ref="publicAccountService" />
     </bean>
-    
+    <bean id="attachmentAction" class="com.yapu.archive.action.AttachmentAction">
+    	<property name="treeService" ref="treeService" />
+    	<property name="docService" ref="docService" />
+    </bean>
     
     <bean id="dispatchAction" class="com.yapu.system.action.DispatchAction">
     </bean>

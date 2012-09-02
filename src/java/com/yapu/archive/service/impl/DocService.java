@@ -6,14 +6,19 @@ package com.yapu.archive.service.impl;
  */
 import java.util.List;
 
+import com.yapu.archive.dao.itf.DynamicDAO;
 import com.yapu.archive.dao.itf.SysDocDAO;
+import com.yapu.archive.dao.itf.SysTableDAO;
 import com.yapu.archive.entity.SysDoc;
 import com.yapu.archive.entity.SysDocExample;
+import com.yapu.archive.entity.SysTable;
 import com.yapu.archive.service.itf.IDocService;
 
 public class DocService implements IDocService {
 	
 	private SysDocDAO docDao;
+	private SysTableDAO tableDao;
+	private DynamicDAO dynamicDao;
 
 	/*
 	 * (non-Javadoc)
@@ -110,14 +115,74 @@ public class DocService implements IDocService {
 		return 0;
 	}
 	/*
+	 * (non-Javadoc)
+	 * @see com.yapu.archive.service.itf.IDocService#updateDoc(java.util.List)
+	 */
+	@Override
+	public int updateDoc(List<SysDoc> docList) {
+		if (docList.size() >0) {
+			//存储fileid有值的
+			StringBuffer whereYesStr = new StringBuffer();
+			StringBuffer whereNoStr = new StringBuffer();
+			String tableid = "";
+			for (SysDoc doc :docList) {
+				try {
+					tableid = doc.getTableid();
+					updateDoc(doc);
+					if (null == doc.getFileid() || "".equals(doc.getFileid())) {
+						whereNoStr.append("'").append(doc.getFileid()).append("',");
+					}
+					else {
+						whereYesStr.append("'").append(doc.getFileid()).append("',");
+					}
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					return 0;
+				}
+			}
+			if (whereYesStr.length() > 0) {
+				whereYesStr.deleteCharAt(whereYesStr.length() - 1);
+				updateArchiveDoc(tableid,whereYesStr.toString());
+			}
+			
+			if (whereNoStr.length() > 0) {
+				whereNoStr.deleteCharAt(whereYesStr.length() - 1);
+			}
+			
+			return docList.size();
+		}
+		
+		return 0;
+	}
+	/*
+	 * 更新档案表的全文标识
+	 */
+	private void updateArchiveDoc(String tableid,String where) {
+		//得到表名
+		SysTable table = tableDao.selectByPrimaryKey(tableid);
+		//创建sql语句
+		StringBuffer sql = new StringBuffer();
+		sql.append("update ").append(table.getTablename()).append(" set isdoc = 1 where id in (").append(where).append(" )");
+		dynamicDao.update(sql.toString());
+		
+	}
+
+	
+	
+	/*
 
 	 */
 	public int rowCount(SysDocExample example) {
 		return docDao.countByExample(example);
 	}
-
 	public void setDocDao(SysDocDAO docDao) {
 		this.docDao = docDao;
 	}
-
+	public void setTableDao(SysTableDAO tableDao) {
+		this.tableDao = tableDao;
+	}
+	public void setDynamicDao(DynamicDAO dynamicDao) {
+		this.dynamicDao = dynamicDao;
+	}
+	
 }

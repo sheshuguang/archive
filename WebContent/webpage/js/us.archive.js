@@ -34,8 +34,10 @@ us.archive.Archive = function() {
 	
 	//批量挂接对应关系之档案字段
 	this.archiveField = "ajh";
-	//皮昂挂接对应关系之未挂接文件字段
+	//批量挂接对应关系之未挂接文件字段
 	this.fileField = "docoldname";
+	//存储批量挂接对应上关系的文件items。
+	this.yesItems = [];
 }
 
 /**
