@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
 	<display-name>archive</display-name>
-	
+    <context-param>
+        <param-name>HOME_SHARED_DOCS</param-name>
+        <param-value>/tmp/shared_docs</param-value>
+    </context-param>
+    <context-param>
+        <param-name>THUMBNAIL</param-name>
+        <param-value>/servlet/thumbnailer?p=</param-value>
+    </context-param>
+    <context-param>
+        <param-name>REALOBJECTURL</param-name>
+        <param-value>/servlet/virtualproxy?p=</param-value>
+    </context-param>
+    <context-param>
+        <param-name>SHARED_DOCS</param-name>
+        <param-value>Shared docs</param-value>
+    </context-param>
+
 	<!-- 设置log4j配置文件路径 -->
   	<context-param>
 		<param-name>log4jConfigLocation</param-name>
@@ -22,7 +38,34 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:applicationContext.xml</param-value>
 	</context-param>
-	
+
+<servlet>
+<display-name>Connector for ElFinder</display-name>
+<servlet-name>connector</servlet-name>
+<servlet-class>com.yapu.document.DocMgrConnectorServlet</servlet-class>
+</servlet>
+<servlet>
+<display-name>Generic Thumbnailer</display-name>
+<servlet-name>thumbnailer</servlet-name>
+<servlet-class>com.yapu.document.Thumbnailer</servlet-class>
+</servlet>
+<servlet>
+<display-name>Generic Proxy</display-name>
+<servlet-name>virtualproxy</servlet-name>
+<servlet-class>com.yapu.document.VirtualProxy</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>connector</servlet-name>
+<url-pattern>/servlet/connector</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+<servlet-name>thumbnailer</servlet-name>
+<url-pattern>/servlet/thumbnailer</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+<servlet-name>virtualproxy</servlet-name>
+<url-pattern>/servlet/virtualproxy</url-pattern>
+</servlet-mapping>
 	<!-- 创建spring 监听 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
