@@ -16,6 +16,7 @@ import com.yapu.system.util.Constants;
 import com.yapu.system.util.Coverter;
 import com.yapu.system.util.FtpUtil;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.dao.support.DaoSupport;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -38,6 +39,7 @@ public class DocAction extends BaseAction{
     private IDocService docService;
     private String docId;
 
+    private SysDoc doc;
     private String tableid;
     private String selectRowid;
     private int chunks;
@@ -45,6 +47,9 @@ public class DocAction extends BaseAction{
     private int chunk;
     private File file;
     private String savePath;
+    
+    private String docName;
+    private String contentType;
 
     public String getSavePath() {
         return savePath;
@@ -69,12 +74,24 @@ public class DocAction extends BaseAction{
     	out.write(gson.toJson(docList));
     	return null;
     }
+    
+    public String listLinkDoc() throws IOException {
+    	PrintWriter out = this.getPrintWriter();
+    	SysDocExample example = new SysDocExample();
+        SysDocExample.Criteria criteria = example.createCriteria();
+        criteria.andFileidEqualTo(selectRowid);
+        criteria.andTableidEqualTo(tableid);
+     	List<SysDoc> docList = docService.selectByWhereNotPage(example);
+     	Gson gson = new Gson();
+     	out.write(gson.toJson(docList));
+     	return null;
+    }
     /**
      * 得到当前帐户上传的未挂接的电子全文
      * @return
      * @throws IOException
      */
-    public String listAsAccount() throws IOException {
+    public String listNoLinkDocAsAccount() throws IOException {
     	PrintWriter out = this.getPrintWriter();
     	//得到当前登录帐户
     	SysAccount sessionAccount = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
@@ -322,6 +339,88 @@ public class DocAction extends BaseAction{
             }
         }
     }
+    
+    public String downDoc() {
+    	if (null == docId || "".equals(docId)) {
+    		return ERROR;
+    	}
+    	//根据docid读取电子全文信息
+    	doc = docService.selectByPrimaryKey(docId);
+    	if (null == doc || "".equals(doc)) {
+    		return ERROR;
+    	}
+    	//得到原文件名
+    	docName = doc.getDocoldname();
+    	//判断文件所属服务器
+    	String serverid = doc.getDocserverid();
+    	//得到所属服务器的信息
+    	SysDocserver docServer = docserverService.selectByPrimaryKey(serverid);
+    	if (null == docServer || "".equals(docServer)) {
+    		return ERROR;
+    	}
+    	//判断服务器类型。根据不同类型，执行不同的操作
+    	String serverType = docServer.getServertype();
+    	if ("LOCAL".equals(serverType)) {
+    		savePath = docServer.getServerpath();
+    	}
+    	return SUCCESS;
+    }
+    
+    public InputStream getInputStream() throws FileNotFoundException {
+//    	docName = "文档 阿斯 顿飞.doc";
+//    	InputStream aa = ServletActionContext.getServletContext().getResourceAsStream("/aa.doc");
+//    	FileInputStream aa = new FileInputStream("d:\\文档 阿斯 顿飞.doc");
+    	String fileName = savePath + doc.getDocnewname();
+    	FileInputStream aa = new FileInputStream(fileName);
+    	return aa;
+	}
+    
+    public String readDoc() {
+//    	docId = "1f4fe3f4-c285-4600-884c-2fd57f2e0d3a";
+    	if (null == docId || "".equals(docId)) {
+    		return ERROR;
+    	}
+    	//根据docid读取电子全文信息
+    	doc = docService.selectByPrimaryKey(docId);
+    	if (null == doc || "".equals(doc)) {
+    		return ERROR;
+    	}
+    	//得到原文件名
+    	docName = doc.getDocoldname();
+    	//判断文件所属服务器
+    	String serverid = doc.getDocserverid();
+    	//得到所属服务器的信息
+    	SysDocserver docServer = docserverService.selectByPrimaryKey(serverid);
+    	if (null == docServer || "".equals(docServer)) {
+    		return ERROR;
+    	}
+    	//判断服务器类型。根据不同类型，执行不同的操作
+    	String serverType = docServer.getServertype();
+    	if ("LOCAL".equals(serverType)) {
+    		savePath = docServer.getServerpath();
+    	}
+    	String docType = doc.getDoctype();
+    	if ("XLS".equals(docType)) {
+    		// contentType设定      
+            contentType = "application/vnd.ms-excel;charset=utf-8";      
+            // attachment表示网页会出现保存、打开对话框      
+            docName = "inline; filename=" + docName;      
+    	}
+    	else if("DOC".equals(docType)) {
+    		// contentType设定      
+            contentType = "application/msword;charset=utf-8";      
+            // attachment表示网页会出现保存、打开对话框      
+            docName = "inline; filename=" + docName;    
+    	}
+    	else {
+    		// contentType设定      
+            contentType = "text/plain;charset=utf-8";      
+            // attachment表示网页会出现保存、打开对话框      
+            docName = "inline; filename=" + docName;   
+    	}
+    	return SUCCESS;
+    }
+
 
     public File getArchive() {
         return archive;
@@ -402,6 +501,33 @@ public class DocAction extends BaseAction{
     public void setDocId(String docId) {
         this.docId = docId;
     }
+
+	public String getDocName() throws UnsupportedEncodingException {
+		//文件名字转码，为了下载显示中文名不出现乱码
+		docName = new String(docName.getBytes(),"ISO-8859-1");
+		return docName;
+	}
+
+	public void setDocName(String docName) {
+		
+		this.docName = docName;
+	}
+
+	public SysDoc getDoc() {
+		return doc;
+	}
+
+	public void setDoc(SysDoc doc) {
+		this.doc = doc;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
 
 
 
