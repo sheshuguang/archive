@@ -1,5 +1,7 @@
 package com.yapu.system.util;
 
+import com.yapu.system.util.id.UUIDHexGenerator;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.Closeable;
@@ -300,6 +302,11 @@ public class CommonUtils {
             fileSizeString = df.format((double) fileS / 1073741824) + "G";
         }
         return fileSizeString;
+    }
+
+    public static String getId() {
+        UUIDHexGenerator uuid = new UUIDHexGenerator();
+        return (String) uuid.generate();
     }
 
     public static void main(String[] args) {

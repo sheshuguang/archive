@@ -22,6 +22,8 @@ public class RenameCommand extends AbstractCommandOverride {
 			File futureFile = getNewFile(getParam("name"), dirCurrent, FileActionEnum.WRITE);
 			try {
 				getFs().renameFileOrDirectory(targetFile, futureFile);
+                updateInfor(targetFile , futureFile);
+
 			} catch (FsException e) {
 				throw new ConnectorException("Unable to rename file", e);
 			}
@@ -30,5 +32,6 @@ public class RenameCommand extends AbstractCommandOverride {
 			_content(dirCurrent, true);
 		}
 	}
+
 
 }

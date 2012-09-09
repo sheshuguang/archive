@@ -5,76 +5,201 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>文件库管理</title>
-	<link rel="stylesheet" href="../../js/elfinder/css/smoothness/jquery-ui-1.8.13.custom.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="../../js/elfinder/css/elfinder.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <script src="../../js/elfindern/jquery/jquery-1.7.2.min.js"></script>
+    <script src="../../js/elfindern/jquery/jquery-ui-1.8.21.custom.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery.layout/jquery.layout-latest.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../js/jquery.layout/layout-default-latest.css" />
 
-	<script src="../../js/elfinder/js/jquery-1.6.1.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/elfinder/js/jquery-ui-1.8.13.custom.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="../../js/elfindern/jquery/ui-themes/smoothness/jquery-ui-1.8.21.custom.css" type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/common.css"      type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/dialog.css"      type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/toolbar.css"     type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/navbar.css"      type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/statusbar.css"   type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/contextmenu.css" type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/cwd.css"         type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/quicklook.css"   type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/commands.css"    type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/fonts.css"       type="text/css">
+    <link rel="stylesheet" href="../../js/elfindern/css/theme.css"       type="text/css">
+    <!-- elfinder core -->
+    <script src="../../js/elfindern/js/elFinder.js"></script>
+    <script src="../../js/elfindern/js/elFinder.version.js"></script>
+    <script src="../../js/elfindern/js/jquery.elfinder.js"></script>
+    <script src="../../js/elfindern/js/elFinder.resources.js"></script>
+    <script src="../../js/elfindern/js/elFinder.options.js"></script>
+    <script src="../../js/elfindern/js/elFinder.history.js"></script>
+    <script src="../../js/elfindern/js/elFinder.command.js"></script>
+    <!-- elfinder ui -->
+    <script src="../../js/elfindern/js/ui/overlay.js"></script>
+    <script src="../../js/elfindern/js/ui/workzone.js"></script>
+    <script src="../../js/elfindern/js/ui/navbar.js"></script>
+    <script src="../../js/elfindern/js/ui/dialog.js"></script>
+    <script src="../../js/elfindern/js/ui/tree.js"></script>
+    <script src="../../js/elfindern/js/ui/cwd.js"></script>
+    <script src="../../js/elfindern/js/ui/toolbar.js"></script>
+    <script src="../../js/elfindern/js/ui/button.js"></script>
+    <script src="../../js/elfindern/js/ui/uploadButton.js"></script>
+    <script src="../../js/elfindern/js/ui/viewbutton.js"></script>
+    <script src="../../js/elfindern/js/ui/searchbutton.js"></script>
+    <script src="../../js/elfindern/js/ui/sortbutton.js"></script>
+    <script src="../../js/elfindern/js/ui/panel.js"></script>
+    <script src="../../js/elfindern/js/ui/contextmenu.js"></script>
+    <script src="../../js/elfindern/js/ui/path.js"></script>
+    <script src="../../js/elfindern/js/ui/stat.js"></script>
+    <script src="../../js/elfindern/js/ui/places.js"></script>
 
-	<script src="../../js/elfinder/js/elfinder.full.js" type="text/javascript" charset="utf-8"></script>
+    <!-- elfinder commands -->
+    <script src="../../js/elfindern/js/commands/back.js"></script>
+    <script src="../../js/elfindern/js/commands/forward.js"></script>
+    <script src="../../js/elfindern/js/commands/reload.js"></script>
+    <script src="../../js/elfindern/js/commands/up.js"></script>
+    <script src="../../js/elfindern/js/commands/home.js"></script>
+    <script src="../../js/elfindern/js/commands/copy.js"></script>
+    <script src="../../js/elfindern/js/commands/cut.js"></script>
+    <script src="../../js/elfindern/js/commands/paste.js"></script>
+    <script src="../../js/elfindern/js/commands/open.js"></script>
+    <script src="../../js/elfindern/js/commands/rm.js"></script>
+    <script src="../../js/elfindern/js/commands/info.js"></script>
+    <script src="../../js/elfindern/js/commands/duplicate.js"></script>
+    <script src="../../js/elfindern/js/commands/rename.js"></script>
+    <script src="../../js/elfindern/js/commands/help.js"></script>
+    <script src="../../js/elfindern/js/commands/getfile.js"></script>
+    <script src="../../js/elfindern/js/commands/mkdir.js"></script>
+    <script src="../../js/elfindern/js/commands/mkfile.js"></script>
+    <script src="../../js/elfindern/js/commands/upload.js"></script>
+    <script src="../../js/elfindern/js/commands/download.js"></script>
+    <script src="../../js/elfindern/js/commands/edit.js"></script>
+    <script src="../../js/elfindern/js/commands/quicklook.js"></script>
+    <script src="../../js/elfindern/js/commands/quicklook.plugins.js"></script>
+    <script src="../../js/elfindern/js/commands/extract.js"></script>
+    <script src="../../js/elfindern/js/commands/archive.js"></script>
+    <script src="../../js/elfindern/js/commands/search.js"></script>
+    <script src="../../js/elfindern/js/commands/view.js"></script>
+    <script src="../../js/elfindern/js/commands/resize.js"></script>
+    <script src="../../js/elfindern/js/commands/sort.js"></script>
+    <script src="../../js/elfindern/js/commands/netmount.js"></script>
+    <!--lang-->
+    <script src="../../js/elfindern/js/i18n/elfinder.zh_CN.js"></script>
 
-	<script src="../../js/elfinder/js/i18n/elfinder.zh.js" type="text/javascript" charset="utf-8"></script>
+    <!-- elfinder dialog -->
+    <script src="../../js/elfindern/js/jquery.dialogelfinder.js"></script>
+
+    <!-- elfinder 1.x connector API support -->
+    <script src="../../js/elfindern/js/proxy/elFinderSupportVer1.js"></script>
+
+    <style type="text/css">
+        body { font-family:arial, verdana, sans-serif;}
+        .button {
+            width: 100px;
+            position:relative;
+            display: -moz-inline-stack;
+            display: inline-block;
+            vertical-align: top;
+            zoom: 1;
+            *display: inline;
+            margin:0 3px 3px 0;
+            padding:1px 0;
+            text-align:center;
+            border:1px solid #ccc;
+            background-color:#eee;
+            margin:1em .5em;
+            padding:.3em .7em;
+            border-radius:5px;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            cursor:pointer;
+        }
+    </style>
+    <script>
+        $().ready(function() {
+            $('#finder').elfinder({
+                height : '570',
+                requestType : 'post',
+                // url : 'php/connector.php',
+                url : '../../../servlet/connector',
+                transport : new elFinderSupportVer1(),
+                // transport : new elFinderSupportVer1(),
+                // getFileCallback : function(files, fm) {
+                // 	console.log(files);
+                // },
+                handlers : {
+                    select : function(event, elfinderInstance) {
+                        var selected = event.data.selected;
+
+                        if (selected.length) {
+                            // console.log(elfinderInstance.file(selected[0]))
+                        }
+
+                    }
+                },
+                // handlers : {
+                // 	select : function(e) {
+                // 		console.log(e.data)
+                // 	}
+                // },
+                // onlyMimes : ['image', 'text/plain']
+                // sync : 20000,
+                lang : 'zh_CN',
+                customData : {answer : 42}
+                // requestType : 'POST',
+                // rememberLastDir : false,
+                // ui : ['tree', 'toolbar'],
+                // ui : ['toolbar', 'path', 'stat'],
+                // commands : [],
+                // commandsOptions : {
+                // 	edit : {
+                // 		mimes : ['text/plain', 'text/html', 'text/javascript'],
+                // 		editors : [
+                // 			{
+                // 				mimes : ['text/html'],
+                // 				load : function(textarea) {
+                // 					tinyMCE.execCommand("mceAddControl", true, textarea.id);
+                // 				},
+                // 				close : function(textarea, instance) {
+                // 					tinyMCE.execCommand('mceRemoveControl', false, textarea.id);
+                // 				},
+                // 				save : function(textarea, editor) {
+                // 					textarea.value = tinyMCE.get(textarea.id).selection.getContent({format : 'html'});
+                // 					tinyMCE.execCommand('mceRemoveControl', false, textarea.id);
+                // 				}
+                //
+                // 			}
+                // 		]
+                // 	}
+                // }
+                // uiOptions : {
+                // 	toolbar : [['help']]
+                // }
+            })
+
+            // $('#finder2').elfinder({
+            // 	url : 'connectors/php/connector.php',
+            // 	width:650,
+            // 	lang : 'ru'
+            // })
+
+            // console.log(f1)
+            //
+            // setTimeout(function() {
+            // 	console.log($('#finder').elfinder('instance'))
+            // }, 2000)
+
+            // new elFinder($('<div/>'))
+
+            // var f2 = $('#asd').elfinder({
+            // 	url : 'connectors/php/connector.php',
+            // 	lang : 'ru'
+            // }).elfinder('instance')
 
 
-	<style type="text/css">
-		#close, #open, #dock, #undock {
-			width: 100px;
-			position:relative;
-			display: -moz-inline-stack;
-			display: inline-block;
-			vertical-align: top;
-			zoom: 1;
-			*display: inline;
-			margin:0 3px 3px 0;
-			padding:1px 0;
-			text-align:center;
-			border:1px solid #ccc;
-			background-color:#eee;
-			margin:1em .5em;
-			padding:.3em .7em;
-			border-radius:5px; 
-			-moz-border-radius:5px; 
-			-webkit-border-radius:5px;
-			cursor:pointer;
-		}
-	</style>
-	
+        });
+    </script>
 
-	<script type="text/javascript" charset="utf-8">
-		$().ready(function() {
-			
-			var f = $('#finder').elfinder({
-				url : '../../../servlet/connector',
-				lang : 'zh',
-				docked : true,
-                height : '550'
-				// dialog : {
-				// 	title : 'File manager',
-				// 	height : 500
-				// }
 
-				// Callback example
-				//editorCallback : function(url) {
-				//	if (window.console && window.console.log) {
-				//		window.console.log(url);
-				//	} else {
-				//		alert(url);
-				//	}
-				//},
-				//closeOnEditorCallback : true
-			})
-			// window.console.log(f)
-		/*	$('#close,#open,#dock,#undock').click(function() {
-				$('#finder').elfinder($(this).attr('id'));
-			})*/
-			
-		})
-	</script>
 
 </head>
 <body>
-	<!--<div id="open">open</div><div id="close">close</div><div id="dock">dock</div><div id="undock">undock</div>-->
-	<div id="finder">finder</div>
-
+   <div id="finder" class="ui-layout-center" style="overflow:hidden;"   border="false" ></div>
 </body>
 </html>

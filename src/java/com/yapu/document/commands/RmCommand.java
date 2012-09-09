@@ -50,6 +50,8 @@ public class RmCommand extends AbstractCommandOverride {
 			}
 			try {
 				getFs().removeFile(path);
+                rmInfor(path);
+
 			} catch (FsException e) {
 				throw new ConnectorException("Unable to remove file", e);
 			}
@@ -77,4 +79,7 @@ public class RmCommand extends AbstractCommandOverride {
 			throw new ConnectorException("Unable to remove file", e);
 		}
 	}
+
+
+
 }

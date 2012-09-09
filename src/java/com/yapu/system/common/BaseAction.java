@@ -1,19 +1,13 @@
 package com.yapu.system.common;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
-
-import com.opensymphony.xwork2.ActionSupport;
-
-import org.apache.struts2.ServletActionContext;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class BaseAction extends ActionSupport {
 //	/**
@@ -58,14 +52,22 @@ public class BaseAction extends ActionSupport {
 	 * @return
 	 * @throws IOException
 	 */
-	protected PrintWriter getPrintWriter() throws IOException {
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
-		return out;
-	}
+    protected PrintWriter getPrintWriter() throws IOException {
+        HttpServletResponse response = getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html");
+        response.setHeader("Cache-Control", "no-cache");
+        PrintWriter out  = response.getWriter();
+        return out;
+    }
+    protected PrintWriter getJsonOuter() throws IOException {
+        HttpServletResponse response = getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+        PrintWriter out  = response.getWriter();
+        return out;
+    }
 
 }
 

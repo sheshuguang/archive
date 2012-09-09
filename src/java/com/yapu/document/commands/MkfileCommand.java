@@ -26,6 +26,7 @@ public class MkfileCommand extends AbstractCommandOverride {
 			try {
 				// write with empty data
 				getFs().createFile(newFile, null);
+                saveInfor(newFile);
 			} catch (Exception e) {
 				logger.error("", e);
 				throw new ConnectorException("Unable to create folder");
@@ -43,4 +44,5 @@ public class MkfileCommand extends AbstractCommandOverride {
 			_content(dirCurrent, true);
 		}
 	}
+
 }

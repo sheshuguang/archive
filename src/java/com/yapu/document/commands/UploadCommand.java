@@ -19,6 +19,7 @@ import java.util.List;
 public class UploadCommand extends AbstractCommandOverride {
 	private static Logger logger = Logger.getLogger(UploadCommand.class);
 
+
 	@Override
 	public void execute() throws ConnectorException {
 		setResponseTextHtml();
@@ -40,7 +41,7 @@ public class UploadCommand extends AbstractCommandOverride {
 
 					File newFile = getNewFile(fileName, dirCurrent, FileActionEnum.WRITE);
 					getFs().createFile(newFile, os);
-
+                    saveInfor(newFile);
 					listeResponseSelect.add(_hash(newFile));
 					i++;
 				}
@@ -93,4 +94,5 @@ public class UploadCommand extends AbstractCommandOverride {
 			throw new ConnectorException("File exceeds the maximum allowed filesize");
 		}
 	}
+
 }

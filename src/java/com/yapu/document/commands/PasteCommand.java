@@ -55,6 +55,7 @@ public class PasteCommand extends AbstractCommandOverride {
 
 							try {
 								getFs().renameFileOrDirectory(fileTarget, futureFile);
+                                updateInfor(fileTarget ,futureFile);
 								// TODO
 								//								if (!is_dir($f)) {
 								//									$this->_rmTmb($f);
@@ -67,6 +68,9 @@ public class PasteCommand extends AbstractCommandOverride {
 							// copying file...
 							try {
 								getFs().copyFileOrDirectory(fileTarget, futureFile);
+                                if(!fileTarget.isDirectory()){
+                                   saveInfor(futureFile);
+                                }
 							} catch (FsException e) {
 								_content(dirCurrent, true);
 								throw new ConnectorException("Unable to copy files");
@@ -78,4 +82,5 @@ public class PasteCommand extends AbstractCommandOverride {
 			_content(dirCurrent, true);
 		}
 	}
+
 }

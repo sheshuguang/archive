@@ -6,7 +6,7 @@
 	<!-- 
 	<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
 	-->
-	<script src="jquery/jquery-1.7.2.min.js"></script>
+	<script src="../jquery-1.7.1.js"></script>
 	<script src="jquery/jquery-ui-1.8.21.custom.min.js"></script>
 	<link rel="stylesheet" href="jquery/ui-themes/smoothness/jquery-ui-1.8.21.custom.css" type="text/css">
 
@@ -19,7 +19,6 @@
 	<link rel="stylesheet" href="css/cwd.css"         type="text/css">
 	<link rel="stylesheet" href="css/quicklook.css"   type="text/css">
 	<link rel="stylesheet" href="css/commands.css"    type="text/css">
-
 	<link rel="stylesheet" href="css/fonts.css"       type="text/css">
 	<link rel="stylesheet" href="css/theme.css"       type="text/css">
 
@@ -150,7 +149,8 @@
 				requestType : 'post',
 
 				// url : 'php/connector.php',
-				url : '../../../servlet/connector',
+				url : 'connector.action',
+                //transport : new elFinderSupportVer1(),
 				// transport : new elFinderSupportVer1(),
 				// getFileCallback : function(files, fm) {
 				// 	console.log(files);

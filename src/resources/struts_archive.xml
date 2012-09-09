@@ -125,5 +125,6 @@
         </action >
         <action name = "docAction_*" class = "docAction" method = "{1}"/>
 
+        <action name = "connector" class = "connectorAction" method="run"/>
     </package>
 </struts>

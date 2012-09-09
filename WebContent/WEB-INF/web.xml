@@ -39,33 +39,36 @@
 		<param-value>classpath:applicationContext.xml</param-value>
 	</context-param>
 
-<servlet>
-<display-name>Connector for ElFinder</display-name>
-<servlet-name>connector</servlet-name>
-<servlet-class>com.yapu.document.DocMgrConnectorServlet</servlet-class>
-</servlet>
-<servlet>
-<display-name>Generic Thumbnailer</display-name>
-<servlet-name>thumbnailer</servlet-name>
-<servlet-class>com.yapu.document.Thumbnailer</servlet-class>
-</servlet>
-<servlet>
-<display-name>Generic Proxy</display-name>
-<servlet-name>virtualproxy</servlet-name>
-<servlet-class>com.yapu.document.VirtualProxy</servlet-class>
-</servlet>
-<servlet-mapping>
-<servlet-name>connector</servlet-name>
-<url-pattern>/servlet/connector</url-pattern>
-</servlet-mapping>
-<servlet-mapping>
-<servlet-name>thumbnailer</servlet-name>
-<url-pattern>/servlet/thumbnailer</url-pattern>
-</servlet-mapping>
-<servlet-mapping>
-<servlet-name>virtualproxy</servlet-name>
-<url-pattern>/servlet/virtualproxy</url-pattern>
-</servlet-mapping>
+
+    <servlet>
+        <display-name>Connector for ElFinder</display-name>
+        <servlet-name>connector</servlet-name>
+        <servlet-class>com.yapu.document.DocMgrConnectorServlet</servlet-class>
+    </servlet>
+    <servlet>
+    <display-name>Generic Thumbnailer</display-name>
+    <servlet-name>thumbnailer</servlet-name>
+    <servlet-class>com.yapu.document.Thumbnailer</servlet-class>
+    </servlet>
+    <servlet>
+    <display-name>Generic Proxy</display-name>
+    <servlet-name>virtualproxy</servlet-name>
+    <servlet-class>com.yapu.document.VirtualProxy</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>connector</servlet-name>
+    <url-pattern>/servlet/connector</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+
+    <servlet-name>thumbnailer</servlet-name>
+    <url-pattern>/servlet/thumbnailer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>virtualproxy</servlet-name>
+    <url-pattern>/servlet/virtualproxy</url-pattern>
+    </servlet-mapping>
 	<!-- 创建spring 监听 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
