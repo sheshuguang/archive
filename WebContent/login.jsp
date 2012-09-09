@@ -9,8 +9,8 @@
 </head>
 <body>
 <form action="login.action" method="post">
-	用户名：<input type="text" id="accountcode" name="accountcode" />
-	密码:<input type="password" id="password" name="password"/>
+	用户名：<input type="text" id="accountcode" name="accountcode" value="admin"/>
+	密码:<input type="password" id="password" name="password" value="password"/>
 	<input type="submit" value="submit" />
 </form>
 <br>

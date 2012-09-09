@@ -3,6 +3,197 @@
 var wjGridconfig = new us.archive.ui.Gridconfig();
 
 $(function(){
+	//生成grid的toolbar_aj
+	$( "#wjadd" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-plusthick"
+		}
+	})
+	.click(function() {
+		wjGridconfig.grid.setOptions({
+			autoEdit : true
+		});
+		wjGridconfig.grid.gotoCell(wjGridconfig.dataView.getLength(),3,true);
+	});
+	$( "#wjdelete" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-trash"
+		}
+	})
+	.click(function() {
+		var selectRows = wjGridconfig.grid.getSelectedRows();
+		selectRows.sort(function compare(a, b) {
+			return b - a;
+		});
+		if (selectRows.length > 0) {
+			$.Zebra_Dialog('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span> 条文件记录吗? <br><span style="color:red">注意：删除案卷记录，将同时删除案卷及案卷下所有文件数据、电子全文，请谨慎操作！</span> ', {
+				'type':     'question',
+                'title':    '系统提示',
+                'buttons':  ['确定', '取消'],
+                'onClose':  function(caption) {
+                	if (caption == '确定') {
+                		var deleteRows = [];
+                		
+                		for ( var i = 0; i < selectRows.length; i++) {
+        					var item = wjGridconfig.dataView.getItem(selectRows[i]);
+        					deleteRows.push(item);
+        				}
+                		var par = "par=" + JSON.stringify(deleteRows) + "&tableType=02";
+                		$.post("deleteArchive.action",par,function(data){
+                				if (data == "SUCCESS") {
+                					for ( var i = 0; i < selectRows.length; i++) {
+    		        					var item = wjGridconfig.dataView.getItem(selectRows[i]);
+    		        					wjGridconfig.dataView.deleteItem(item.id);
+    		        				};
+    		        				new $.Zebra_Dialog("删除成功。", {
+    					  				'buttons':  false,
+    					   			    'modal': false,
+    					   			    'position': ['right - 20', 'top + 20'],
+    					   			    'auto_close': 3500
+    					            });
+//                					$.Zebra_Dialog("删除成功。", {
+//                		                'type':     'information',
+//                		                'title':    '系统提示',
+//                		                'buttons':  ['确定']
+//                		            });
+                				}
+                				else {
+                					new $.Zebra_Dialog(data, {
+    					  				'buttons':  false,
+    					   			    'modal': false,
+    					   			    'position': ['right - 20', 'top + 20'],
+    					   			    'auto_close': 3500
+    					            });
+                				}
+                			}
+                		);
+                	}
+                }
+	        });
+		}
+		else {
+			$.Zebra_Dialog('请选择要删除的数据。 ', {
+                'type':     'information',
+                'title':    '系统提示',
+                'buttons':  ['确定']
+            });
+		}
+	});
+	$( "#wjupdate" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-wrench"
+		}
+	})
+	.click(function() {
+		wjGridconfig.grid.setOptions({
+			autoEdit : true
+		});
+	});
+	$( "#wjendupdate" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-grip-solid-horizontal"
+		}
+	})
+	.click(function() {
+		wjGridconfig.grid.setOptions({
+			autoEdit : false
+		});
+	});
+	$( "#wjbatchupdate" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-gear"
+		}
+	})
+	.click(function() {
+		var selectRows = wjGridconfig.grid.getSelectedRows();
+		selectRows.sort(function compare(a, b) {
+			return b - a;
+		});
+		if (selectRows.length > 0) {
+				$.window({
+					showModal	: true,
+		   			modalOpacity: 0.5,
+				    title		: "批量修改",
+				    content		: $("#batchwindows"),
+				    width		: 300,
+				    height		: 200,
+				    showFooter	: false,
+				    showRoundCorner: true,
+				    minimizable	: false,
+				    maximizable	: false,
+				    onShow		: function(wnd) {
+				    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+						var selectContent = container.find("#selectfield"); // 尋找container底下的指定select框
+						var batchBtn = container.find("#batchBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+						batchBtn.unbind("click"); 
+						batchBtn.click( function(){
+							us.batchUpdate(wjGridconfig.grid,wjGridconfig.dataView,true,wnd,'02');
+						});
+						//修改关闭按钮事件
+						var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+						closeBtn.unbind("click"); 
+						closeBtn.click( function(){
+							wnd.close();
+						});
+//						var value = inputer.val(); // 取得值
+						selectContent.empty();
+						
+						for (var i=0;i<wjGridconfig.columns_fields.length;i++) {
+							if (wjGridconfig.columns_fields[i].id != "rownum" && wjGridconfig.columns_fields[i].id != "isdoc" && wjGridconfig.columns_fields[i].id != "files") {
+								selectContent.append("<option value='"+wjGridconfig.columns_fields[i].id+"'>"+wjGridconfig.columns_fields[i].name+"</option>");
+							}
+						}
+				    }
+				});
+		}
+		else {
+			$.Zebra_Dialog('请选择要修改的数据。 ', {
+                'type':     'information',
+                'title':    '系统提示',
+                'buttons':  ['确定']
+            });
+		}
+	});
+	$( "#wjimport" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-calculator"
+		}
+	})
+	.click(function() {
+		showArchiveImportTab('02');
+	});
+	$( "#wjfilter" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-circle-zoomout"
+		}
+	})
+	.click(function() {
+		if ($(wjGridconfig.grid.getTopPanel()).is(":visible")) {
+			wjGridconfig.grid.hideTopPanel();
+		} else {
+			wjGridconfig.grid.showTopPanel();
+		}
+	});
+	$( "#wjbatchatt" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-flag"
+		}
+	})
+	.click(function() {
+		
+	});
+	
+	$("#wjGrid").css({ width: $('.archivetab').width(), height: $('.archivetab').height()-36});
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=02&importType=0";
 	$.ajax({
 		async: false,
@@ -44,7 +235,7 @@ $(function(){
 		}
 	});
 	
-	$("#grid_header_wj").html(archiveCommon.selectTreeName + '_档案列表');
+	$("#grid_header_wj").html(archiveCommon.selectTreeName + '_文件列表');
 	
 	// 创建checkbox列
 	var checkboxSelector = new Slick.CheckboxSelectColumn({
@@ -192,8 +383,8 @@ $(function(){
 	
 	wjGridconfig.dataView.syncGridSelection(wjGridconfig.grid, true);
 	
-	//生成toolbar_aj
-	$('#toolbar_wj').toolbar({
+	//TODO 生成toolbar_aj 已去掉easyui toolbar 等待删除
+	$('#toolbar_wj22').toolbar({
 		items:[{
 			id:"insert_wj",
 			iconCls:"icon-page-add",
@@ -369,9 +560,12 @@ $(function(){
 			}
 		}]
 	});
-	//如果是现实全部文件。屏蔽导入按钮
+	//如果是显示全部文件。屏蔽导入按钮
 	if (archiveCommon.isAllWj == '1') {
-		$("#importWjBtn").linkbutton('disable');
-		$("#insert_wj").linkbutton('disable');
+//		$("#importWjBtn").linkbutton('disable');
+//		$("#insert_wj").linkbutton('disable');
+		$('#wjimport').button("disable"); 
+		$('#wjadd').button("disable"); 
+		
 	}
 });

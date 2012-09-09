@@ -6,7 +6,7 @@ if (us == null || us == undefined){
 /*===================================
  *               public
  ===================================*/
-// 打开、切换tab页签
+//TODO 打开、切换tab页签(easyui用，等能去掉时删除)
 us.showtab=function(tabObject,url, tabname, icon) {
 	if (tabObject.tabs('exists', tabname)) {
 		tabObject.tabs('select', tabname);
@@ -26,7 +26,22 @@ us.showtab=function(tabObject,url, tabname, icon) {
 			closable : true
 		});
 	}
-}
+};
+
+//打开、切换tab页签
+us.addtab=function(ob,txt, type, link) {
+	var aa = $.fn.jerichoTab.addTab({
+//		tabFirer: $(this),
+		tabFirer: ob,
+        title:txt,
+        closeable: true,
+//        iconImg: ico,
+        data: {
+            dataType: type,
+            dataLink: link
+        }
+    }).showLoader().loadData();
+};
 
 
 /*==============================================
@@ -152,4 +167,57 @@ us.request= function(paras)
 
 us.batchAttachment = function() {
 	
+}
+
+//jquery ui dialog 制作的通用alert 
+us.openalert = function(text, title) {
+	var html = $(
+		    '<div class="dialog" id="dialog-message">' +
+		    '  <p>' +
+		    '    <span class="ui-icon ui-icon-circle-check" style="float: left; margin: 0 7px 0 0;"></span>' + text +
+		    '  </p>' +
+		    '</div>');
+	return html.dialog({
+	      //autoOpen: false,
+	      resizable: false,
+	      modal: true,
+	      title: title || "提示信息",
+	      buttons: {
+	        "确定": function() {
+	          var dlg = $(this).dialog("close");
+	        }
+	      },
+	      close: function() {
+	    	  
+	      }
+	    });
+}
+//jquery ui dialog confirm弹出确认提示
+us.openconfirm = function(text, title, fn1, fn2) {
+	var html =
+	    '<div class="dialog" id="dialog-confirm">' +
+	    '  <p>' +
+	    '    <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>' + text +
+	    '  </p>' +
+	    '</div>';
+	    return $(html).dialog({
+	      //autoOpen: false,
+	      resizable: false,
+	      modal: true,
+	      show: {
+	        effect: 'fade',
+	        duration: 300
+	      },
+	      title: title || "提示信息",
+	      buttons: {
+	        "确定": function() {
+	          var dlg = $(this).dialog("close");
+	          fn1 && fn1.call(dlg, true);
+	        },
+	        "取消": function() {
+	          var dlg = $(this).dialog("close");
+	          fn2 && fn2(dlg, false);
+	        }
+	      }
+	    });
 }

@@ -3,8 +3,11 @@ package com.yapu.archive.action;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.yapu.archive.entity.SysAccountTree;
 import com.yapu.archive.entity.SysTree;
 import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.archive.service.itf.ITreeService;
@@ -125,6 +128,123 @@ public class TreeAction extends BaseAction {
 		}
 		return null;
 	}
+	
+	/**
+	 * 读取档案节点树。
+	 * @return
+	 * @throws IOException 
+	 */
+	public String getTree() throws IOException {
+		PrintWriter out  = this.getPrintWriter();
+		
+		//获得帐户组或帐户的节点操作权限
+		SysAccount sessionAccount = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
+		
+		if (null == sessionAccount) {
+			return null;
+		}
+		//创建跟节点
+		List list = new ArrayList();
+		HashMap map = new HashMap();
+		HashMap attrMap = new HashMap();
+		attrMap.put("id", "0");
+		attrMap.put("rel", "root");
+		map.put("attr", attrMap);
+		map.put("data", "档案结构树");
+		
+		List<String> treeidList = new ArrayList<String>();
+		
+		if (!"admin".equals(sessionAccount.getAccountcode())) {
+			List<SysTree> authorityTree = new ArrayList<SysTree>();
+			//首先得到帐户的档案树节点范围
+			authorityTree = accountService.getTree(sessionAccount.getAccountid());
+			//判断帐户是否有档案树节点操作
+			if (null == authorityTree || authorityTree.size() < 1) {
+				//如果未设置帐户自己的树节点范围，读取所属组的范围
+				SysOrg org = accountService.getAccountOfOrg(sessionAccount);
+				authorityTree = orgService.getTree(org.getOrgid());
+				//如果没有找到帐户的树节点范围，也没有找到所属组的节点范围。就只返回跟节点。
+				if (null == authorityTree ) {
+					list.add(map);
+					Gson gson = new Gson();
+					out.write(gson.toJson(list));
+					return null;
+				}
+			}
+			
+			if (null != authorityTree && authorityTree.size() > 0) {
+				for (SysTree tree : authorityTree) {
+					treeidList.add(tree.getTreeid());
+				}
+			}
+		}
+		
+		List tmpList = getTreeJson("0",treeidList);
+		map.put("children", tmpList);
+		list.add(map);
+		
+//		List temp = new ArrayList();
+//		HashMap map = new HashMap();
+//		map.put("id", "0");
+//		map.put("text", "档案节点树");
+//		map.put("iconCls", "");
+//		map.put("state", "open");
+//		List list = getTreeJson("0",treeList);
+//		map.put("children", list);
+//		temp.add(map);
+		Gson gson = new Gson();
+		out.write(gson.toJson(list));
+		return null;
+	}
+	
+	/**  
+     * 无限递归获得tree的json字串  
+     *   
+     * @param parentId  
+     *            父权限id 
+     * @return  
+     */  
+    private List getTreeJson(String parentid,List<String> treeidList) {
+    	//获得帐户组或帐户的节点操作权限
+    	SysAccount sessionAccount = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
+    	//得到节点
+		SysTreeExample example = new SysTreeExample();
+		if ("admin".equals(sessionAccount.getAccountcode())) {
+			example.createCriteria().andParentidEqualTo(parentid);
+		}
+		else {
+			example.createCriteria().andParentidEqualTo(parentid).andTreeidIn(treeidList);
+		}
+		
+		List<SysTree> trees = treeService.selectByWhereNotPage(example);
+		List list = new ArrayList();
+		if(null!=trees && trees.size()>0){
+			for(int i=0;i<trees.size();i++){
+				HashMap attrMap = new HashMap();
+				HashMap map = new HashMap();
+				SysTree tree =(SysTree)trees.get(i);
+				//判断该节点下是否有子节点
+				example.clear();
+				example.createCriteria().andParentidEqualTo(tree.getTreeid());
+				if (treeService.selectByWhereNotPage(example).size() >0) {
+					attrMap.put("id", tree.getTreeid());
+					attrMap.put("rel", "folder");
+					map.put("attr", attrMap);
+					map.put("data", tree.getTreename());
+					map.put("children", this.getTreeJson(tree.getTreeid(),treeidList));
+				}
+				else {
+					attrMap.put("id", tree.getTreeid());
+					attrMap.put("rel", "default");
+					map.put("attr", attrMap);
+					map.put("data", tree.getTreename());
+				}
+				list.add(map);
+			}
+		}
+        
+        return list;
+    }
 	
 	
 	

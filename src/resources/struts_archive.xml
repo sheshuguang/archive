@@ -46,6 +46,7 @@
 		<!-- ========== tree =========================== -->
 		<!-- 显示树-->
 		<action name="loadTreeData" class="treeAction" method="loadTreeData"></action>
+		<action name="getTree" class="treeAction" method="getTree"></action>
 		<!-- 保存新建树-->
 		<action name="addTree" class="treeAction" method="add"></action>
 		<!-- 删除 -->

@@ -4,6 +4,167 @@ var importGridConfig = new us.archive.ui.Gridconfig();
 
 
 $(function() {
+	//生成grid的toolbar_import
+	$( "#importselectfile" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-folder-open"
+		}
+	})
+	.click(function() {
+		$.window({
+			showModal	: true,
+   			modalOpacity: 0.5,
+		    title		: "选择文件",
+		    content		: $("#selectfilewindows"),
+		    width		: 400,
+		    height		: 200,
+		    showFooter	: false,
+		    showRoundCorner: true,
+		    minimizable	: false,
+		    maximizable	: false,
+		    onShow		: function(wnd) {
+		    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+		    	//修改导入按钮点击事件
+		    	var importBtn = container.find("#importBtn"); // 尋找container底下的指定更改按钮
+				//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+		    	importBtn.unbind("click"); 
+		    	importBtn.click( function(){
+		    		importArchive(wnd);
+				});
+				//修改关闭按钮事件
+				var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+				//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+				closeBtn.unbind("click"); 
+				closeBtn.click( function(){
+					wnd.close();
+				});
+		    }
+		});
+	});
+	$( "#importbatchupdate" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-tag"
+		}
+	}).click(function() {
+		var selectRows = importGridConfig.grid.getSelectedRows();
+		selectRows.sort(function compare(a, b) {
+			return b - a;
+		});
+		if (selectRows.length > 0) {
+			$.window({
+				showModal	: true,
+	   			modalOpacity: 0.5,
+			    title		: "批量修改",
+			    content		: $("#batchwindows"),
+			    width		: 300,
+			    height		: 200,
+			    showFooter	: false,
+			    showRoundCorner: true,
+			    minimizable	: false,
+			    maximizable	: false,
+			    onShow		: function(wnd) {
+			    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+					var selectContent = container.find("#selectfield"); // 尋找container底下的指定select框
+					var batchBtn = container.find("#batchBtn"); // 尋找container底下的指定更改按钮
+					//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+					batchBtn.unbind("click"); 
+					batchBtn.click( function(){
+						us.batchUpdate(importGridConfig.grid,importGridConfig.dataView,false,wnd,archiveCommon.tableType);
+					});
+					//修改关闭按钮事件
+					var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+					//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+					closeBtn.unbind("click"); 
+					closeBtn.click( function(){
+						wnd.close();
+					});
+//					var value = inputer.val(); // 取得值
+					selectContent.empty();
+					
+					for (var i=0;i<importGridConfig.columns_fields.length;i++) {
+						if (importGridConfig.columns_fields[i].id != "rownum" && importGridConfig.columns_fields[i].id != "isdoc" && importGridConfig.columns_fields[i].id != "files") {
+							selectContent.append("<option value='"+importGridConfig.columns_fields[i].id+"'>"+importGridConfig.columns_fields[i].name+"</option>");
+						}
+					}
+			    }
+			});
+		}
+		else {
+			$.Zebra_Dialog('请选择要修改的数据。 ', {
+                'type':     'information',
+                'title':    '系统提示',
+                'buttons':  ['确定']
+            });
+		}
+	});
+	$( "#importdelete" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-trash"
+		}
+	})
+	.click(function() {
+		var selectRows = importGridConfig.grid.getSelectedRows();
+		selectRows.sort(function compare(a, b) {
+			return b - a;
+		});
+		if (selectRows.length > 0) {
+			$.Zebra_Dialog('确定要删除选中的数据吗? ', {
+				'type':     'question',
+                'title':    '系统提示',
+                'buttons':  ['确定', '取消'],
+                'onClose':  function(caption) {
+                	if (caption == '确定') {
+                		for ( var i = 0; i < selectRows.length; i++) {
+        					var item = importGridConfig.dataView.getItem(selectRows[i]);
+        					importGridConfig.dataView.deleteItem(item.id);
+        				}
+                	}
+                }
+	        });
+		}
+		else {
+			$.Zebra_Dialog('请选择要删除的数据。 ', {
+                'type':     'information',
+                'title':    '系统提示',
+                'buttons':  ['确定']
+            });
+		}
+	});
+	$( "#importsave" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-disk"
+		}
+	})
+	.click(function() {
+		importGridConfig.grid.getEditorLock().commitCurrentEdit();
+		var a = importGridConfig.dataView.getItems();
+		if (a.length > 0) {
+			var par = "importData=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType;
+
+			$.post("saveImportArchive.action",par,function(data){
+					new $.Zebra_Dialog(data, {
+		  				'buttons':  false,
+		   			    'modal': false,
+		   			    'position': ['right - 20', 'top + 20'],
+		   			    'auto_close': 2500
+		            });
+				}
+			);
+		}
+		else {
+			$.Zebra_Dialog('没有找到导入数据.<br>请重新读取Excel导入文件或与管理员联系。 ', {
+                'type':     'information',
+                'title':    '系统提示',
+                'buttons':  ['确定']
+            });
+		}
+	});
+	
+	$("#importgrid").css({ width: $('.archivetab').width(), height: $('.archivetab').height()-36});
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";
 	$.ajax({
 		async : false,
@@ -32,7 +193,7 @@ $(function() {
 //	else {
 //		importTitle = archiveCommon.selectTreeName + '_文件导入';
 //	}
-	$("#grid-header").html(importTitle);
+	$("#grid-header_import").html(importTitle);
 	
 	// 创建checkbox列
 	var checkboxSelector = new Slick.CheckboxSelectColumn({
@@ -59,7 +220,7 @@ $(function() {
 		selectActiveRow : false
 	}));
 	// 设置分页控件
-	var pager = new Slick.Controls.Pager(importGridConfig.dataView, importGridConfig.grid, $("#pager"));
+	var pager_import = new Slick.Controls.Pager(importGridConfig.dataView, importGridConfig.grid, $("#pager_import"));
 	// 注册grid的checkbox功能插件
 	importGridConfig.grid.registerPlugin(checkboxSelector);
 	// 注册grid的自动提示插件。只在字段内容过长时出现省略号时提示
@@ -82,8 +243,8 @@ $(function() {
 		importGridConfig.grid.render();
 	});
 	
-	//生成toolbar
-	$('#toolbar').toolbar({
+	//生成toolbar 已失效，等待删除
+	$('#toolbar22').toolbar({
 		items:[{
 			id:"select",
 			iconCls:"icon-page-add",
