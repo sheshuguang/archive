@@ -51,7 +51,8 @@ us.archive.Archive.prototype.showBatchAttachment = function(grid,tableType,rows)
 		archiveCommon.items.push(item);
 	};
 	var url = "dispatch.action?page=/webpage/archive/archive/ArchiveBatchAttachment.html";
-	us.showtab($('#tab'),url, '批量挂接', 'icon-page');
+	us.addtab($("#batchatttab"),'批量挂接','ajax', url);
+//	us.showtab($('#tab'),url, '批量挂接', 'icon-page');
 	
 }
 

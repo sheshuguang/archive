@@ -3,6 +3,227 @@
 var ajGridconfig = new us.archive.ui.Gridconfig();
 
 $(function(){
+	//生成grid的toolbar_aj
+	$( "#add" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-plusthick"
+		}
+	})
+	.click(function() {
+		ajGridconfig.grid.setOptions({
+			autoEdit : true
+		});
+		ajGridconfig.grid.gotoCell(ajGridconfig.dataView.getLength(),4,true);
+	});
+	$( "#update" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-wrench"
+		}
+	}).click(function() {
+		ajGridconfig.grid.setOptions({
+			autoEdit : true
+		});
+	});
+	$( "#endupdate" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-grip-solid-horizontal"
+		}
+	})
+	.click(function() {
+		ajGridconfig.grid.setOptions({
+			autoEdit : false
+		});
+	});
+	$( "#batchupdate" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-gear"
+		}
+	})
+	.click(function() {
+		var selectRows = ajGridconfig.grid.getSelectedRows();
+		selectRows.sort(function compare(a, b) {
+			return b - a;
+		});
+		if (selectRows.length > 0) {
+				$.window({
+					showModal	: true,
+		   			modalOpacity: 0.5,
+				    title		: "批量修改",
+				    content		: $("#batchwindows"),
+				    width		: 300,
+				    height		: 200,
+				    showFooter	: false,
+				    showRoundCorner: true,
+				    minimizable	: false,
+				    maximizable	: false,
+				    onShow		: function(wnd) {
+				    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
+						var selectContent = container.find("#selectfield"); // 尋找container底下的指定select框
+						var batchBtn = container.find("#batchBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+						batchBtn.unbind("click"); 
+						batchBtn.click( function(){
+							us.batchUpdate(ajGridconfig.grid,ajGridconfig.dataView,true,wnd,'01');
+						});
+						//修改关闭按钮事件
+						var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
+						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
+						closeBtn.unbind("click"); 
+						closeBtn.click( function(){
+							wnd.close();
+						});
+//						var value = inputer.val(); // 取得值
+						selectContent.empty();
+						
+						for (var i=0;i<ajGridconfig.columns_fields.length;i++) {
+							if (ajGridconfig.columns_fields[i].id != "rownum" && ajGridconfig.columns_fields[i].id != "isdoc" && ajGridconfig.columns_fields[i].id != "files") {
+								selectContent.append("<option value='"+ajGridconfig.columns_fields[i].id+"'>"+ajGridconfig.columns_fields[i].name+"</option>");
+							}
+						}
+				    }
+				});
+		}
+		else {
+//			$.Zebra_Dialog('请选择要修改的数据。 ', {
+//                'type':     'information',
+//                'title':    '系统提示',
+//                'buttons':  ['确定']
+//            });
+			us.openalert('请选择要修改的数据。 ','系统提示');
+		}
+	});
+	$( "#delete" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-trash"
+		}
+	}).click(function() {
+		var selectRows = ajGridconfig.grid.getSelectedRows();
+		selectRows.sort(function compare(a, b) {
+			return b - a;
+		});
+		us.openconfirm('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span>' + 
+				' 条案卷记录吗? <br><span style="color:red">注意：删除案卷记录，将同时删除案卷及案卷下所有文件数据、电子全文，请谨慎操作！</span> ','系统提示',
+				function() {
+					us.openalert('点了确认 ','系统提示');
+				},
+				function() {
+					us.openalert('点了取消 ','系统提示');
+				}
+		);
+		if (selectRows.length > 0) {
+			$.Zebra_Dialog('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span> 条案卷记录吗? <br><span style="color:red">注意：删除案卷记录，将同时删除案卷及案卷下所有文件数据、电子全文，请谨慎操作！</span> ', {
+				'type':     'question',
+                'title':    '系统提示',
+                'buttons':  ['确定', '取消'],
+                'onClose':  function(caption) {
+                	if (caption == '确定') {
+                		var deleteRows = [];
+                		
+                		for ( var i = 0; i < selectRows.length; i++) {
+        					var item = ajGridconfig.dataView.getItem(selectRows[i]);
+        					deleteRows.push(item);
+        				}
+                		var par = "par=" + JSON.stringify(deleteRows) + "&tableType=01";
+                		$.post("deleteArchive.action",par,function(data){
+                				if (data == "SUCCESS") {
+                					for ( var i = 0; i < selectRows.length; i++) {
+    		        					var item = ajGridconfig.dataView.getItem(selectRows[i]);
+    		        					ajGridconfig.dataView.deleteItem(item.id);
+    		        				};
+    		        				new $.Zebra_Dialog("删除成功。", {
+    					  				'buttons':  false,
+    					   			    'modal': false,
+    					   			    'position': ['right - 20', 'top + 20'],
+    					   			    'auto_close': 3500
+    					            });
+//                					$.Zebra_Dialog("删除成功。", {
+//                		                'type':     'information',
+//                		                'title':    '系统提示',
+//                		                'buttons':  ['确定']
+//                		            });
+                				}
+                				else {
+                					new $.Zebra_Dialog(data, {
+    					  				'buttons':  false,
+    					   			    'modal': false,
+    					   			    'position': ['right - 20', 'top + 20'],
+    					   			    'auto_close': 3500
+    					            });
+                				}
+                			}
+                		);
+                	}
+                }
+	        });
+		}
+		else {
+			$.Zebra_Dialog('请选择要删除的数据。 ', {
+                'type':     'information',
+                'title':    '系统提示',
+                'buttons':  ['确定']
+            });
+		}
+	});
+	$( "#import" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-calculator"
+		}
+	}).click(function() {
+		showArchiveImportTab('01');
+	});
+	$( "#Filter" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-circle-zoomout"
+		}
+	}).click(function() {
+		if ($(ajGridconfig.grid.getTopPanel()).is(":visible")) {
+			ajGridconfig.grid.hideTopPanel();
+		} else {
+			ajGridconfig.grid.showTopPanel();
+		}
+	});
+	$( "#allwj" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-script"
+		}
+	}).click(function() {
+		showWjTab("","1");
+	});
+	$( "#batchatt" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-flag"
+		}
+	}).click(function() {
+		var selectRows = ajGridconfig.grid.getSelectedRows();
+		if (selectRows.length > 0) {
+			selectRows.sort(function compare(a, b) {
+				return a - b;
+			});
+			archiveCommon.showBatchAttachment(ajGridconfig,'01',selectRows);
+		}
+		else {
+			$.Zebra_Dialog('请选择要批量挂接的档案记录! ', {
+                'type':     'information',
+                'title':    '系统提示',
+                'buttons':  ['确定']
+            });
+		}
+	});
+	
+	
+	
+//	$("#ajGrid").height($('.archivetab').height()-15);
+//	$("#ajGrid").width($('.archivetab').width()-10);
+	$("#ajGrid").css({ width: $('.archivetab').width(), height: $('.archivetab').height()-36});
 	//同步读取字段
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=01&importType=0";
 	$.ajax({
@@ -186,7 +407,7 @@ $(function(){
 	ajGridconfig.dataView.syncGridSelection(ajGridconfig.grid, true);
 	
 	//生成toolbar_aj
-	$('#toolbar_aj').toolbar({
+	$('#toolbar_aj1').toolbar({
 		items:[{
 			id:"insert",
 			iconCls:"icon-page-add",

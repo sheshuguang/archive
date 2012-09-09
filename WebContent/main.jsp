@@ -12,7 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="webpage/js/jquery.layout/layout-default-latest.css" />
 	
 	<script type="text/javascript" src="webpage/js/jquery-1.7.1.js"></script>
-	<link rel="stylesheet" type="text/css" href="webpage/js/jquery-ui/css/smoothness/jquery-ui-1.8.23.custom.css" />
+	<link rel="stylesheet" type="text/css" href="webpage/js/jquery-ui/css/cupertino/jquery-ui-1.8.23.custom.css" />
 	<script type="text/javascript" src="webpage/js/jquery-ui/jquery-ui-1.8.23.custom.min.js"></script>
 	<!-- <script type="text/javascript" src="webpage/js/jquery-easyui/jquery.easyui.min.js"></script> -->
 	

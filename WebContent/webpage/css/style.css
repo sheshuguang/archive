@@ -111,4 +111,8 @@ a:hover {
 	background: #f2f2f2;
 	text-align:right;
 }
+/*jquery ui 制作的toolbar 需要*/
+.toolbar {
+	padding: 3px;
+}
 
