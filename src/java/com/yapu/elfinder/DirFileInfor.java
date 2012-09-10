@@ -38,4 +38,84 @@ public class DirFileInfor {
             "thash"  : "l1_c2NhbnMy",        // (String) For symlinks only. Symlink target hash.
             "dim"    : "640x480"             // (String) For images - file dimensions. Optionally.
             "volumeid" : "l1_"               // (String) Volume id. For root dir only.*/
+
+    public int getDirs() {
+        return dirs;
+    }
+
+    public void setDirs(int dirs) {
+        this.dirs = dirs;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public int getLocked() {
+        return locked;
+    }
+
+    public void setLocked(int locked) {
+        this.locked = locked;
+    }
+
+    public String getMime() {
+        return mime;
+    }
+
+    public void setMime(String mime) {
+        this.mime = mime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getRead() {
+        return read;
+    }
+
+    public void setRead(int read) {
+        this.read = read;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getTs() {
+        return ts;
+    }
+
+    public void setTs(int ts) {
+        this.ts = ts;
+    }
+
+    public String getVolumeid() {
+        return volumeid;
+    }
+
+    public void setVolumeid(String volumeid) {
+        this.volumeid = volumeid;
+    }
+
+    public int getWrite() {
+        return write;
+    }
+
+    public void setWrite(int write) {
+        this.write = write;
+    }
 }
