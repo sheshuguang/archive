@@ -14,10 +14,12 @@ $(function() {
 //			var gridHdrH	= $pane.children('.slick-header').outerHeight(),
 //				$gridList	= $pane.children('.slick-viewport') ;
 //			$gridList.height( state.innerHeight - gridHdrH );
+			$.fn.jerichoTab.resize();
 			var tabw = $('.archivetab').outerWidth();
 			var tabh = $('.archivetab').outerHeight();
 			$('.archivetab').width(state.innerWidth - 5);
 			$('.archivetab').height(state.outerHeight - 5);
+			
 		}
 	});
 //	using('tree', function () {
@@ -48,7 +50,7 @@ $(function() {
 			"ajax":{
 	            url:"getTree.action",
 	            async:false
-	        },
+	        }
 		},
 		"types" : {
 				"valid_children" : [ "root" ],
@@ -122,8 +124,9 @@ $(function() {
 //                iconImg: 'images/jerichotab.png',
                 data: { dataType: 'formtag', dataLink: '#help' }
             }],
-            activeTabIndex: 0,
-            loadOnce: false
+        activeTabIndex: 0,
+        loadOnce: false,
+        tabWidth:120
     });
 	
 	$('.archivetab').resize(function(){
@@ -199,8 +202,9 @@ function showDocwindow(id, tableid) {
 //				authorityGridconfig.rows = rowList;
 //				var rowList = [];
 				rowList = eval(data);
+				$("#doclist").html("");
 				for (var i=0;i<rowList.length;i++) {
-					$("#doclist").html("<li><a href=\"downDoc.action?docId="+ rowList[i].docid +"\">" + rowList[i].docoldname +"</a></li>");
+					$("#doclist").append("<li><a href=\"downDoc.action?docId="+ rowList[i].docid +"\">" + rowList[i].docoldname +"</a></li>");
 				}
 			} else {
 				$.Zebra_Dialog('读取数据时出错，请尝试重新操作或与管理员联系! ', {

@@ -172,10 +172,12 @@ $.extend($.fn, {
                     //otherwise attach the jerichotabindex' attribute
                     if (ps.tabFirer != null) {
                         var jerichotabindex = ps.tabFirer.attr('jerichotabindex');
-                        if (typeof jerichotabindex != 'undefined' && $('#jerichotab_' + jerichotabindex).length > 0)
-                        	//20120906 wangf 修改 解决add时，加载2次的问题。
+                        if (typeof jerichotabindex != 'undefined' && $('#jerichotab_' + jerichotabindex).length > 0) {
+                            //20120906 wangf 修改 解决add时，加载2次的问题。
 //                            return $.fn.setTabActive(jerichotabindex).adaptSlider().loadData();
-                        	return $.fn.setTabActive(jerichotabindex).adaptSlider();
+                            $('#jerichotab_contentholder').children('div[class=curholder]').attr('class', 'holder').css({ 'display': 'none' });
+                            return $.fn.setTabActive(jerichotabindex).adaptSlider();
+                        }
                         ps.tabFirer.attr('jerichotabindex', curIndex);
                     }
                     //newTab html tree:
@@ -491,7 +493,10 @@ $.extend($.fn, {
                     //make the previous tab selected whether the removed tab was selected
                     var lastTab = $.fn.jerichoTab.tabpage.children('li').filter('.tab_selected');
                     if (lastTab.attr('id') == $(this).attr('id')) {
-                        $(this).prev().swapTabEnable().loadData();
+//                        $(this).prev().swapTabEnable().loadData();
+                    	//20120910  wangf 修改  页签关闭时，不重新载入
+                        $('#jerichotabholder_' + $(this).prev().swapTabEnable().attr('id').replace('jerichotab_', '')).css({ 'display': 'block' }).attr('class','curholder');
+//                    	$(this).prev().swapTabEnable().css({ 'display': 'block' });
                     }
                     //clear the information of the removed tab from tabHash
                     for (var t in tabHash) {
@@ -521,12 +526,13 @@ $.extend($.fn, {
                 //select this tab and hide the last selected tab
                 var lastTab = $.fn.jerichoTab.tabpage.children('li').filter('.tab_selected');
                 lastTab.attr('class', 'jericho_tabs tab_unselect');
-                $('#jerichotabholder_' + lastTab.attr('id').replace('jerichotab_', '')).css({ 'display': 'none' });
+                $('#jerichotabholder_' + lastTab.attr('id').replace('jerichotab_', '')).css({ 'display': 'none' }).attr('class','holder');
                 //20120908 wangf 修改页签变换时 ，不要重新刷新数据
 //                $(this).attr('class', 'jericho_tabs tab_selected').loadData().adaptSlider();
-                $('#jerichotabholder_' + $(this).attr('id').replace('jerichotab_', '')).css({ 'display': 'block' });
+                /////
+                $('#jerichotabholder_' + $(this).attr('id').replace('jerichotab_', '')).css({ 'display': 'block' }).attr('class','curholder');
                 $(this).attr('class', 'jericho_tabs tab_selected').adaptSlider();
-                
+                /////
             });
         });
     },

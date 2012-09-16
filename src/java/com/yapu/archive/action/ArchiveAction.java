@@ -182,7 +182,7 @@ public class ArchiveAction extends BaseAction {
 	        if ("A".equals(templet.getTemplettype()) && "01".equals(tableType)) {
 	            result.append("{id:'files',name:'文件级',field:'files',width:45,cssClass:'cell-center',cannotTriggerInsert:true,resizable:false,selectable:false,");
 	            result.append("formatter:function(row,column,value){");
-	            result.append("return  '<img src=\"../../images/icons/page.png\" title=\"点击查看文件级\" onclick=\"showWjTab(\\''+ value +'\\',\\'0\\')\" />'  }},");
+	            result.append("return  '<img src=\"../../images/icons/page.png\" title=\"点击查看文件级\" style=\"cursor:pointer\" onclick=\"showWjTab(\\''+ value +'\\',\\'0\\')\" />'  }},");
 	//            result.append("return  '<a href=\"#\" onClick=\"showWjTab(\\''+ value +'\\')\" title=\"点击查看文件级\" class=\"easyui-linkbutton\" plain=\"true\" iconCls=icon-table_add></a>'  }},");
 	        }
 	        //添加【是否有全文】标识
@@ -197,7 +197,7 @@ public class ArchiveAction extends BaseAction {
 	                break;
 	            }
 	        }
-	        result.append("if (value>0) {return  '<img src=\"../../images/icons/flag_blue.png\" title=\"点击查看电子文件\" onclick=\"showDocwindow(\\''+ dataContext.id + '\\',\\'"+tableid+"\\')\" />'  } else { return \"\"}}},");
+	        result.append("if (value>0) {return  '<img src=\"../../images/icons/flag_blue.png\" style=\"cursor:pointer\" title=\"点击查看电子文件\" onclick=\"showDocwindow(\\''+ dataContext.id + '\\',\\'"+tableid+"\\')\" />'  } else { return \"\"}}},");
         }
         
 //		//返回字段特殊属性，例如默认值，在页面添加时，直接赋值

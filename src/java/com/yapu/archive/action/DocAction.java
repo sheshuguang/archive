@@ -104,6 +104,10 @@ public class DocAction extends BaseAction{
         criteria.andCreaterEqualTo(sessionAccount.getAccountcode());
         criteria.andFileidEqualTo("");
         criteria.andTableidEqualTo("");
+        SysDocExample.Criteria criteria1 = example.createCriteria();
+        criteria1.andFileidIsNull();
+        criteria1.andTableidIsNull();
+        example.or(criteria1);
     	List<SysDoc> docList = docService.selectByWhereNotPage(example);
     	Gson gson = new Gson();
     	out.write(gson.toJson(docList));
@@ -140,7 +144,7 @@ public class DocAction extends BaseAction{
             doc.setDocnewname(newName);
             doc.setDoclength(CommonUtils.formatFileSize(newFile.length()));
             doc.setDocoldname(oldName);
-            doc.setDoctype(docType);
+            doc.setDoctype(docType.substring(1).toUpperCase());
             doc.setCreater(sessionAccount.getAccountcode());
             doc.setCreatetime(CommonUtils.getTimeStamp());
             SysDocserverExample example = new SysDocserverExample();
@@ -351,6 +355,7 @@ public class DocAction extends BaseAction{
     	}
     	//得到原文件名
     	docName = doc.getDocoldname();
+    	contentType = getContentType(doc.getDoctype());
     	//判断文件所属服务器
     	String serverid = doc.getDocserverid();
     	//得到所属服务器的信息
@@ -400,25 +405,29 @@ public class DocAction extends BaseAction{
     		savePath = docServer.getServerpath();
     	}
     	String docType = doc.getDoctype();
-    	if ("XLS".equals(docType)) {
-    		// contentType设定      
-            contentType = "application/vnd.ms-excel;charset=utf-8";      
-            // attachment表示网页会出现保存、打开对话框      
-            docName = "inline; filename=" + docName;      
+    	contentType = getContentType(docType);
+    	docName = "inline; filename=" + docName;
+    	return SUCCESS;
+    }
+    /**
+     * 返回文件下载类型
+     * @param docType
+     * @return
+     */
+    private String getContentType(String docType) {
+    	if ("XLS".equals(docType.toUpperCase())) {
+            return "application/vnd.ms-excel;charset=utf-8";
     	}
-    	else if("DOC".equals(docType)) {
-    		// contentType设定      
-            contentType = "application/msword;charset=utf-8";      
-            // attachment表示网页会出现保存、打开对话框      
-            docName = "inline; filename=" + docName;    
+    	else if("DOC".equals(docType.toUpperCase())) {
+            return "application/msword;charset=utf-8";      
+    	}
+    	else if("PDF".equals(docType.toUpperCase())) {
+            return "application/pdf;charset=utf-8";
     	}
     	else {
-    		// contentType设定      
             contentType = "text/plain;charset=utf-8";      
-            // attachment表示网页会出现保存、打开对话框      
-            docName = "inline; filename=" + docName;   
     	}
-    	return SUCCESS;
+    	return "";
     }
 
 
@@ -504,7 +513,7 @@ public class DocAction extends BaseAction{
 
 	public String getDocName() throws UnsupportedEncodingException {
 		//文件名字转码，为了下载显示中文名不出现乱码
-		docName = new String(docName.getBytes(),"ISO-8859-1");
+		docName = new String(docName.getBytes("gbk"),"ISO-8859-1");
 		return docName;
 	}
 

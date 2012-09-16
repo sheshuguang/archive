@@ -78,6 +78,12 @@
 
 <link type="text/css" href="../../js/jerichotab/css/jquery.jerichotab.css" rel="stylesheet">
 <script type="text/javascript" src="../../js/jerichotab/jquery.jerichotab.js"></script>
+<script type="text/javascript" src="../../js/jerichotab/jquery.resizable.js"></script>
+
+<link type="text/css" href="../../js/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css" rel="stylesheet">
+<script type="text/javascript" src="../../js/plupload/js/plupload.full.js"></script>
+<script type="text/javascript" src="../../js/plupload/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
+<script type="text/javascript" src="../../js/plupload/js/i18n/cn.js"></script>
 
 <script type="text/javascript">
 //客户端实现 复制、粘贴 功能用的map
@@ -119,15 +125,22 @@ var copyMap = new HashMap();
 	</div>
 	<!-- -->
 	<div id="docwindows" title="电子全文列表">
-		<input type="button" onclick="window.location.href='readDoc.action?docId=1f4fe3f4-c285-4600-884c-2fd57f2e0d3a'" value="open"/>
-		<ul id="doclist">
-		<li>a</li>
-		<li>b</li>
-		</ul>
+		<!-- <input type="button" onclick="window.location.href='readDoc.action?docId=1f4fe3f4-c285-4600-884c-2fd57f2e0d3a'" value="open"/>-->
+		<ul id="doclist"></ul>
 	</div>
 	<!-- 为了解决 jerichotab 在同一页签下显示不同节点数据需要绑定一个 tabFirer，才能实现，我靠-->
 	<input type="hidden" id="wjtab" />
 	<input type="hidden" id="importtab" />
 	<input type="hidden" id="batchatttab" />
+
+    <div id="uploadFile" style="width:600px;" title="上传电子全文">
+        <div style="width: 600px;margin: 0px 0px 0px 0px">
+            <form id="formId" action="submit.action" method="post">
+                <div id="uploader" style="width: 100%;height: 100%">
+                    <p>您的浏览器未安装 Flash, Silverlight, Gears, BrowserPlus 或者支持 HTML5 .</p>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

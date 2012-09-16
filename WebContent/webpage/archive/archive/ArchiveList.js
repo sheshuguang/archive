@@ -223,7 +223,17 @@ $(function(){
 	
 //	$("#ajGrid").height($('.archivetab').height()-15);
 //	$("#ajGrid").width($('.archivetab').width()-10);
-	$("#ajGrid").css({ width: $('.archivetab').width(), height: $('.archivetab').height()-36});
+//	$("#ajGrid").css({ width: $('.archivetab').width(), height: $('.archivetab').height()-36});
+	$("#ajGrid").css({  height: $('.archivetab').height()-36});
+//	$("#archivediv").resizable({
+//		handler: '.archivetab',
+//		onResize: function(e) {
+//			alert("ddd");
+////			alert(('target style: {width: ' +
+////			e.data.resizeData.target.css('width') + ', height: ' +
+////			e.data.resizeData.target.css('height') + '}'));
+//		}
+//	});
 	//同步读取字段
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=01&importType=0";
 	$.ajax({
