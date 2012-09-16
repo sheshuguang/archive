@@ -973,5 +973,696 @@ public class SysDocExample {
             addCriterion("TABLEID not between", value1, value2, "tableid");
             return this;
         }
+
+        public Criteria andAuthorityIsNull() {
+            addCriterion("AUTHORITY is null");
+            return this;
+        }
+
+        public Criteria andAuthorityIsNotNull() {
+            addCriterion("AUTHORITY is not null");
+            return this;
+        }
+
+        public Criteria andAuthorityEqualTo(String value) {
+            addCriterion("AUTHORITY =", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityNotEqualTo(String value) {
+            addCriterion("AUTHORITY <>", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityGreaterThan(String value) {
+            addCriterion("AUTHORITY >", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityGreaterThanOrEqualTo(String value) {
+            addCriterion("AUTHORITY >=", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityLessThan(String value) {
+            addCriterion("AUTHORITY <", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityLessThanOrEqualTo(String value) {
+            addCriterion("AUTHORITY <=", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityLike(String value) {
+            addCriterion("AUTHORITY like", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityNotLike(String value) {
+            addCriterion("AUTHORITY not like", value, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityIn(List values) {
+            addCriterion("AUTHORITY in", values, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityNotIn(List values) {
+            addCriterion("AUTHORITY not in", values, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityBetween(String value1, String value2) {
+            addCriterion("AUTHORITY between", value1, value2, "authority");
+            return this;
+        }
+
+        public Criteria andAuthorityNotBetween(String value1, String value2) {
+            addCriterion("AUTHORITY not between", value1, value2, "authority");
+            return this;
+        }
+        public Criteria andHeightIsNull() {
+            addCriterion("HEIGHT is null");
+            return this;
+        }
+
+        public Criteria andHeightIsNotNull() {
+            addCriterion("HEIGHT is not null");
+            return this;
+        }
+
+        public Criteria andHeightEqualTo(String value) {
+            addCriterion("HEIGHT =", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightNotEqualTo(String value) {
+            addCriterion("HEIGHT <>", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightGreaterThan(String value) {
+            addCriterion("HEIGHT >", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightGreaterThanOrEqualTo(String value) {
+            addCriterion("HEIGHT >=", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightLessThan(String value) {
+            addCriterion("HEIGHT <", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightLessThanOrEqualTo(String value) {
+            addCriterion("HEIGHT <=", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightLike(String value) {
+            addCriterion("HEIGHT like", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightNotLike(String value) {
+            addCriterion("HEIGHT not like", value, "height");
+            return this;
+        }
+
+        public Criteria andHeightIn(List values) {
+            addCriterion("HEIGHT in", values, "height");
+            return this;
+        }
+
+        public Criteria andHeightNotIn(List values) {
+            addCriterion("HEIGHT not in", values, "height");
+            return this;
+        }
+
+        public Criteria andHeightBetween(String value1, String value2) {
+            addCriterion("HEIGHT between", value1, value2, "height");
+            return this;
+        }
+
+        public Criteria andHeightNotBetween(String value1, String value2) {
+            addCriterion("HEIGHT not between", value1, value2, "height");
+            return this;
+        }
+        public Criteria andWidthIsNull() {
+            addCriterion("WIDTH is null");
+            return this;
+        }
+
+        public Criteria andWidthIsNotNull() {
+            addCriterion("WIDTH is not null");
+            return this;
+        }
+
+        public Criteria andWidthEqualTo(String value) {
+            addCriterion("WIDTH =", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthNotEqualTo(String value) {
+            addCriterion("WIDTH <>", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthGreaterThan(String value) {
+            addCriterion("WIDTH >", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthGreaterThanOrEqualTo(String value) {
+            addCriterion("WIDTH >=", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthLessThan(String value) {
+            addCriterion("WIDTH <", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthLessThanOrEqualTo(String value) {
+            addCriterion("WIDTH <=", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthLike(String value) {
+            addCriterion("WIDTH like", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthNotLike(String value) {
+            addCriterion("WIDTH not like", value, "width");
+            return this;
+        }
+
+        public Criteria andWidthIn(List values) {
+            addCriterion("WIDTH in", values, "width");
+            return this;
+        }
+
+        public Criteria andWidthNotIn(List values) {
+            addCriterion("WIDTH not in", values, "width");
+            return this;
+        }
+
+        public Criteria andWidthBetween(String value1, String value2) {
+            addCriterion("WIDTH between", value1, value2, "width");
+            return this;
+        }
+
+        public Criteria andWidthNotBetween(String value1, String value2) {
+            addCriterion("WIDTH not between", value1, value2, "width");
+            return this;
+        }
+        public Criteria andHiddenIsNull() {
+            addCriterion("HIDDEN is null");
+            return this;
+        }
+
+        public Criteria andHiddenIsNotNull() {
+            addCriterion("HIDDEN is not null");
+            return this;
+        }
+
+        public Criteria andHiddenEqualTo(String value) {
+            addCriterion("HIDDEN =", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenNotEqualTo(String value) {
+            addCriterion("HIDDEN <>", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenGreaterThan(String value) {
+            addCriterion("HIDDEN >", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenGreaterThanOrEqualTo(String value) {
+            addCriterion("HIDDEN >=", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenLessThan(String value) {
+            addCriterion("HIDDEN <", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenLessThanOrEqualTo(String value) {
+            addCriterion("HIDDEN <=", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenLike(String value) {
+            addCriterion("HIDDEN like", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenNotLike(String value) {
+            addCriterion("HIDDEN not like", value, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenIn(List values) {
+            addCriterion("HIDDEN in", values, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenNotIn(List values) {
+            addCriterion("HIDDEN not in", values, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenBetween(String value1, String value2) {
+            addCriterion("HIDDEN between", value1, value2, "hidden");
+            return this;
+        }
+
+        public Criteria andHiddenNotBetween(String value1, String value2) {
+            addCriterion("HIDDEN not between", value1, value2, "hidden");
+            return this;
+        }
+        public Criteria andLockedIsNull() {
+            addCriterion("LOCKED is null");
+            return this;
+        }
+
+        public Criteria andLockedIsNotNull() {
+            addCriterion("LOCKED is not null");
+            return this;
+        }
+
+        public Criteria andLockedEqualTo(String value) {
+            addCriterion("LOCKED =", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedNotEqualTo(String value) {
+            addCriterion("LOCKED <>", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedGreaterThan(String value) {
+            addCriterion("LOCKED >", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedGreaterThanOrEqualTo(String value) {
+            addCriterion("LOCKED >=", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedLessThan(String value) {
+            addCriterion("LOCKED <", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedLessThanOrEqualTo(String value) {
+            addCriterion("LOCKED <=", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedLike(String value) {
+            addCriterion("LOCKED like", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedNotLike(String value) {
+            addCriterion("LOCKED not like", value, "locked");
+            return this;
+        }
+
+        public Criteria andLockedIn(List values) {
+            addCriterion("LOCKED in", values, "locked");
+            return this;
+        }
+
+        public Criteria andLockedNotIn(List values) {
+            addCriterion("LOCKED not in", values, "locked");
+            return this;
+        }
+
+        public Criteria andLockedBetween(String value1, String value2) {
+            addCriterion("LOCKED between", value1, value2, "locked");
+            return this;
+        }
+
+        public Criteria andLockedNotBetween(String value1, String value2) {
+            addCriterion("LOCKED not between", value1, value2, "locked");
+            return this;
+        }
+        public Criteria andWriteIsNull() {
+            addCriterion("MWRITE is null");
+            return this;
+        }
+
+        public Criteria andWriteIsNotNull() {
+            addCriterion("MWRITE is not null");
+            return this;
+        }
+
+        public Criteria andWriteEqualTo(String value) {
+            addCriterion("MWRITE =", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteNotEqualTo(String value) {
+            addCriterion("MWRITE <>", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteGreaterThan(String value) {
+            addCriterion("MWRITE >", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteGreaterThanOrEqualTo(String value) {
+            addCriterion("MWRITE >=", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteLessThan(String value) {
+            addCriterion("MWRITE <", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteLessThanOrEqualTo(String value) {
+            addCriterion("MWRITE <=", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteLike(String value) {
+            addCriterion("MWRITE like", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteNotLike(String value) {
+            addCriterion("MWRITE not like", value, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteIn(List values) {
+            addCriterion("MWRITE in", values, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteNotIn(List values) {
+            addCriterion("MWRITE not in", values, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteBetween(String value1, String value2) {
+            addCriterion("MWRITE between", value1, value2, "mwrite");
+            return this;
+        }
+
+        public Criteria andWriteNotBetween(String value1, String value2) {
+            addCriterion("MWRITE not between", value1, value2, "mwrite");
+            return this;
+        }
+        public Criteria andMreadIsNull() {
+            addCriterion("MREAD is null");
+            return this;
+        }
+
+        public Criteria andMreadIsNotNull() {
+            addCriterion("MREAD is not null");
+            return this;
+        }
+
+        public Criteria andMreadEqualTo(String value) {
+            addCriterion("MREAD =", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadNotEqualTo(String value) {
+            addCriterion("MREAD <>", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadGreaterThan(String value) {
+            addCriterion("MREAD >", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadGreaterThanOrEqualTo(String value) {
+            addCriterion("MREAD >=", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadLessThan(String value) {
+            addCriterion("MREAD <", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadLessThanOrEqualTo(String value) {
+            addCriterion("MREAD <=", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadLike(String value) {
+            addCriterion("MREAD like", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadNotLike(String value) {
+            addCriterion("MREAD not like", value, "mread");
+            return this;
+        }
+
+        public Criteria andMreadIn(List values) {
+            addCriterion("MREAD in", values, "mread");
+            return this;
+        }
+
+        public Criteria andMreadNotIn(List values) {
+            addCriterion("MREAD not in", values, "mread");
+            return this;
+        }
+
+        public Criteria andMreadBetween(String value1, String value2) {
+            addCriterion("MREAD between", value1, value2, "mread");
+            return this;
+        }
+
+        public Criteria andMreadNotBetween(String value1, String value2) {
+            addCriterion("MREAD not between", value1, value2, "mread");
+            return this;
+        }
+        public Criteria andMimeIsNull() {
+            addCriterion("MIME is null");
+            return this;
+        }
+
+        public Criteria andMimeIsNotNull() {
+            addCriterion("MIME is not null");
+            return this;
+        }
+
+        public Criteria andMimeEqualTo(String value) {
+            addCriterion("MIME =", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeNotEqualTo(String value) {
+            addCriterion("MIME <>", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeGreaterThan(String value) {
+            addCriterion("MIME >", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeGreaterThanOrEqualTo(String value) {
+            addCriterion("MIME >=", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeLessThan(String value) {
+            addCriterion("MIME <", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeLessThanOrEqualTo(String value) {
+            addCriterion("MIME <=", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeLike(String value) {
+            addCriterion("MIME like", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeNotLike(String value) {
+            addCriterion("MIME not like", value, "mime");
+            return this;
+        }
+
+        public Criteria andMimeIn(List values) {
+            addCriterion("MIME in", values, "mime");
+            return this;
+        }
+
+        public Criteria andMimeNotIn(List values) {
+            addCriterion("MIME not in", values, "mime");
+            return this;
+        }
+
+        public Criteria andMimeBetween(String value1, String value2) {
+            addCriterion("MIME between", value1, value2, "mime");
+            return this;
+        }
+
+        public Criteria andMimeNotBetween(String value1, String value2) {
+            addCriterion("MIME not between", value1, value2, "mime");
+            return this;
+        }
+        public Criteria andMtimeIsNull() {
+            addCriterion("MTIME is null");
+            return this;
+        }
+
+        public Criteria andMtimeIsNotNull() {
+            addCriterion("MTIME is not null");
+            return this;
+        }
+
+        public Criteria andMtimeEqualTo(String value) {
+            addCriterion("MTIME =", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeNotEqualTo(String value) {
+            addCriterion("MTIME <>", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeGreaterThan(String value) {
+            addCriterion("MTIME >", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeGreaterThanOrEqualTo(String value) {
+            addCriterion("MTIME >=", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeLessThan(String value) {
+            addCriterion("MTIME <", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeLessThanOrEqualTo(String value) {
+            addCriterion("MTIME <=", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeLike(String value) {
+            addCriterion("MTIME like", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeNotLike(String value) {
+            addCriterion("MTIME not like", value, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeIn(List values) {
+            addCriterion("MTIME in", values, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeNotIn(List values) {
+            addCriterion("MTIME not in", values, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeBetween(String value1, String value2) {
+            addCriterion("MTIME between", value1, value2, "mtime");
+            return this;
+        }
+
+        public Criteria andMtimeNotBetween(String value1, String value2) {
+            addCriterion("MTIME not between", value1, value2, "mtime");
+            return this;
+        }
+        public Criteria andParentidIsNull() {
+            addCriterion("PARENTID is null");
+            return this;
+        }
+
+        public Criteria andParentidIsNotNull() {
+            addCriterion("PARENTID is not null");
+            return this;
+        }
+
+        public Criteria andParentidEqualTo(String value) {
+            addCriterion("PARENTID =", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidNotEqualTo(String value) {
+            addCriterion("PARENTID <>", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidGreaterThan(String value) {
+            addCriterion("PARENTID >", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidGreaterThanOrEqualTo(String value) {
+            addCriterion("PARENTID >=", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidLessThan(String value) {
+            addCriterion("PARENTID <", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidLessThanOrEqualTo(String value) {
+            addCriterion("PARENTID <=", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidLike(String value) {
+            addCriterion("PARENTID like", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidNotLike(String value) {
+            addCriterion("PARENTID not like", value, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidIn(List values) {
+            addCriterion("PARENTID in", values, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidNotIn(List values) {
+            addCriterion("PARENTID not in", values, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidBetween(String value1, String value2) {
+            addCriterion("PARENTID between", value1, value2, "parentid");
+            return this;
+        }
+
+        public Criteria andParentidNotBetween(String value1, String value2) {
+            addCriterion("PARENTID not between", value1, value2, "parentid");
+            return this;
+        }
     }
 }

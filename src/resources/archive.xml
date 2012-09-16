@@ -259,6 +259,6 @@
     </bean>
 
     <bean id="connectorAction" class="com.yapu.elfinder.ConnectorAction">
-
+        <property name="docService" ref="docService" />
     </bean>
 </beans>

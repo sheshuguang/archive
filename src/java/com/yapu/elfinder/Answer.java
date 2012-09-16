@@ -15,10 +15,26 @@ public class Answer {
     private List<DirFileInfor> files ;// 当前目录包含的文件信息
     private Options options;//
     private String uplMaxSize;//上传文件最大限制 如：32M
-    private String [] netDrivers;//可以被挂载的网络协议列表 如：["ftp"]
+    private List<String> netDrivers;//可以被挂载的网络协议列表 如：["ftp"]
     private Debug debug;//客户端调试信息
+    private List<DirFileInfor> tree; //directors
+
+    public List<DirFileInfor> getTree() {
+        return tree;
+    }
+   public void setTree(List<DirFileInfor> tree) {
+        this.tree = tree;
+    }
+   public List<String> getNetDrivers() {
+        return netDrivers;
+    }
+
+    public void setNetDrivers(List<String> netDrivers) {
+        this.netDrivers = netDrivers;
+    }
 
     public String getApi() {
+
         return api;
     }
 
@@ -58,13 +74,6 @@ public class Answer {
         this.uplMaxSize = uplMaxSize;
     }
 
-    public String[] getNetDrivers() {
-        return netDrivers;
-    }
-
-    public void setNetDrivers(String[] netDrivers) {
-        this.netDrivers = netDrivers;
-    }
 
     public Debug getDebug() {
         return debug;
