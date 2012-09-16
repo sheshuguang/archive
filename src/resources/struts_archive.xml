@@ -4,7 +4,7 @@
         "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<!-- 档案涉及的操作都在这里 -->
-	<package name="archive" extends="struts-default" >
+	<package name="archive" extends="struts-archive" >
 		<!-- ========== ftp =========================== -->
 		<!-- ftp显示列表 -->
 		<action name="testFtp" class="ftpAction" method="testFtp"></action>
@@ -46,7 +46,8 @@
 		<!-- ========== tree =========================== -->
 		<!-- 显示树-->
 		<action name="loadTreeData" class="treeAction" method="loadTreeData"></action>
-		<action name="getTree" class="treeAction" method="getTree"></action>
+		<action name="getTree" class="treeAction" method="getTree">
+		</action>
 		<!-- 保存新建树-->
 		<action name="addTree" class="treeAction" method="add"></action>
 		<!-- 删除 -->
@@ -85,10 +86,10 @@
         <!--上传文件-->
         <action name="uploadFile" class="docAction" method="uploadFile"></action>
         <action name="listDoc" class="docAction" method="list"></action>
-        <!-- 下载测试 -->
+        <!-- 下载测试  application/octet-stream-->
         <action name="downDoc" class="docAction" method="downDoc">
         	<result type="stream">
-				<param name="contentType">application/octet-stream</param>
+				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentDisposition">attachment;filename="${docName}"</param>
 				<param name="bufferSize">4096</param>
@@ -115,7 +116,8 @@
 		
 		<!-- 保存批量挂接-->
 		<action name="saveBatchAttArchive" class="attachmentAction" method="insertBatchAttachmentArchive"></action>
-
+        
+        <!-- test upload end-->
         <action name ="docUpload" class ="docAction" method="upload">
             <param name="savePath">/WEB-INF/files/upload</param>
         </action >

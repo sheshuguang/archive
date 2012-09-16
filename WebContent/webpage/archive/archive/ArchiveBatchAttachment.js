@@ -11,16 +11,35 @@ archiveCommon.yesItems = [];
 
 $(function() {
 	
-	$("#batchlayout").css({ width: $('.archivetab').width(), height: $('.archivetab').height()-36});
+	$("#batchlayout").css({  height: $('.archivetab').height()-36});
+	//声明上传控件。#uploadFile，作为公共的资源，在archiveMgr.js里
+	$("#uploadFile").dialog({
+        autoOpen: false,
+        height: 410,
+        width: 630,
+        modal: true,
+        buttons: {
+            '关闭': function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        	getNoAttData();
+        	attNoGridConfig.dataView.beginUpdate();
+        	attNoGridConfig.dataView.setItems(attNoGridConfig.rows);
+        	attNoGridConfig.dataView.endUpdate();
+        }
+    });
 	
+
 	//生成grid的toolbar_archiveAttachment
+    //设置挂接条件
 	$( "#setcondition" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-info"
 		}
-	})
-	.click(function() {
+	}).click(function() {
 		$.window({
 			showModal	: true,
    			modalOpacity: 0.5,
@@ -37,27 +56,27 @@ $(function() {
 //		    	//修改导入按钮点击事件
 //		    	var importBtn = container.find("#importBtn"); // 尋找container底下的指定更改按钮
 //				//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-//		    	importBtn.unbind("click"); 
+//		    	importBtn.unbind("click");
 //		    	importBtn.click( function(){
 //		    		importArchive(wnd);
 //				});
 //				//修改关闭按钮事件
 //				var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
 //				//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-//				closeBtn.unbind("click"); 
+//				closeBtn.unbind("click");
 //				closeBtn.click( function(){
 //					wnd.close();
 //				});
 		    }
 		});
 	});
+    //移除批量挂接档案
 	$( "#deletearchive" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-closethick"
 		}
-	})
-	.click(function() {
+	}).click(function() {
 		var selectRows = attGridConfig.grid.getSelectedRows();
 		selectRows.sort(function compare(a, b) {
 			return b - a;
@@ -76,13 +95,13 @@ $(function() {
             });
 		}
 	});
+    //保存挂接结果
 	$( "#savearchive" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-disk"
 		}
-	})
-	.click(function() {
+	}).click(function() {
 		var a = archiveCommon.yesItems;
 		if (a.length > 0) {
 			var par = "items=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType + "&treeid=" + archiveCommon.selectTreeid;
@@ -105,15 +124,15 @@ $(function() {
             });
 		}
 	});
-	
+
 	//生成grid的toolbar_archiveAttachment_no
+    //自动挂接
 	$( "#autofile" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-flag"
 		}
-	})
-	.click(function() {
+	}).click(function() {
 		//得到档案记录items
 		var attItems = attGridConfig.dataView.getItems();
 		if (attItems.length < 1) {
@@ -134,7 +153,7 @@ $(function() {
             });
 			return;
 		}
-		
+
 		for (a in attItems) {
 			for (var i=attNoItems.length-1;i>=0;i-- ) {
 				if (attItems[a][archiveCommon.archiveField] != "") {
@@ -146,22 +165,23 @@ $(function() {
 						var item = attNoItems[i];
 						item.fileid = fileid;
 						attYesGridConfig.dataView.addItem(item);
+                        archiveCommon.yesItems.push(item);
 						//
 						attNoGridConfig.dataView.deleteItem(item.docid);
 					}
 				}
-				
+
 			}
 		}
-		archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
+//		archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
 	});
+    //手动挂接
 	$( "#selffile" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-circle-arrow-w"
 		}
-	})
-	.click(function() {
+	}).click(function() {
 		var attSelectRows = attGridConfig.grid.getSelectedRows();
 		if (attSelectRows.length != 1) {
 			$.Zebra_Dialog('手动挂接只能选择一个档案记录，请重新选择。 ', {
@@ -184,6 +204,7 @@ $(function() {
 				var item = attNoGridConfig.dataView.getItem(attNoSelectRows[i]);
 				item.fileid = fileid;
 				attYesGridConfig.dataView.addItem(item);
+                archiveCommon.yesItems.push(item);
 			};
 			attYesGridConfig.dataView.endUpdate();
 			attNoSelectRows.sort(function compare(a, b) {
@@ -201,24 +222,63 @@ $(function() {
                 'buttons':  ['确定']
             });
 		}
-		archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
+//		archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
 	});
+    //上传文件
 	$( "#uploadfile" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-circle-arrow-n"
 		}
-	})
-	.click(function() {
-		
+	}).click(function() {
+            $("#uploader").pluploadQueue({
+                // General settings
+                runtimes : 'flash,html5,html4',
+                url : 'docUpload.action',
+                max_file_size : '200mb',
+//                unique_names : true,
+                chunk_size: '2mb',
+                // Specify what files to browse for
+                filters : [
+                           {title : "所有文件", extensions : "*.*"},
+		                   {title : "Image files", extensions : "jpg,gif,png"},
+				           {title : "rar files", extensions : "rar"},
+				           {title : "pdf files", extensions : "pdf"},
+				           {title : "office files", extensions : "doc,docx,ppt,pptx,xls,xlsx"},
+				           {title : "exe files", extensions : "exe"},
+				           {title : "Zip files", extensions : "zip,rar,exe"}
+		            
+                ],
+
+                // Flash settings
+                flash_swf_url : '../../js/plupload/js/plupload.flash.swf'
+                // Silverlight settings
+//                silverlight_xap_url : '/example/plupload/js/plupload.silverlight.xap'
+            });
+            $('#formId').submit(function(e) {
+                var uploader = $('#uploader').pluploadQueue();
+                if (uploader.files.length > 0) {
+                    // When all files are uploaded submit form
+                    uploader.bind('StateChanged', function() {
+                        if (uploader.files.length === (uploader.total.uploaded + uploader.total.failed)) {
+                            $('#formId')[0].submit();
+                        }
+                    });
+                    uploader.start();
+                } else {
+                    alert('请先上传数据文件.');
+                }
+                return false;
+            });
+            $( "#uploadFile" ).dialog( "open");
 	});
+    //移除未挂接文件
 	$( "#deletefile" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-closethick"
 		}
-	})
-	.click(function() {
+	}).click(function() {
 		var selectRows = attNoGridConfig.grid.getSelectedRows();
 		selectRows.sort(function compare(a, b) {
 			return b - a;
@@ -237,15 +297,15 @@ $(function() {
             });
 		}
 	});
-	
+
 	//生成grid的toolbar_archiveAttachment_yes
+    //移除已挂接的文件
 	$( "#deleteyesfile" ).button({
 		text: false,
 		icons: {
 			primary: "ui-icon-closethick"
 		}
-	})
-	.click(function() {
+	}).click(function() {
 		var selectRows = attYesGridConfig.grid.getSelectedRows();
 		selectRows.sort(function compare(a, b) {
 			return a - b;
@@ -262,6 +322,13 @@ $(function() {
 			for ( var i = 0; i < selectRows.length; i++) {
 				var item = attYesGridConfig.dataView.getItem(selectRows[i]);
 				attYesGridConfig.dataView.deleteItem(item.docid);
+                for(var j=0;j<archiveCommon.yesItems.length;j++) {
+                    var tempItem = archiveCommon.yesItems[j];
+                    if (tempItem.docid == item.docid) {
+                        archiveCommon.yesItems.splice(j,1);
+                        break;
+                    }
+                }
 			}
 		}
 		else {
@@ -271,7 +338,7 @@ $(function() {
                 'buttons':  ['确定']
             });
 		}
-		archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
+//		archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
 	});
 	
 	
@@ -299,7 +366,7 @@ $(function() {
 		}
 	});
 	
-	
+	//生成档案grid
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";
 	$.ajax({
 		async : false,
@@ -345,12 +412,6 @@ $(function() {
 		attGridConfig.grid.render();
 	});
 	
-//	attGridConfig.grid.onClick.subscribe(function(e,args) {
-//		 var item = attGridConfig.dataView.getItem(args.row);
-//		 var attYesItems = attYesGridConfig.dataView.getItems();
-//		 alert(item.id); 
-//	});
-	
 	attGridConfig.grid.onSelectedRowsChanged.subscribe(function(e,args) {
 		var attYesItems = archiveCommon.yesItems;  //attYesGridConfig.dataView.getItems();
 		if (attYesItems.length > 0) {
@@ -361,7 +422,6 @@ $(function() {
 					for (var j=0;j<attYesItems.length;j++) {
 						if (item.id == attYesItems[j].fileid) {
 							attYesGridConfig.dataView.addItem(attYesItems[j]);
-							break;
 						}
 					}
 				}
@@ -377,24 +437,7 @@ $(function() {
 //	attGridConfig.grid.resizeCanvas();
 	//=========没有对应的全文grid============
 	
-  //同步读取当前帐户上传到全文库中的电子文件数据
-	$.ajax({
-		async : false,
-		url : "listNoLinkDocAsAccount.action",
-		type : 'post',
-		dataType : 'script',
-		success : function(data) {
-			if (data != "error") {
-				attNoGridConfig.rows = eval(data);
-			} else {
-				$.Zebra_Dialog('读取全文库中未挂接数据时出错，请尝试重新操作或与管理员联系! ', {
-	                'type':     'information',
-	                'title':    '系统提示',
-	                'buttons':  ['确定']
-	            });
-			}
-		}
-	});
+	getNoAttData();
 	attNoGridConfig.columns = [
          {id: "docoldname", name: "文件名", field: "docoldname" },
          {id: "doctype", name: "文件类型", field: "doctype" },
@@ -467,4 +510,25 @@ $(function() {
   	});
           	
 });
+
+function getNoAttData() {
+	//同步读取当前帐户上传到全文库中的电子文件数据
+	$.ajax({
+		async : false,
+		url : "listNoLinkDocAsAccount.action",
+		type : 'post',
+		dataType : 'script',
+		success : function(data) {
+			if (data != "error") {
+				attNoGridConfig.rows = eval(data);
+			} else {
+				$.Zebra_Dialog('读取全文库中未挂接数据时出错，请尝试重新操作或与管理员联系! ', {
+	                'type':     'information',
+	                'title':    '系统提示',
+	                'buttons':  ['确定']
+	            });
+			}
+		}
+	});
+}
 
