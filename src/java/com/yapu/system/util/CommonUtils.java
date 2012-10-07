@@ -1,5 +1,7 @@
 package com.yapu.system.util;
 
+import com.yapu.archive.entity.SysDoc;
+import com.yapu.elfinder.DirFileInfor;
 import com.yapu.system.util.id.UUIDHexGenerator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
@@ -308,7 +311,28 @@ public class CommonUtils {
         UUIDHexGenerator uuid = new UUIDHexGenerator();
         return (String) uuid.generate();
     }
-
+    public static DirFileInfor copyDoc2Dfi(SysDoc doc, DirFileInfor dfi){
+        dfi.setDirs(Integer.valueOf(doc.getDoctype()));
+        dfi.setMime(doc.getMime());
+        dfi.setHash(doc.getDocid());
+        dfi.setLocked(Integer.valueOf(doc.getLocked()));
+        dfi.setName(doc.getDocnewname());
+        dfi.setRead(Integer.valueOf(doc.getMread()));
+        dfi.setSize(Integer.valueOf(doc.getDoclength()));
+        dfi.setTs(doc.getMtime());
+        dfi.setVolumeid(doc.getDocserverid());
+        dfi.setWrite(Integer.valueOf(doc.getMwrite()));
+        dfi.setPhash(doc.getParentid());
+        dfi.setVolumeid(doc.getDocserverid());
+        return dfi;
+    }
+    public static  boolean filesContains(List<DirFileInfor> files,String docId){
+        for(DirFileInfor file:files){
+            if (file.getHash().equals(docId))
+                return true;
+        }
+       return false;
+    }
     public static void main(String[] args) {
 		System.out.println(isNumber("a123.123"));
 	}

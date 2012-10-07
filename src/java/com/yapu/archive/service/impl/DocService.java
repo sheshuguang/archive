@@ -4,8 +4,6 @@ package com.yapu.archive.service.impl;
  * @author wangf
  * @date	2010-11-18
  */
-import java.util.List;
-
 import com.yapu.archive.dao.itf.DynamicDAO;
 import com.yapu.archive.dao.itf.SysDocDAO;
 import com.yapu.archive.dao.itf.SysTableDAO;
@@ -13,6 +11,8 @@ import com.yapu.archive.entity.SysDoc;
 import com.yapu.archive.entity.SysDocExample;
 import com.yapu.archive.entity.SysTable;
 import com.yapu.archive.service.itf.IDocService;
+
+import java.util.List;
 
 public class DocService implements IDocService {
 	
@@ -175,7 +175,51 @@ public class DocService implements IDocService {
 	public int rowCount(SysDocExample example) {
 		return docDao.countByExample(example);
 	}
-	public void setDocDao(SysDocDAO docDao) {
+
+    @Override
+    public List<SysDoc> selectChildrensByParentId(String parentId) {
+        SysDocExample where = new SysDocExample();
+        where.createCriteria().andParentidEqualTo(parentId);
+        List<SysDoc> docList = selectByWhereNotPage(where);   //子目录与文件列表
+        return docList;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<SysDoc> selectChildrenDirsByParentId(String parentId) {
+        SysDocExample where = new SysDocExample();
+        where.createCriteria().andParentidEqualTo(parentId).andDoctypeEqualTo("1");
+        List<SysDoc> dosList = selectByWhereNotPage(where);
+        return dosList;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean checkTarget(String targetId) {
+        SysDoc tgdoc = selectByPrimaryKey(targetId);
+        if(null!=tgdoc){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasChildren(String targetId) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean hasChildrenDir(String targetId) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<SysDoc> selectAllroot() {
+        SysDocExample where = new SysDocExample();
+        where.createCriteria().andParentidIsNull();
+        List<SysDoc> rootDocList = selectByWhereNotPage(where);  //所有一级节点
+        return rootDocList;
+    }
+
+    public void setDocDao(SysDocDAO docDao) {
 		this.docDao = docDao;
 	}
 	public void setTableDao(SysTableDAO tableDao) {

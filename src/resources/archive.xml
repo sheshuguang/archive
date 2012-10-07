@@ -258,7 +258,7 @@
     <bean id="dispatchAction" class="com.yapu.system.action.DispatchAction">
     </bean>
 
-    <bean id="connectorAction" class="com.yapu.elfinder.ConnectorAction">
+    <bean id="connectorAction" class="com.yapu.elfinder.ConnectorAction" scope="prototype">
         <property name="docService" ref="docService" />
     </bean>
 </beans>

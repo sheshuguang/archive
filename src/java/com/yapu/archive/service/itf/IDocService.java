@@ -1,9 +1,9 @@
 package com.yapu.archive.service.itf;
 
-import java.util.List;
-
 import com.yapu.archive.entity.SysDoc;
 import com.yapu.archive.entity.SysDocExample;
+
+import java.util.List;
 
 public interface IDocService {
 
@@ -63,4 +63,41 @@ public interface IDocService {
 	//========================================================
 	
 	//===========电子文件关联的操作=================================
+
+    /**
+     * 得到子元素 ，包括文件与文件夹
+     * @param parentId
+     * @return
+     */
+    List<SysDoc> selectChildrensByParentId(String parentId);
+
+    /**
+     * 得到子目录 只含文件夹
+     * @param parentId
+     * @return
+     */
+    List<SysDoc> selectChildrenDirsByParentId(String parentId);
+
+    /**
+     * 检查目标文件或文件夹是否存在
+     * @param targetId
+     * @return
+     */
+    boolean  checkTarget(String targetId);
+
+    /**
+     * 是否存在子文件或者文件夹
+     * @param targetId
+     * @return
+     */
+    boolean  hasChildren(String targetId);
+
+    /**
+     * 是否存在子目录
+     * @param targetId
+     * @return
+     */
+    boolean  hasChildrenDir(String targetId);
+
+    List<SysDoc> selectAllroot();
 }

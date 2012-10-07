@@ -8,6 +8,9 @@
 	<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
 	-->
 	<script src="../jquery-1.7.1.js"></script>
+    <script type="text/javascript">
+        jQuery.ajaxSettings.traditional = true;
+    </script>
 	<script src="jquery/jquery-ui-1.8.21.custom.min.js"></script>
 	<link rel="stylesheet" href="jquery/ui-themes/smoothness/jquery-ui-1.8.21.custom.css" type="text/css">
 
@@ -145,6 +148,7 @@
 	</style>
 
 	<script>
+
 		$().ready(function() {
 			$('#finder').elfinder({
 				requestType : 'post',

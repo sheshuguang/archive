@@ -2004,7 +2004,7 @@ elFinder.prototype = {
 			
 			form.append('<input type="hidden" name="'+(self.newAPI ? 'target' : 'current')+'" value="'+self.cwd().hash+'"/>')
 				.append('<input type="hidden" name="html" value="1"/>')
-				.append($(input).attr('name', 'upload[]'));
+				.append($(input).attr('name', 'upload'));          //.append($(input).attr('name', 'upload[]'));
 			
 			$.each(self.options.onlyMimes||[], function(i, mime) {
 				form.append('<input type="hidden" name="mimes[]" value="'+mime+'"/>');
@@ -2120,7 +2120,7 @@ elFinder.prototype = {
 			});
 			
 			$.each(files, function(i, file) {
-				formData.append('upload[]', file);
+				formData.append('upload', file);          //formData.append('upload[]', file);
 			});
 			
 			xhr.onreadystatechange = function() {
