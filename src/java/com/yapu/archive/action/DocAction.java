@@ -153,7 +153,7 @@ public class DocAction extends BaseAction{
             SysDocserver docserver = docserverList.get(0);
             if ("FTP".equals(docserver.getServertype())) {
                 FtpUtil util = new FtpUtil();
-                util.connectServer(docserver.getServerip(),
+                util.connect(docserver.getServerip(),
                         docserver.getServerport(),
                         docserver.getFtpuser(),
                         docserver.getFtppassword(),
@@ -272,7 +272,7 @@ public class DocAction extends BaseAction{
 
         if ("FTP".equals(docserver.getServertype())) {
             FtpUtil util = new FtpUtil();
-            util.connectServer(docserver.getServerip(), docserver.getServerport(),
+            util.connect(docserver.getServerip(), docserver.getServerport(),
                     docserver.getFtpuser(), docserver.getFtppassword(), docserver.getServerpath());
 
             FileInputStream s = new FileInputStream(archive);

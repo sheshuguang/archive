@@ -19,9 +19,9 @@
     <result column="TABLEID" property="tableid" jdbcType="VARCHAR" />
 
       <result column="AUTHORITY" property="authority" jdbcType="VARCHAR"/>
-      <result column="HEIGHT" property="height" jdbcType="INTEGER"/>
-      <result column="WIDTH" property="width" jdbcType="INTEGER"/>
-      <result column="MTIME" property="mtime" jdbcType="INTEGER"/>
+      <result column="HEIGHT" property="height" jdbcType="VARCHAR"/>
+      <result column="WIDTH" property="width" jdbcType="VARCHAR"/>
+      <result column="MTIME" property="mtime" jdbcType="VARCHAR"/>
       <result column="HIDDEN" property="hidden" jdbcType="VARCHAR"/>
       <result column="LOCKED" property="locked" jdbcType="VARCHAR"/>
       <result column="MWRITE" property="mwrite" jdbcType="VARCHAR"/>

@@ -6,12 +6,14 @@ package com.yapu.archive.service.impl;
  */
 import com.yapu.archive.dao.itf.DynamicDAO;
 import com.yapu.archive.dao.itf.SysDocDAO;
+import com.yapu.archive.dao.itf.SysDocserverDAO;
 import com.yapu.archive.dao.itf.SysTableDAO;
-import com.yapu.archive.entity.SysDoc;
-import com.yapu.archive.entity.SysDocExample;
-import com.yapu.archive.entity.SysTable;
+import com.yapu.archive.entity.*;
 import com.yapu.archive.service.itf.IDocService;
+import com.yapu.elfinder.DirFileInfor;
+import com.yapu.system.util.CommonUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DocService implements IDocService {
@@ -19,6 +21,10 @@ public class DocService implements IDocService {
 	private SysDocDAO docDao;
 	private SysTableDAO tableDao;
 	private DynamicDAO dynamicDao;
+    private SysDocserverDAO sysDocserverDAO;
+
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -213,10 +219,78 @@ public class DocService implements IDocService {
 
     @Override
     public List<SysDoc> selectAllroot() {
-        SysDocExample where = new SysDocExample();
+        List<SysDocserver> sysDocserverList = this.sysDocserverDAO.selectByExample(new SysDocserverExample());
+        List<SysDoc> rootDocList = new ArrayList<SysDoc>();
+        for (SysDocserver sysDocserver : sysDocserverList){
+            SysDoc sysDoc= new SysDoc();
+            sysDoc.setDocid(sysDocserver.getDocserverid());
+            sysDoc.setDocserverid(sysDocserver.getDocserverid());
+            sysDoc.setDocnewname(sysDocserver.getServername());
+            sysDoc.setDoctype("1");     //1-文件夹 0-文件
+            sysDoc.setLocked("1");
+            sysDoc.setMread("1");
+            sysDoc.setDoclength("0");
+            sysDoc.setMwrite("1");
+            sysDoc.setMime("directory");
+            sysDoc.setMtime(1347698680L);
+            sysDoc.setHidden("1");
+            sysDoc.setCreatetime("1347698680");
+            sysDoc.setCreater("admin");
+            rootDocList.add(sysDoc);
+        }
+       /* SysDocExample where = new SysDocExample();
         where.createCriteria().andParentidIsNull();
-        List<SysDoc> rootDocList = selectByWhereNotPage(where);  //所有一级节点
+        List<SysDoc> rootDocList = selectByWhereNotPage(where);  //所有一级节点*/
         return rootDocList;
+    }
+
+    @Override
+    public SysDoc targetDoc(String target) {
+        SysDoc sysDoc= new SysDoc();
+        sysDoc = selectByPrimaryKey(target);
+        if(null!=sysDoc) return sysDoc;
+        SysDocserver sysDocserver = this.sysDocserverDAO.selectByPrimaryKey(target);
+        if(null!=sysDocserver){
+            sysDoc= new SysDoc();
+            sysDoc.setDocid(sysDocserver.getDocserverid());
+            sysDoc.setDocserverid(sysDocserver.getDocserverid());
+            sysDoc.setDocnewname(sysDocserver.getServername());
+            sysDoc.setDocpath("/");
+            sysDoc.setDoctype("1");     //1-文件夹 0-文件
+            sysDoc.setLocked("1");
+            sysDoc.setMread("1");
+            sysDoc.setDoclength("0");
+            sysDoc.setMwrite("1");
+            sysDoc.setMime("directory");
+            sysDoc.setMtime(1347698680L);
+            sysDoc.setHidden("1");
+            sysDoc.setCreatetime("1347698680");
+            sysDoc.setCreater("admin");
+            return sysDoc;
+        }
+        SysDocserverExample example = new SysDocserverExample();
+        SysDocserverExample.Criteria criteria = example.createCriteria();
+        criteria.andServerstateEqualTo(1);       //激活的服务器
+        List<SysDocserver> sysDocserverList = this.sysDocserverDAO.selectByExample(example);
+        if (null != sysDocserverList && sysDocserverList.size() > 0) {
+            SysDocserver docserver = (SysDocserver)sysDocserverList.get(0);
+            sysDoc= new SysDoc();
+            sysDoc.setDocid(docserver.getDocserverid());
+            sysDoc.setDocserverid(docserver.getDocserverid());
+            sysDoc.setDocnewname(docserver.getServername());
+            sysDoc.setDocpath("/");
+            sysDoc.setDoctype("1");     //1-文件夹 0-文件
+            sysDoc.setLocked("1");
+            sysDoc.setMread("1");
+            sysDoc.setDoclength("0");
+            sysDoc.setMwrite("1");
+            sysDoc.setMime("directory");
+            sysDoc.setMtime(1347698680L);
+            sysDoc.setHidden("1");
+            sysDoc.setCreatetime("1347698680");
+            sysDoc.setCreater("admin");
+        }
+        return sysDoc;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void setDocDao(SysDocDAO docDao) {
@@ -228,5 +302,12 @@ public class DocService implements IDocService {
 	public void setDynamicDao(DynamicDAO dynamicDao) {
 		this.dynamicDao = dynamicDao;
 	}
+    public SysDocserverDAO getSysDocserverDAO() {
+        return sysDocserverDAO;
+    }
+
+    public void setSysDocserverDAO(SysDocserverDAO sysDocserverDAO) {
+        this.sysDocserverDAO = sysDocserverDAO;
+    }
 	
 }

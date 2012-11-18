@@ -12,7 +12,6 @@ public class SysDoc {
     private String createtime;
     private String fileid;
     private String tableid;
-
     private String  authority;      //权限 参考linux文件系统
     private Integer  height;        //高
     private Integer width;           //宽
@@ -21,7 +20,7 @@ public class SysDoc {
     private String mwrite;            //写权限
     private String mread;             //读权限
     private String mime;             //文件类型
-    private Integer mtime;           //修改时间
+    private Long mtime;           //修改时间
     private String parentid;        //父亲节点id
 
     public String getMwrite() {
@@ -90,11 +89,11 @@ public class SysDoc {
         this.mime = mime;
     }
 
-    public Integer getMtime() {
+    public Long getMtime() {
         return mtime;
     }
 
-    public void setMtime(Integer mtime) {
+    public void setMtime(Long mtime) {
         this.mtime = mtime;
     }
 

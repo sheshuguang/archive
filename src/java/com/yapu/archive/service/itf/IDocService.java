@@ -2,6 +2,7 @@ package com.yapu.archive.service.itf;
 
 import com.yapu.archive.entity.SysDoc;
 import com.yapu.archive.entity.SysDocExample;
+import com.yapu.elfinder.DirFileInfor;
 
 import java.util.List;
 
@@ -100,4 +101,6 @@ public interface IDocService {
     boolean  hasChildrenDir(String targetId);
 
     List<SysDoc> selectAllroot();
+
+    SysDoc targetDoc(String target);
 }

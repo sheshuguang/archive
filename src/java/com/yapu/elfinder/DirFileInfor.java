@@ -20,10 +20,18 @@ public class DirFileInfor {
     private String name;// "files"  当前目录或文件的名称
     private int read;// 1
     private int size;// 0
-    private int ts;// 1346942638
+    private Long ts;// 1346942638
     private String volumeid;// "l1_"
     private int write;// 1
+    private String date;
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
     /*   "name"   : "Images",                   // (String) name of file/dir. Required
 "hash"   : "l0_SW1hZ2Vz",        // (String) hash of current file/dir path, first symbol must be letter, symbols before _underline_ - volume id, Required.
 "phash"  : "l0_Lw",               // (String) hash of parent directory. Required except roots dirs.
@@ -104,11 +112,11 @@ public class DirFileInfor {
         this.size = size;
     }
 
-    public int getTs() {
+    public Long getTs() {
         return ts;
     }
 
-    public void setTs(int ts) {
+    public void setTs(Long ts) {
         this.ts = ts;
     }
 
