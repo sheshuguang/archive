@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="webpage/css/style.css" />
 <script type="text/javascript" src="webpage/js/jquery-1.7.1.js"></script>
 <title></title>
+<!-- 
 <script language="javascript">
 	$(function() {
 		$.ajaxSetup({
@@ -30,6 +31,7 @@
 		});
 	})
 </script>
+ -->
 </head>
 <body>
 	<form action="login.action" method="post">

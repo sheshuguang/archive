@@ -1,5 +1,29 @@
 
 /*  add by wangf */
+.alertbody {
+	min-height: 48px;
+    padding: 10px 10px 10px 68px;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    text-align: left;
+}
+.alert_Information {
+	background-image: url("information.png");
+}
+
+.alert_Error {
+    background-image: url("error.png");
+}
+
+.alert_Confirmation {
+    background-image: url("confirmation.png");
+}
+.alert_Question {
+    background-image: url("question.png");
+}
+.alert_Warning {
+    background-image: url("warning.png");
+}
 
 /* public */
 .icon-house{
@@ -330,6 +354,59 @@
 .icon-key{
 	background:url('icons/key.png') no-repeat;
 }
+
+
+/*电子全文类型的图片 no-repeat scroll 0 0 padding-box transparent*/
+.file-icon {
+	background: url("icons-big.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 48px;
+    /*margin: 0 auto;*/
+    width: 48px;
+}
+
+
+.file-icon-active {
+	
+}
+.file-icon-text {
+	background-position: 0 -200px;
+}
+.file-icon-image {
+	background-position: 0 -250px;
+}
+.file-icon-audio {
+	background-position: 0 -300px;
+}
+.file-icon-video {
+	background-position: 0 -350px;
+}
+.file-icon-pdf {
+	 background-position: 0 -450px;
+}
+.file-icon-office {
+	background-position: 0 -500px;
+}
+.file-icon-html {
+	 background-position: 0 -550px;
+}
+.file-icon-javascript {
+	 background-position: 0 -650px;
+}
+.file-icon-zip {
+	 background-position: 0 -1050px;
+}
+.file-icon-rar {
+	 background-position: 0 -1200px;
+}
+.file-icon-flash {
+	 background-position: 0 -1250px;
+}
+
+
+
+
+
 
 
 

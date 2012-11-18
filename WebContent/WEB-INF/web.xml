@@ -6,7 +6,7 @@
 	<display-name>archive</display-name>
 
 	<session-config>
-		<session-timeout>1</session-timeout>
+		<session-timeout>30</session-timeout>
 	</session-config>
 
 	<context-param>
@@ -70,9 +70,10 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<!-- 
 	<listener>
 		<listener-class>com.yapu.system.listener.SysInitListener</listener-class>
-	</listener>
+	</listener> -->
 	<filter>
 		<filter-name>struts2</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>

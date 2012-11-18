@@ -10,8 +10,7 @@ archiveCommon.yesItems = [];
 
 
 $(function() {
-	
-	$("#batchlayout").css({  height: $('.archivetab').height()-36});
+	$("#batchlayout").css({  height: $('#center').height()-25});
 	//声明上传控件。#uploadFile，作为公共的资源，在archiveMgr.js里
 	$("#uploadFile").dialog({
         autoOpen: false,

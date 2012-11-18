@@ -12,9 +12,7 @@
 
 <!-- jquery-easyui css 
 <link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />-->
-<!-- jquery ui css 有一些插件用到了jquery ui。例如新的grid -->
-<!--<link rel="stylesheet" href="../../js/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css" />-->
- <link rel="stylesheet" type="text/css" href="../../js/jquery-ui/css/cupertino/jquery-ui-1.8.23.custom.css" />
+
 <!-- jquery-window css 弹出式windows css-->
 <link type="text/css" href="../../js/jquery-window/css/jquery.window.css" rel="stylesheet">
 <!-- jquery -->
@@ -28,7 +26,7 @@
 <!-- json2 -->
 <script type="text/javascript" src="../../js/json2.js"></script>
 
-<script type="text/javascript" src="../../js/jquery-easyui/jquery.toolbar.js"></script>
+
 <!-- 模块专用 -->
 <script type="text/javascript" src="ArchiveMgr.js"></script>
 <script type="text/javascript" src="../../js/uuid.js"></script>
@@ -37,6 +35,17 @@
 <script type="text/javascript" src="../../js/zebra-dialog/js/zebra_dialog.js"></script>
 <!-- javascript 的map。在客户端环境下实现复制，粘贴功能时用到 -->
 <script type="text/javascript" src="../../js/map.js"></script>
+
+<!-- jquery ui css 有一些插件用到了jquery ui。例如新的grid -->
+<!--<link rel="stylesheet" href="../../js/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css" />
+ <link rel="stylesheet" type="text/css" href="../../js/jquery-ui/css/cupertino/jquery-ui-1.8.23.custom.css" />
+ <script type="text/javascript" src="../../js/jquery-ui/jquery-ui-1.8.23.custom.min.js"></script>-->
+ <!---->
+ 
+ 
+
+
+
 <!-- slick grid -->
 <link rel="stylesheet" href="../../js/SlickGrid/slick.grid.css" type="text/css" />
 <link rel="stylesheet" href="../../js/SlickGrid/myGrid.css" type="text/css" />
@@ -45,10 +54,9 @@
 <script type="text/javascript" src="../../js/SlickGrid/lib/firebugx.js"></script>
 <!-- jquery easyui 
 <script type="text/javascript" src="../../js/jquery-easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-easyui/jquery.toolbar.js"></script>
 <script type="text/javascript" src="../../js/jquery-easyui/easyloader.js"></script>-->
 <!--<script type="text/javascript" src="../../js/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script> -->
- <script type="text/javascript" src="../../js/jquery-ui/jquery-ui-1.8.23.custom.min.js"></script>
-
 
 
 <script type="text/javascript" src="../../js/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
@@ -69,9 +77,6 @@
 <!-- jqueyr-window js -->
 <script type="text/javascript" src="../../js/jquery-window/jquery.window.js"></script>
 
-<link rel="stylesheet" type="text/css" href="../../js/jquery.layout/layout-default-latest.css" />
-<script type="text/javascript" src="../../js/jquery.layout/jquery.layout-latest.js"></script>
-
 <!-- tree -->
 <link type="text/css" href="../../js/jstree/themes/default/style.css" rel="stylesheet">
 <script type="text/javascript" src="../../js/jstree/jquery.jstree.js"></script>
@@ -85,6 +90,12 @@
 <script type="text/javascript" src="../../js/plupload/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
 <script type="text/javascript" src="../../js/plupload/js/i18n/cn.js"></script>
 
+
+<link rel="stylesheet" type="text/css" href="../../js/jquery-ui/css/custom-theme/jquery-ui-1.8.16.custom.css" />
+ <script type="text/javascript" src="../../js/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
+ 
+ <link rel="stylesheet" type="text/css" href="../../js/jquery.layout/layout-default-latest.css" />
+<script type="text/javascript" src="../../js/jquery.layout/jquery.layout-latest.js"></script>
 <script type="text/javascript">
 //客户端实现 复制、粘贴 功能用的map
 var copyMap = new HashMap();
@@ -109,7 +120,17 @@ var copyMap = new HashMap();
 			
 		</div>
 	</div>
-	<div id="batchwindows" style="display:none;">
+	<div id="batchwindows" title="批量修改">
+		<form>
+			<fieldset class="fieldset">
+				<label for="selectfield" class="label">更改字段</label>  
+				<select id="selectfield" ></select></br>
+				<label for="updatetxt" class="label">更改内容</label>
+				<input type="text" id="updatetxt" class="text ui-widget-content ui-corner-all input" />
+			</fieldset>
+		</form>
+	</div>
+	<!--<div id="batchwindows" style="display:none;">
 		<div style="padding:10px;">
 			<div>
 				<div style="margin:10px 0px 0px 10px;">
@@ -123,7 +144,7 @@ var copyMap = new HashMap();
 			</div>
 		</div>
 	</div>
-	<!-- -->
+	<!-- 电子全文列表 -->
 	<div id="docwindows" title="电子全文列表">
 		<!-- <input type="button" onclick="window.location.href='readDoc.action?docId=1f4fe3f4-c285-4600-884c-2fd57f2e0d3a'" value="open"/>-->
 		<ul id="doclist"></ul>

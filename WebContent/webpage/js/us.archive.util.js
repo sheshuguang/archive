@@ -90,19 +90,15 @@ us.updateFilter = function(dataView) {
  * dataView  	是哪个view对象
  * isSave		批量修改时，是否保存到数据库。
  */
-us.batchUpdate = function(grid,dataView,isSave,w,tabletype) {
+us.batchUpdate = function(grid,dataView,isSave,tabletype) {
 	var selectRows = grid.getSelectedRows();
 	selectRows.sort(function compare(a, b) {
 		return b - a;
 	});
-	if (w != null) {
-		var container = w.getContainer(); // 抓到window裡最外層div物件
-		var selectContent = container.find("#selectfield"); // 尋找container底下的指定input element
-		var updateContent = container.find("#updatetxt"); 
-		
-		var selectFieldName = selectContent.val(); 
-		var updateTxt = updateContent.val();
-	}
+	var selectContent = $("#selectfield");
+	var updateContent = $("#updatetxt"); 
+	var selectFieldName = selectContent.val(); 
+	var updateTxt = updateContent.val();
 	
 	var batchUpdateItems = [];
 	for ( var i = 0; i < selectRows.length; i++) {
@@ -121,17 +117,14 @@ us.batchUpdate = function(grid,dataView,isSave,w,tabletype) {
 		var par = "importData=" + JSON.stringify(batchUpdateItems) + "&tableType=" + tabletype;
         $.post("updateImportArchive.action",par,function(data){
                 if (data != "保存完毕。") {
-                    $.Zebra_Dialog(data, {
-                        'type':     'information',
-                        'title':    '系统提示',
-                        'buttons':  ['确定']
-                    });
+                	us.openalert(data,'系统提示','alertbody alert_Information');
                 }
                 else {
                     for ( var i = 0; i < batchUpdateItems.length; i++) {
                         var item = batchUpdateItems[i];
                         dataView.updateItem(item.id,item);
                     }
+                    us.openalert('批量更改完成。','系统提示','alertbody alert_Information');
                 }
             }
         );
@@ -170,18 +163,22 @@ us.batchAttachment = function() {
 }
 
 //jquery ui dialog 制作的通用alert 
-us.openalert = function(text, title) {
+us.openalert = function(text, title,iconcss) {
 	var html = $(
 		    '<div class="dialog" id="dialog-message">' +
-		    '  <p>' +
-		    '    <span class="ui-icon ui-icon-circle-check" style="float: left; margin: 0 7px 0 0;"></span>' + text +
-		    '  </p>' +
+		    '  <div class="'+iconcss+'">' +
+		    '  	<div style="margin-top: 8px;" >' + text + '</div>' + 
 		    '</div>');
 	return html.dialog({
 	      //autoOpen: false,
 	      resizable: false,
 	      modal: true,
 	      title: title || "提示信息",
+	      closeOnEscape : true,
+	      show: {
+	          effect: 'fade',
+	          duration: 300
+	      },
 	      buttons: {
 	        "确定": function() {
 	          var dlg = $(this).dialog("close");
@@ -193,13 +190,12 @@ us.openalert = function(text, title) {
 	    });
 }
 //jquery ui dialog confirm弹出确认提示
-us.openconfirm = function(text, title, fn1, fn2) {
-	var html =
-	    '<div class="dialog" id="dialog-confirm">' +
-	    '  <p>' +
-	    '    <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>' + text +
-	    '  </p>' +
-	    '</div>';
+us.openconfirm = function(text, title,fn1, fn2) {
+	var html = $(
+		    '<div class="dialog" id="dialog-confirm">' +
+		    '  <div class="alertbody alert_Question">' +
+		    '  	<div style="margin-top: 8px;" >' + text + '</div>' + 
+		    '</div>');
 	    return $(html).dialog({
 	      //autoOpen: false,
 	      resizable: false,

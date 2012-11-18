@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 查询 -->
+	<package name="search" extends="struts-default" >
+	
+		<!-- 读取档案类型 -->
+		<action name="getTemplet" class="searchAction" method="getTemplet"></action>
+		<!-- 执行查询 -->
+		<action name="search" class="searchAction" method="search"></action>
+	</package>
+</struts>

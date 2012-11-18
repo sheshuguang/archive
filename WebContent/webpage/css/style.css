@@ -1,13 +1,14 @@
-<meta http-equiv ="Content-Type" content ="text/html"; charset ="UTF-8">
-html,body 
-{ 
-	margin: 0;
-    width:100%; 
-    height:100%; 
-} 
+<meta http-equiv  ="Content-Type " content  ="text /html"; charset  ="UTF-8">
 
-<!--body
-	{
+
+html,body {
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
+<!--
+body {
 	FONT-SIZE: 9pt;
 	margin: 0px;
 }
@@ -22,19 +23,24 @@ a:hover {
 	text-decoration: none;
 }
 
+ol,ul {
+	list-style: none outside none;
+}
+
 #desktop {
 	position: relative;
 	min-width: 400px; /* Helps keep header content from wrapping */
 	height: 100%;
 	min-height: 100%;
 	overflow: hidden;
-	cursor: default; /* Fix for issue in IE7. IE7 wants to use the I-bar text cursor */
+	cursor: default;
+	/* Fix for issue in IE7. IE7 wants to use the I-bar text cursor */
 }
 
 #desktopTitlebarWrapper {
-	position: relative;	
+	position: relative;
 	height: 45px;
-	width:100%;
+	width: 100%;
 	overflow: hidden;
 	background: #718BA6 url(images/bg-header.gif) repeat-x;
 }
@@ -42,7 +48,7 @@ a:hover {
 #desktopTitlebar {
 	padding: 7px 8px 6px 8px;
 	height: 32px;
-	width:100%;
+	width: 100%;
 	background: url(images/logo.gif) no-repeat;
 	background-position: left 0;
 }
@@ -58,10 +64,10 @@ a:hover {
 }
 
 #desktopTitlebar h2.tagline {
-	padding: 7px 0 0 0;	
+	padding: 7px 0 0 0;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;    
-	color: #d4dce4;    
+	font-size: 12px;
+	color: #d4dce4;
 	font-weight: bold;
 	text-align: center;
 	text-transform: uppercase;
@@ -89,7 +95,7 @@ a:hover {
 
 .menu-right li {
 	list-style-type: none;
-	display: inline;	
+	display: inline;
 	margin: 0 0 0 15px;
 	font-size: 9pt;
 }
@@ -109,10 +115,37 @@ a:hover {
 	height: 20px;
 	padding: 6px 8px 0 8px;
 	background: #f2f2f2;
-	text-align:right;
+	text-align: right;
 }
 /*jquery ui 制作的toolbar 需要*/
 .toolbar {
 	padding: 3px;
 }
 
+/*li的横排列表(电子全文图标显示用过)*/
+.docli {
+	text-align: center;
+	float: left;
+	width: 100px;
+	margin: 3px;
+	/*padding: 3px;*/
+	padding: 0pt 15px 25px;
+	list-style-type: none;
+}
+
+.docdiv {
+	margin: 1px 25px 10px;
+}
+.docfilename{
+	border-radius: 8px 8px 8px 8px;
+    margin: 3px 1px 0;
+    overflow: hidden;
+    padding: 1px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: pre;
+}
+
+.label, .input { display:block; }
+.fieldset { padding:0; border:0; margin-top:15px; }
+.input.text { margin-bottom:12px; padding: .4em; }

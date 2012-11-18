@@ -14,11 +14,11 @@ $(function() {
 //			var gridHdrH	= $pane.children('.slick-header').outerHeight(),
 //				$gridList	= $pane.children('.slick-viewport') ;
 //			$gridList.height( state.innerHeight - gridHdrH );
-			$.fn.jerichoTab.resize();
-			var tabw = $('.archivetab').outerWidth();
-			var tabh = $('.archivetab').outerHeight();
-			$('.archivetab').width(state.innerWidth - 5);
-			$('.archivetab').height(state.outerHeight - 5);
+//			$.fn.jerichoTab.resize();
+//			var tabw = $('.archivetab').outerWidth();
+//			var tabh = $('.archivetab').outerHeight();
+//			$('.archivetab').width(state.innerWidth - 5);
+//			$('.archivetab').height(state.outerHeight - 5);
 			
 		}
 	});
@@ -109,15 +109,10 @@ $(function() {
         }           
     });
 
-	var w = $("#center").width();
-    var h = $("#center").height();
-     
-//	$('.archivetab').css({ width: w-4, height: h-36, 'display': 'block', 'margin-left': 0 });
-	$('.archivetab').css({ width: '100%', height: '100%', 'display': 'block', 'margin-left': 0 });
 	$.fn.initJerichoTab({
         renderTo: '#tab',
         uniqueId: 'archiveTab',
-        contentCss: { 'height': $('.archivetab').height()-0 },
+        contentCss: { 'height': $('#center').height()-0 },
         tabs: [{
                 title: '操作帮助',
                 closeable: false,
@@ -129,21 +124,16 @@ $(function() {
         tabWidth:120
     });
 	
-	$('.archivetab').resize(function(){
-		alert("Stop it!dd");
-	});
-	
-	
 	$("#docwindows").dialog({
 		autoOpen: false,
-		height: 300,
-		width: 350,
+		height: 420,
+		width: 720,
 		modal: true,
 		buttons: {
 			"打开": function() {
 				alert("docwindows");
 			},
-			Cancel: function() {
+			"关闭": function() {
 				$( this ).dialog( "close" );
 			}
 		},
@@ -182,6 +172,49 @@ function showArchiveImportTab(tableType) {
 	us.addtab($("#importtab"),'案卷导入','ajax', url);
 }
 
+/*
+ * 生成doc现实的列表
+ */
+function getDoclist(row) {
+	var str = "<li class=\"docli\">";
+	str += "<div class=\"docdiv\"><a href=\"downDoc.action?docId="+ row.docid +"\">";
+	var docType = row.doctype;
+	var typeCss = "";
+	if (docType == "DOC" || docType == "XLS" || docType=="PPT") {
+		typeCss = "file-icon-office";
+	}
+	else if (docType == "TXT") {
+		typeCss = "file-icon-text";
+	}
+	else if (docType == "JPG" || docType == "GIF" || docType=="BMP" || docType=="JPEG" || docType=="TIF") {
+		typeCss = "file-icon-image";
+	}
+	else if (docType == "PDF") {
+		typeCss = "file-icon-pdf";
+	}
+	else if (docType == "ZIP") {
+		typeCss = "file-icon-zip";
+	}
+	else if (docType == "RAR") {
+		typeCss = "file-icon-rar";
+	}
+	else if (docType == "FLASH") {
+		typeCss = "file-icon-flash";
+	}
+	else {
+		
+	}
+	str += "<img class=\"file-icon "+typeCss+" \">";
+	str += "</a></div>";
+	var name = row.docoldname;
+//	if (row.docoldname.length > 8) {
+//		name = row.docoldname.substr(0,8) + "..." + "." + docType;
+//	}
+	str += "<div title=\""+row.docoldname+"\"><div class=\"docfilename\"><a href=\"downDoc.action?docId="+ row.docid +"\">" + name + "</a></div></div>";
+	str += "</li>";
+	return str;
+}
+
 
 
 // 打开电子全文windows
@@ -189,7 +222,7 @@ function showDocwindow(id, tableid) {
 	archiveCommon.selectRowid = id;
 	archiveCommon.selectTableid = tableid;
 	
-	var par = "selectRowid="+ id + "&tableid="+tableid; 
+	var par = "selectRowid="+ id + "&tableid="+tableid;
 	var rowList = [];
 	//同步读取数据
 	$.ajax({
@@ -204,33 +237,14 @@ function showDocwindow(id, tableid) {
 				rowList = eval(data);
 				$("#doclist").html("");
 				for (var i=0;i<rowList.length;i++) {
-					$("#doclist").append("<li><a href=\"downDoc.action?docId="+ rowList[i].docid +"\">" + rowList[i].docoldname +"</a></li>");
+					$("#doclist").append(getDoclist(rowList[i]));
 				}
 			} else {
-				$.Zebra_Dialog('读取数据时出错，请尝试重新操作或与管理员联系! ', {
-	                'type':     'information',
-	                'title':    '系统提示',
-	                'buttons':  ['确定']
-	            });
+				us.openalert('读取数据时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
 			}
 		}
 	});
-	$( "#docwindows" ).dialog( "open" );
-//	$.window({
-//		showModal	: true,
-//		modalOpacity: 0.5,
-//	    title		: "电子全文列表",
-//	    content		: $("#docwindows"),
-//	    width		: 300,
-//	    height		: 200,
-//	    showFooter	: false,
-//	    showRoundCorner: true,
-//	    minimizable	: false,
-//	    maximizable	: false,
-//	    onShow		: function(wnd) {
-//	    	
-//	    }
-//	});
-//	var url = "showDocListTab.action";
-//	us.showtab($('#tab'),url, '电子文件管理', 'icon-page');
+	
+	$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
+	$("#docwindows").dialog( "open" );
 }

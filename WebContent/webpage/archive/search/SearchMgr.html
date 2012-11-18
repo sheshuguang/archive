@@ -1,0 +1,242 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+<script type="text/javascript" src="../../js/jquery-1.7.1.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="../../js/jquery-ui/css/custom-theme/jquery-ui-1.8.16.custom.css" />
+<script type="text/javascript"
+	src="../../js/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="../../js/us.archive.search.js"></script>
+<script type="text/javascript" src="../../js/us.archive.ui.js"></script>
+<script type="text/javascript" src="../../js/us.archive.util.js"></script>
+
+<script type="text/javascript" src="../../js/multi_menu/accordion.js"></script>
+<script type="text/javascript" src="SearchMgr.js"></script>
+<title></title>
+<style type="text/css">
+.nav {
+	width: 190px;
+	padding: 40px 28px 25px 0;
+}
+
+ul.nav {
+	padding: 0;
+	margin: 0;
+	font-size: 1em;
+	line-height: 0.5em;
+	list-style: none;
+}
+
+ul.nav li {
+	
+}
+
+ul.nav li a {
+	line-height: 10px;
+	font-size: 14px;
+	padding: 10px 5px;
+	color: #000;
+	display: block;
+	text-decoration: none;
+	font-weight: bolder;
+}
+
+ul.nav li a:hover {
+	background-color: #675C7C;
+	color: white;
+}
+
+ul.nav ul {
+	margin: 0;
+	padding: 0;
+	display: none;
+}
+
+ul.nav ul li {
+	margin: 0;
+	padding: 0;
+	clear: both;
+}
+
+ul.nav ul li a {
+	padding-left: 20px;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+ul.nav ul li a:hover {
+	background-color: #D3C99C;
+	color: #675C7C;
+}
+
+ul.nav ul ul li a {
+	color: silver;
+	padding-left: 40px;
+}
+
+ul.nav ul ul li a:hover {
+	background-color: #D3CEB8;
+	color: #675C7C;
+}
+
+ul.nav span {
+	float: right;
+}
+
+.right_content {
+    float: left;
+    padding: 10px 10px 30px 30px;
+    width: 480px;
+}
+.right_shows {
+    border-bottom: 1px dashed #AE1337;
+    float: left;
+    margin: 0 0 10px;
+    padding: 10px 0 8px;
+    width: auto;
+}
+</style>
+</head>
+<body>
+	<div
+		style="margin: 0 auto; text-align: center; padding: 0; width: 700px">
+		搜索<select style="min-width: 105px;" title="搜索范围" class="searchSelect"
+			id="searchDropdownBox">
+		</select> <input type="text" class="text ui-widget-content ui-corner-all input"
+			style="width: 60%" id="searchTxt" name="searchTxt"
+			onkeypress="if(event.keyCode==13) {btn.click();return false;}">
+		<button
+			class="ui-button-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+			role="button" id="btn" aria-disabled="false" onClick="submitSearch()">
+			<span class="ui-button-text">搜索</span>
+		</button>
+	</div>
+	<div
+		style="float: left; width: 200px; border-right: 1px dashed #AE1337;">
+		<!-- border-bottom:1px dashed #000 -->
+		<ul id="leftmenu" class="nav">
+			<li><a href="http://www.helloweba.com">首页</a></li>
+			<li><a href="#">服务</a></li>
+			<li><a href="#">案例</a></li>
+			<li><a href="#">文章</a>
+				<ul>
+					<li><a href="#" target="_blank">XHTML/CSS</a></li>
+					<li class="active"><a href="#">Javascript/Ajax/jQuery</a>
+						<ul>
+							<li><a href="#">Cookies</a>
+								<ul>
+									<li><a href="#">Cookies</a></li>
+									<li><a href="#">Event</a></li>
+									<li><a href="#">Games</a></li>
+									<li><a href="#">Images</a></li>
+								</ul></li>
+							<li><a href="#">Event</a></li>
+							<li><a href="#">Games</a></li>
+							<li><a href="#">Images</a></li>
+						</ul></li>
+					<li><a href="#" target="_blank">PHP/MYSQL</a></li>
+					<li><a href="#" target="_blank">前端观察</a></li>
+					<li><a href="#" target="_blank">HTML5/移动WEB应用</a></li>
+				</ul></li>
+			<li><a href="#">关于</a></li>
+		</ul>
+	</div>
+	<div class="right_content">
+		<div class="title">Welcome to our radio station</div>
+		<p>
+			<img class="left_img" title="" alt="" src="images/earphones.gif">嗨!
+			欢迎使用巴巴唔模板网提供的网页模板,你可以免费将此模板应用与任何地方,个人网站或者商业应用,唯一需要做的就是在此页面保留<a
+				style="color: #ae1337" href="http://www.88web.org">巴巴唔模板网</a>的相关链接.或加入友情链接<br>如果你需要更多的精美<a
+				style="color: #ae1337" href="http://www.88web.org/css-templates">网页模板</a>,请随时访问我们的模板页面,我们每周都会发布新模板,敬请关注
+		</p>
+		<div class="title">Latest Shows</div>
+
+
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+
+
+		<div class="right_shows">
+			<div class="show_date">20.07.09</div>
+			<div class="show_text_content">“Lorem ipsum dolor sit amet,
+				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud.</div>
+			<a class="more_details" href="#">more details</a>
+		</div>
+	</div>
+</body>
+</html>
