@@ -9,5 +9,7 @@
 		<action name="listConfig" class="configAction" method="list"></action>
 		<!-- 保存角色-->
 		<action name="saveConfig" class="configAction" method="save"></action>
+		
+		<action name="createIndexer" class="indexerAction" method="createIndexerOnCREATE"></action>
 	</package>
 </struts>

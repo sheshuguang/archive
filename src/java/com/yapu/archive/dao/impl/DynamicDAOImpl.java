@@ -60,7 +60,7 @@ public class DynamicDAOImpl extends SqlMapClientDaoSupport implements DynamicDAO
 	@SuppressWarnings("unchecked")
 	public List selectByExample(DynamicExample example) {
 		//判断参数是否为空
-		if (null == example ) {
+		if (null == example.getTableName() || "".equals(example.getTableName()) ) {
 			return null;
 		}
 		

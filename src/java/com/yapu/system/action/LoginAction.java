@@ -81,20 +81,38 @@ public class LoginAction extends BaseAction {
 			return ERROR;
 		}
 		String str = "";
+		StringBuffer sb = new StringBuffer();
+		//添加首页按钮
+		sb.append("<li><h3><a href=\"#\">Archive</a></h3></li>");
+		sb.append("<li><a href=\"#\" onclick=\"javascript:$(window.parent.document).find('#ifr').attr('src','webpage/archive/search/SearchMgr.html')\">首页</a></li>");
+		sb.append("<li style=\"float:right;\"><a href=\"#\" onclick=\"quit()\">退出</a></li>");
+		sb.append("<li style=\"float:right;\"><a href=\"#\" onClick=\"openAccountInfo();\">欢迎您 "+account.getAccountcode()+" </a></li>");
 		if ("admin".equals(account.getAccountcode())) {
 			SysFunctionExample funExample = new SysFunctionExample();
 			List<SysFunction> functionList = functionService.selectByWhereNotPage(funExample);
 			if (null != functionList) {
 				for (SysFunction sysFunction : functionList) {
 					if ("0".equals(sysFunction.getFunparent())) {
-						str += "<a href=\"javascript:void(0)\" id="+ sysFunction.getFunctionid() +" class=\"easyui-menubutton\" menu=\"#"+sysFunction.getFunenglishname()+"\" iconCls=\""+sysFunction.getFunicon()+"\">"+sysFunction.getFunchinesename()+"</a>";
-						str += "<div id=\""+sysFunction.getFunenglishname()+"\" style=\"width:150px;\">";
+						sb.append("<li><a href=\"javascript:void(0)\"");
+						if (null != sysFunction.getFunpath() && !"".equals(sysFunction.getFunpath())) {
+							sb.append(" onclick=\"javascript:$(window.parent.document).find('#ifr').attr('src','"+sysFunction.getFunpath()+"')\"");
+						}
+						sb.append(">"+sysFunction.getFunchinesename()+"</a>");
+						StringBuffer childsb = new StringBuffer();
 						for (SysFunction function : functionList) {
 							if (function.getFunparent().equals(sysFunction.getFunctionid())) {
-								str += "<div iconCls=\""+function.getFunicon()+"\" onclick=\"javascript:$(window.parent.document).find('#ifr').attr('src','"+function.getFunpath()+"')\">"+function.getFunchinesename()+"</div>";
+								childsb.append("<li><a href=\"javascript:void(0)\"");
+								childsb.append(" onclick=\"javascript:$(window.parent.document).find('#ifr').attr('src','"+function.getFunpath()+"')\"");
+								childsb.append(">"+function.getFunchinesename()+"</a></li>");
 							}
 						}
-						str += "</div>";
+						//有子菜单
+						if (childsb.length() > 0) {
+							sb.append("<ul>");
+							sb.append(childsb.toString());
+							sb.append("</ul>");
+						}
+						sb.append("</li>");
 					}
 				}
 			}
@@ -131,7 +149,59 @@ public class LoginAction extends BaseAction {
 				
 			}
 		}
-		out.write(str);
+		//easyui菜单原代码，去掉easyui后，删除
+//		if ("admin".equals(account.getAccountcode())) {
+//			SysFunctionExample funExample = new SysFunctionExample();
+//			List<SysFunction> functionList = functionService.selectByWhereNotPage(funExample);
+//			if (null != functionList) {
+//				for (SysFunction sysFunction : functionList) {
+//					if ("0".equals(sysFunction.getFunparent())) {
+//						str += "<a href=\"javascript:void(0)\" id="+ sysFunction.getFunctionid() +" class=\"easyui-menubutton\" menu=\"#"+sysFunction.getFunenglishname()+"\" iconCls=\""+sysFunction.getFunicon()+"\">"+sysFunction.getFunchinesename()+"</a>";
+//						str += "<div id=\""+sysFunction.getFunenglishname()+"\" style=\"width:150px;\">";
+//						for (SysFunction function : functionList) {
+//							if (function.getFunparent().equals(sysFunction.getFunctionid())) {
+//								str += "<div iconCls=\""+function.getFunicon()+"\" onclick=\"javascript:$(window.parent.document).find('#ifr').attr('src','"+function.getFunpath()+"')\">"+function.getFunchinesename()+"</div>";
+//							}
+//						}
+//						str += "</div>";
+//					}
+//				}
+//			}
+//		}
+//		else {
+//			//得到帐户的角色
+//			SysRole role = new SysRole();
+//			role = accountService.getAccountOfRole(account);
+//			
+//			//如果帐户没有自己的角色，读取帐户所属组的角色
+//			if (null == role) {
+//				SysOrg org = accountService.getAccountOfOrg(account);
+//				role = orgService.getOrgOfRole(org);
+//			}
+////			String str = "";
+//			if (null != role) {
+//				//根据角色，得到角色对应的功能权限
+//				List<SysFunction> functionList = roleService.getRoleOfFunction(role);
+//				if (null != functionList) {
+//					
+//					for (SysFunction sysFunction : functionList) {
+//						if ("0".equals(sysFunction.getFunparent())) {
+//							str = "<a href=\"javascript:void(0)\" id="+ sysFunction.getFunctionid() +" class=\"easyui-menubutton\" menu=\"#"+sysFunction.getFunenglishname()+"\" iconCls=\""+sysFunction.getFunicon()+"\">"+sysFunction.getFunchinesename()+"</a>";
+//							str += "<div id=\""+sysFunction.getFunenglishname()+"\" style=\"width:150px;\">";
+//							for (SysFunction function : functionList) {
+//								if (function.getFunparent().equals(sysFunction.getFunctionid())) {
+//									str += "<div iconCls=\""+function.getFunicon()+"\" onclick=\"javascript:$(window.parent.document).find('#ifr').attr('src','"+function.getFunpath()+"')\">"+function.getFunchinesename()+"</div>";
+//								}
+//							}
+//							str += "</div>";
+//						}
+//					}
+//				}
+//				
+//			}
+//		}
+//		out.write(str);
+		out.write(sb.toString());
 		return null;
 	}
 	

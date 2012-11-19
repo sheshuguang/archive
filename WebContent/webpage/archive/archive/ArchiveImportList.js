@@ -163,8 +163,7 @@ $(function() {
             });
 		}
 	});
-	
-	$("#importgrid").css({ width: $('.archivetab').width(), height: $('.archivetab').height()-36});
+	$("#importgrid").css({  height: $('#center').height()-25});
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";
 	$.ajax({
 		async : false,

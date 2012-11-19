@@ -272,6 +272,13 @@ public class ArchiveAction extends BaseAction {
 		result.deleteCharAt(result.length() - 1).append("]");
 		fieldsDefaultValue.deleteCharAt(fieldsDefaultValue.length() - 1).append("}");
 		result.append(fieldsDefaultValue.toString());
+		//用来返回是否是纯文件级。如果是纯文件级，使档案管理的“全文件”按钮不可用
+		if ("F".equals(templet.getTemplettype())){
+			result.append(";var templettype = 'F' ");
+		}
+		else {
+			result.append(";var templettype = 'A' ");
+		}
 		out.write(result.toString());
 		return null;
 	}
