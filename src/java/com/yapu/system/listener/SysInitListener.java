@@ -16,9 +16,9 @@ public class SysInitListener implements ServletContextListener {
 		String ctxDir = event.getServletContext().getRealPath(String.valueOf(File.separatorChar));	
 		EvnManager.setContexdDir(ctxDir);
         //初始化pdf虚拟打印机
-		EvnManager.initFlashPaperCreator();
+		//EvnManager.initFlashPaperCreator();
        //初始化pdf转swf
-		EvnManager.initPdf2swf();
+		//EvnManager.initPdf2swf();
        //启动定时装置
         CronTriggerRunner cronRunner = new CronTriggerRunner();
            try {

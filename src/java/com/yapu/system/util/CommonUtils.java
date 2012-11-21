@@ -1,10 +1,16 @@
 package com.yapu.system.util;
 
+import com.yapu.archive.entity.SysDoc;
+import com.yapu.elfinder.DirFileInfor;
 import com.yapu.system.util.id.UUIDHexGenerator;
+import eu.medsea.mimeutil.MimeType;
+import eu.medsea.mimeutil.MimeUtil;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -13,8 +19,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
@@ -224,7 +232,13 @@ public class CommonUtils {
 			}
 		}
 	}
-
+    public static String replaceNull2Space(String s) {
+        if (s == null)
+            return "";
+        if (s.trim().toUpperCase().equals("NULL"))
+            return "";
+        return s.trim();
+    }
 	public static void closeStream(Closeable stream) {
 		if (stream != null)
 			try {
@@ -308,8 +322,38 @@ public class CommonUtils {
         UUIDHexGenerator uuid = new UUIDHexGenerator();
         return (String) uuid.generate();
     }
-
+    public static DirFileInfor copyDoc2Dfi(SysDoc doc, DirFileInfor dfi){
+        dfi.setDirs(Integer.valueOf(doc.getDoctype()));
+        dfi.setMime(doc.getMime());
+        dfi.setHash(doc.getDocid());
+        dfi.setLocked(Integer.valueOf(doc.getLocked()));
+        dfi.setName(doc.getDocnewname());
+        dfi.setRead(Integer.valueOf(doc.getMread()));
+        dfi.setSize(Integer.valueOf(doc.getDoclength()));
+        dfi.setTs(doc.getMtime());
+        dfi.setVolumeid(doc.getDocserverid());
+        dfi.setWrite(Integer.valueOf(doc.getMwrite()));
+        dfi.setPhash(doc.getParentid());
+        dfi.setVolumeid(doc.getDocserverid());
+        dfi.setDate(doc.getCreatetime());
+        return dfi;
+    }
+    public static  boolean filesContains(List<DirFileInfor> files,String docId){
+        for(DirFileInfor file:files){
+            if (file.getHash().equals(docId))
+                return true;
+        }
+       return false;
+    }
     public static void main(String[] args) {
 		System.out.println(isNumber("a123.123"));
 	}
+    public static String getMime(File file) {
+        Collection<MimeType> mimes = MimeUtil.getMimeTypes(file);
+        if (!mimes.isEmpty()) {
+            return mimes.iterator().next().toString();
+        }
+        // not found try the second method...
+        return new MimetypesFileTypeMap().getContentType(file);
+    }
 }

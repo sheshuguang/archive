@@ -4,21 +4,27 @@ package com.yapu.archive.service.impl;
  * @author wangf
  * @date	2010-11-18
  */
-import java.util.List;
-
 import com.yapu.archive.dao.itf.DynamicDAO;
 import com.yapu.archive.dao.itf.SysDocDAO;
+import com.yapu.archive.dao.itf.SysDocserverDAO;
 import com.yapu.archive.dao.itf.SysTableDAO;
-import com.yapu.archive.entity.SysDoc;
-import com.yapu.archive.entity.SysDocExample;
-import com.yapu.archive.entity.SysTable;
+import com.yapu.archive.entity.*;
 import com.yapu.archive.service.itf.IDocService;
+import com.yapu.elfinder.DirFileInfor;
+import com.yapu.system.util.CommonUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DocService implements IDocService {
 	
 	private SysDocDAO docDao;
 	private SysTableDAO tableDao;
 	private DynamicDAO dynamicDao;
+    private SysDocserverDAO sysDocserverDAO;
+
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -175,7 +181,119 @@ public class DocService implements IDocService {
 	public int rowCount(SysDocExample example) {
 		return docDao.countByExample(example);
 	}
-	public void setDocDao(SysDocDAO docDao) {
+
+    @Override
+    public List<SysDoc> selectChildrensByParentId(String parentId) {
+        SysDocExample where = new SysDocExample();
+        where.createCriteria().andParentidEqualTo(parentId);
+        List<SysDoc> docList = selectByWhereNotPage(where);   //子目录与文件列表
+        return docList;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<SysDoc> selectChildrenDirsByParentId(String parentId) {
+        SysDocExample where = new SysDocExample();
+        where.createCriteria().andParentidEqualTo(parentId).andDoctypeEqualTo("1");
+        List<SysDoc> dosList = selectByWhereNotPage(where);
+        return dosList;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean checkTarget(String targetId) {
+        SysDoc tgdoc = selectByPrimaryKey(targetId);
+        if(null!=tgdoc){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasChildren(String targetId) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean hasChildrenDir(String targetId) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<SysDoc> selectAllroot() {
+        List<SysDocserver> sysDocserverList = this.sysDocserverDAO.selectByExample(new SysDocserverExample());
+        List<SysDoc> rootDocList = new ArrayList<SysDoc>();
+        for (SysDocserver sysDocserver : sysDocserverList){
+            SysDoc sysDoc= new SysDoc();
+            sysDoc.setDocid(sysDocserver.getDocserverid());
+            sysDoc.setDocserverid(sysDocserver.getDocserverid());
+            sysDoc.setDocnewname(sysDocserver.getServername());
+            sysDoc.setDoctype("1");     //1-文件夹 0-文件
+            sysDoc.setLocked("1");
+            sysDoc.setMread("1");
+            sysDoc.setDoclength("0");
+            sysDoc.setMwrite("1");
+            sysDoc.setMime("directory");
+            sysDoc.setMtime(1347698680L);
+            sysDoc.setHidden("1");
+            sysDoc.setCreatetime("1347698680");
+            sysDoc.setCreater("admin");
+            rootDocList.add(sysDoc);
+        }
+       /* SysDocExample where = new SysDocExample();
+        where.createCriteria().andParentidIsNull();
+        List<SysDoc> rootDocList = selectByWhereNotPage(where);  //所有一级节点*/
+        return rootDocList;
+    }
+
+    @Override
+    public SysDoc targetDoc(String target) {
+        SysDoc sysDoc= new SysDoc();
+        sysDoc = selectByPrimaryKey(target);
+        if(null!=sysDoc) return sysDoc;
+        SysDocserver sysDocserver = this.sysDocserverDAO.selectByPrimaryKey(target);
+        if(null!=sysDocserver){
+            sysDoc= new SysDoc();
+            sysDoc.setDocid(sysDocserver.getDocserverid());
+            sysDoc.setDocserverid(sysDocserver.getDocserverid());
+            sysDoc.setDocnewname(sysDocserver.getServername());
+            sysDoc.setDocpath("/");
+            sysDoc.setDoctype("1");     //1-文件夹 0-文件
+            sysDoc.setLocked("1");
+            sysDoc.setMread("1");
+            sysDoc.setDoclength("0");
+            sysDoc.setMwrite("1");
+            sysDoc.setMime("directory");
+            sysDoc.setMtime(1347698680L);
+            sysDoc.setHidden("1");
+            sysDoc.setCreatetime("1347698680");
+            sysDoc.setCreater("admin");
+            return sysDoc;
+        }
+        SysDocserverExample example = new SysDocserverExample();
+        SysDocserverExample.Criteria criteria = example.createCriteria();
+        criteria.andServerstateEqualTo(1);       //激活的服务器
+        List<SysDocserver> sysDocserverList = this.sysDocserverDAO.selectByExample(example);
+        if (null != sysDocserverList && sysDocserverList.size() > 0) {
+            SysDocserver docserver = (SysDocserver)sysDocserverList.get(0);
+            sysDoc= new SysDoc();
+            sysDoc.setDocid(docserver.getDocserverid());
+            sysDoc.setDocserverid(docserver.getDocserverid());
+            sysDoc.setDocnewname(docserver.getServername());
+            sysDoc.setDocpath("/");
+            sysDoc.setDoctype("1");     //1-文件夹 0-文件
+            sysDoc.setLocked("1");
+            sysDoc.setMread("1");
+            sysDoc.setDoclength("0");
+            sysDoc.setMwrite("1");
+            sysDoc.setMime("directory");
+            sysDoc.setMtime(1347698680L);
+            sysDoc.setHidden("1");
+            sysDoc.setCreatetime("1347698680");
+            sysDoc.setCreater("admin");
+        }
+        return sysDoc;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setDocDao(SysDocDAO docDao) {
 		this.docDao = docDao;
 	}
 	public void setTableDao(SysTableDAO tableDao) {
@@ -184,5 +302,12 @@ public class DocService implements IDocService {
 	public void setDynamicDao(DynamicDAO dynamicDao) {
 		this.dynamicDao = dynamicDao;
 	}
+    public SysDocserverDAO getSysDocserverDAO() {
+        return sysDocserverDAO;
+    }
+
+    public void setSysDocserverDAO(SysDocserverDAO sysDocserverDAO) {
+        this.sysDocserverDAO = sysDocserverDAO;
+    }
 	
 }

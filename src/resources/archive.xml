@@ -106,6 +106,7 @@
         <property name="docDao" ref="docDao" />
         <property name="tableDao" ref="tableDao" />
         <property name="dynamicDao" ref="dynamicDao" />
+        <property name="sysDocserverDAO" ref="docserverDao"/>
     </bean>
     <bean id="functionService" class="com.yapu.system.service.impl.FunctionService">
         <property name="functionDao" ref="functionDao" />
@@ -276,7 +277,8 @@
     <bean id="dispatchAction" class="com.yapu.system.action.DispatchAction">
     </bean>
 
-    <bean id="connectorAction" class="com.yapu.elfinder.ConnectorAction">
-
+    <bean id="connectorAction" class="com.yapu.elfinder.ConnectorAction" scope="prototype">
+        <property name="docService" ref="docService" />
+        <property name="docServerService" ref="docserverService"/>
     </bean>
 </beans>

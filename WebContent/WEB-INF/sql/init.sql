@@ -1,4 +1,28 @@
-﻿-------------archivedb 初始化数据 --------------
+﻿CREATE TABLE IF NOT EXISTS sys_doc (
+  DOCID varchar(40) NOT NULL DEFAULT '' ,
+  DOCSERVERID varchar(40) ,
+  DOCOLDNAME varchar(300) ,
+  DOCNEWNAME varchar(255) ,
+  DOCTYPE varchar(20) ,
+  DOCLENGTH varchar(10) ,
+  DOCPATH varchar(300) ,
+  CREATER varchar(20) ,
+  CREATETIME varchar(30) ,
+  FILEID varchar(40) ,
+  TABLEID varchar(40) ,
+  PARENTID varchar(40) ,
+  MTIME varchar(20) ,
+  LOCKED char(2) ,
+  HEIGHT varchar(20) ,
+  HIDDEN char(2) ,
+  MIME varchar(160) ,
+  WIDTH varchar(20) ,
+  MREAD char(2) ,
+  MWRITE char(2) ,
+  AUTHORITY varchar(10) ,
+  PRIMARY KEY (DOCID)
+);
+-------------archivedb 初始化数据 --------------
 -------------适用于Hsqldb 2.0
 
 --sys_config 系统配置表

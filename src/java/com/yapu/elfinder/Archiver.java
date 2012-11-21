@@ -11,6 +11,22 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class Archiver {
-   private List<Map<Integer,String> > create; //":[],
+    private List<Map<Integer,String> > create; //":[],
     private List<Map<Integer,String> >extract;//:[]
+
+    public List<Map<Integer, String>> getCreate() {
+        return create;
+    }
+
+    public void setCreate(List<Map<Integer, String>> create) {
+        this.create = create;
+    }
+
+    public List<Map<Integer, String>> getExtract() {
+        return extract;
+    }
+
+    public void setExtract(List<Map<Integer, String>> extract) {
+        this.extract = extract;
+    }
 }

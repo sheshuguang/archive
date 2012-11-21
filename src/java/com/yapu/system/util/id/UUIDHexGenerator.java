@@ -29,13 +29,13 @@ public class UUIDHexGenerator extends AbstractUUIDGenerator{
                         .append( format( getCount() ) )
                         .toString();
         }
-//        public static void main( String[] args ) throws Exception {
-//            UUIDHexGenerator g = new UUIDHexGenerator();
-//            for(int i=0; i<10; i++)
-//            {
-//                String id = (String)g.generate();
-//                System.out.println("=======id="+id);
-//            }
-//        }
+        public static void main( String[] args ) throws Exception {
+            UUIDHexGenerator g = new UUIDHexGenerator();
+            for(int i=0; i<10; i++)
+            {
+                String id = (String)g.generate();
+                System.out.println("=======id="+id);
+            }
+        }
 
 }

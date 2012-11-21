@@ -1,5 +1,7 @@
 package com.yapu.elfinder;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ssg
@@ -11,7 +13,7 @@ public class Options {
    private String  path;//"files",
     private String url;//":"\/elFinder\/php\/..\/files\/",
     private String  tmbUrl;//":"\/elFinder\/php\/..\/files\/.tmb\/",
-    private String [] disabled ;//:[],
+    private List disabled ;//:[],
     private String separator;//:"\\",
     private int copyOverwrite;//:1,
     private Archiver archivers; //:{  "create":[],   "extract":[]     }
@@ -33,4 +35,62 @@ public class Options {
                 1 : "application/x-gzip"
         ]                                                    // (Array)  Список mime типов архивов, которые могут быть распакованы
     }*/
+
+    public List getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(List disabled) {
+        this.disabled = disabled;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTmbUrl() {
+        return tmbUrl;
+    }
+
+    public void setTmbUrl(String tmbUrl) {
+        this.tmbUrl = tmbUrl;
+    }
+
+
+
+    public String getSeparator() {
+        return separator;
+    }
+
+    public void setSeparator(String separator) {
+        this.separator = separator;
+    }
+
+    public int getCopyOverwrite() {
+        return copyOverwrite;
+    }
+
+    public void setCopyOverwrite(int copyOverwrite) {
+        this.copyOverwrite = copyOverwrite;
+    }
+
+    public Archiver getArchivers() {
+        return archivers;
+    }
+
+    public void setArchivers(Archiver archivers) {
+        this.archivers = archivers;
+    }
 }
