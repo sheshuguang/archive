@@ -80,12 +80,14 @@ function submitSearch() {
 //	if (searchAlias == "search-alias=all" && searchTxt == "") {
 //		return;
 //	};
-	var par = "searchTxt=" + searchTxt + "&searchType=" + searchType;
+
 	$.ajax({
 		async : true,
-		url : "search.action?" + par,
+		url : "search.action",
 		type : 'post',
 		dataType : 'script',
+		data:"searchTxt=" + searchTxt + "&searchType=" + searchType,
+		contentType: "application/x-www-form-urlencoded; charset=utf-8", 
 		success : function(data) {
 			if (data != "error") {
 //				searchCommon.templetList = eval(data);
@@ -97,4 +99,12 @@ function submitSearch() {
 			}
 		}
 	});
+	
+//	$.post("search.action",par,function(data){
+//			if (data == "SUCCESS") {
+//			}
+//			else {
+//			}
+//		}
+//	);
 }

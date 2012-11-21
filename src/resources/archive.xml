@@ -176,6 +176,8 @@
     <bean id="indexerService" class="com.yapu.archive.service.impl.IndexerService">
         
     </bean>
+    <bean id="searchService" class="com.yapu.archive.service.impl.SearchService">
+    </bean>
     
     <!-- PublisService -->
     <bean id="publicAccountService" class="com.yapu.publics.service.PublicAccountService" parent="accountService">
@@ -261,7 +263,7 @@
     	<property name="accountService" ref="publicAccountService" />
     	<property name="orgService" ref="publicOrgService" />
     	<property name="treeService" ref="treeService" />
-    	<property name="dynamicService" ref="dynamicService" />
+    	<property name="searchService" ref="searchService" />
     </bean>
     <bean id="indexerAction" class="com.yapu.archive.action.IndexerAction">
     	<property name="tableService" ref="tableService" />

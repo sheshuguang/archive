@@ -1,5 +1,10 @@
 package com.yapu.archive.service.itf;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.lucene.queryParser.ParseException;
+
 
 /**
  * 搜索服务
@@ -7,6 +12,6 @@ package com.yapu.archive.service.itf;
  *
  */
 public interface ISearchService {
-	
-	String search(String tableName,String searchTxt);
+
+	List search(String tableName, String[] fields, List<String> fieldsList,String searchTxt) throws IOException;
 }

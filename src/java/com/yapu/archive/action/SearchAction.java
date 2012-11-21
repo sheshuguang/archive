@@ -9,12 +9,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.lucene.queryParser.ParseException;
+
 import com.google.gson.Gson;
 import com.yapu.archive.entity.DynamicExample;
 import com.yapu.archive.entity.SysTable;
+import com.yapu.archive.entity.SysTempletfield;
 import com.yapu.archive.entity.SysTree;
 import com.yapu.archive.entity.SysTreeExample;
 import com.yapu.archive.service.itf.IDynamicService;
+import com.yapu.archive.service.itf.ISearchService;
 import com.yapu.archive.service.itf.ITreeService;
 import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
@@ -29,7 +33,7 @@ public class SearchAction extends BaseAction {
 	private IAccountService accountService;
 	private IOrgService orgService;
 	private ITreeService treeService;
-	private IDynamicService dynamicService;
+	private ISearchService searchService;
 	
 	private String searchType;
 	private String searchTxt;
@@ -105,20 +109,44 @@ public class SearchAction extends BaseAction {
 		return treeList;
 	}
 	
-	public String search() {
+	public String search() throws IOException, ParseException {
+		
+		PrintWriter out = this.getPrintWriter();
 		//获得当前帐户的树节点范围
 		List<SysTree> treeList = new ArrayList<SysTree>();
 		treeList = getTreeNode();
-		
+		HashMap map  = new HashMap();
 		if ("all".equals(searchType)) {
 			
 		}
 		else {
 			//得到树节点对应的表集合
 			List<SysTable> tableList = treeService.getTreeOfTable(searchType);
-			
-			DynamicExample de = new DynamicExample();
-	        DynamicExample.Criteria criteria = de.createCriteria();
+			for (SysTable table:tableList) {
+				List<SysTempletfield> fieldsList = treeService.getTreeOfTempletfield(searchType, table.getTabletype());
+				List<String> searchFieldsList = new ArrayList<String>();
+				List<String> tmpList = new ArrayList<String>();
+				for (int i=0;i<fieldsList.size();i++) {
+					tmpList.add(fieldsList.get(i).getEnglishname().toLowerCase());
+					if (fieldsList.get(i).getIssearch() == 1) {
+						searchFieldsList.add(fieldsList.get(i).getEnglishname().toLowerCase());
+					}
+				}
+				String[] fields = new String[searchFieldsList.size()];
+				for(int i=0;i<searchFieldsList.size();i++) {
+					fields[i] = searchFieldsList.get(i);
+				}
+				List result = searchService.search(table.getTablename(), fields,tmpList,searchTxt);
+				if (null != result && result.size() >0) {
+					map.put(table.getTablename(), result);
+				}
+			}
+			List list = new ArrayList();
+			for(int i=0;i<tableList.size();i++) {
+				list.add(map.get(tableList.get(i).getTablename()));
+			}
+			Gson gson = new Gson();
+			out.write(gson.toJson(list));
 		}
 		
 		return null;
@@ -146,8 +174,9 @@ public class SearchAction extends BaseAction {
 	public void setSearchTxt(String searchTxt) {
 		this.searchTxt = searchTxt;
 	}
-	public void setDynamicService(IDynamicService dynamicService) {
-		this.dynamicService = dynamicService;
+	public void setSearchService(ISearchService searchService) {
+		this.searchService = searchService;
 	}
+	
 	
 }
