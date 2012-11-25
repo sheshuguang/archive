@@ -73,6 +73,8 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errArcMaxSize'        : '压缩包文件超过最大允许文件大小范围.',
 			'errResize'            : '无法重新调整大小 "$1".',
 			'errUsupportType'      : '不被支持的文件格式.',
+            'errFileExist'    : '有同名文件已经.',
+
 			
 			/******************************* commands names ********************************/
 			'cmdarchive'   : '创建压缩包',

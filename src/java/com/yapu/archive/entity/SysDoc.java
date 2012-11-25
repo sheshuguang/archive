@@ -1,5 +1,7 @@
 package com.yapu.archive.entity;
 
+import com.yapu.system.util.CommonUtils;
+
 public class SysDoc {
     private String docid;
     private String docserverid;
@@ -142,7 +144,7 @@ public class SysDoc {
     }
 
     public void setDoctype(String doctype) {
-        this.doctype = doctype;
+        this.doctype = CommonUtils.replaceNull2Space(doctype).toUpperCase();
     }
 
     public String getDoclength() {

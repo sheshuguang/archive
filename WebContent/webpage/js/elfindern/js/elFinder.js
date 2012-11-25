@@ -1872,7 +1872,8 @@ elFinder.prototype = {
 			'video/x-ms-wmv'                : 'VideoWM',
 			'video/x-flv'                   : 'VideoFlash',
 			'video/x-matroska'              : 'VideoMKV',
-			'video/ogg'                     : 'VideoOGG'
+			'video/ogg'                     : 'VideoOGG',
+            'message/rfc822'               :'HTML'
 		},
 	
 	/**

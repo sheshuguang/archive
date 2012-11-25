@@ -9,12 +9,11 @@ import com.yapu.archive.service.itf.IDocserverService;
 import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.util.*;
+import eu.medsea.mimeutil.MimeUtil;
 import org.apache.commons.lang.xwork.StringUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class ConnectorAction extends BaseAction {
@@ -73,15 +72,6 @@ public class ConnectorAction extends BaseAction {
     private Answer open(){
         DirFileInfor cwd =  CommonUtils.copyDoc2Dfi(docService.targetDoc(this.getTarget()), new DirFileInfor());       //当前目录
         this.setTarget(cwd.getHash());
-        /*if (null != this.getInit()&&  this.getInit().equals("1")){   //为初始化设置目标目录为默认目录
-            cwd = CommonUtils.copyDoc2Dfi(docService.selectCWDDoc(null), new DirFileInfor());  //当前目录
-            this.setTarget(cwd.getHash());
-        }
-        if (null == this.getTarget()|| !docService.checkTarget(this.getTarget())){
-             cwd = CommonUtils.copyDoc2Dfi(docService.selectCWDDoc(this.getTarget()), new DirFileInfor());  //当前目录
-            this.setTarget(cwd.getHash());
-        }*/
-        //DirFileInfor cwd = CommonUtils.copyDoc2Dfi(cwdDoc, new DirFileInfor());
         List<DirFileInfor> files = new ArrayList<DirFileInfor>();       //文件列表
         files.add(cwd);
         List<SysDoc> rootDocList = docService.selectAllroot();           //所有一级节点
@@ -120,41 +110,60 @@ public class ConnectorAction extends BaseAction {
     }
     private Answer tree(){
         Answer answer = new Answer();
-        SysDoc firstRoot = docService.targetDoc(target);         //当前文件夹
         List files = new ArrayList<DirFileInfor>();
-        DirFileInfor cwd = new DirFileInfor();
-        cwd.setDirs(Integer.valueOf(firstRoot.getDoctype()));
-        cwd.setMime(firstRoot.getMime());
-        cwd.setHash(firstRoot.getDocid());
-        cwd.setLocked(Integer.valueOf(firstRoot.getLocked()));
-        cwd.setName(firstRoot.getDocnewname());
-        cwd.setRead(Integer.valueOf(firstRoot.getMread()));
-        cwd.setSize(Integer.valueOf(firstRoot.getDoclength()));
-        cwd.setTs(firstRoot.getMtime());
-        cwd.setVolumeid(firstRoot.getDocserverid());
-        cwd.setWrite(Integer.valueOf(firstRoot.getMwrite()));
+        DirFileInfor cwd =  CommonUtils.copyDoc2Dfi(docService.targetDoc(target), new DirFileInfor());       //当前目录
         files.add(cwd);
         SysDocExample where = new SysDocExample();
         where.createCriteria().andParentidEqualTo(target).andDoctypeEqualTo("1");//当前文件夹下的所有文件夹
         List<SysDoc> dosList = docService.selectByWhereNotPage(where);
         for(SysDoc doc:dosList){                      //all root
-            DirFileInfor file = new DirFileInfor();
-            file.setDirs(Integer.valueOf(doc.getDoctype()));
-            file.setMime(doc.getMime());
-            file.setHash(doc.getDocid());
-            file.setLocked(Integer.valueOf(doc.getLocked()));
-            file.setName(doc.getDocnewname());
-            file.setRead(Integer.valueOf(doc.getMread()));
-            file.setSize(Integer.valueOf(doc.getDoclength()));
-            file.setTs(doc.getMtime());
-            file.setVolumeid(doc.getDocserverid());
-            file.setWrite(Integer.valueOf(doc.getMwrite()));
-            file.setPhash(doc.getParentid());
+            DirFileInfor file = CommonUtils.copyDoc2Dfi(doc, new DirFileInfor());
             files.add(file);
         }
         answer.setTree(files);
         answer.setDebug(new Debug());
         return answer;
+    }
+    private boolean save (File inputFile,String fileName,SysDocserver sysDocserver,SysDoc targetDoc){
+        try {
+            FileInputStream fis = new FileInputStream(inputFile);
+            if("FTP".equals(sysDocserver.getServertype())){                        //文件上传到ftp服务器
+                FtpUtil util = new FtpUtil();
+                util.connect(sysDocserver.getServerip(),
+                        sysDocserver.getServerport(),
+                        sysDocserver.getFtpuser(),
+                        sysDocserver.getFtppassword(),
+                        sysDocserver.getServerpath() + targetDoc.getDocpath());
+                util.uploadFile(fis, fileName);
+                util.closeServer();
+            }else if ("LOCAL".equals(sysDocserver.getServertype())){
+                FileOutputStream fos = new FileOutputStream(sysDocserver.getServerpath() +targetDoc.getDocpath()+ fileName);
+                byte[] buffer = new byte[1024];
+                int len = 0;
+                while ((len = fis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fis.close();
+                fos.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+       return true;
+    }
+    private boolean isFilesExist(SysDoc targetDoc,List<String> uploadFileName){
+        Iterator it  = uploadFileName.iterator();
+        while (it.hasNext()){
+              String fileName = (String)it.next();
+              SysDocExample where = new SysDocExample();
+              where.createCriteria().andDocserveridEqualTo(targetDoc.getDocserverid())
+                      .andDocpathEqualTo(targetDoc.getDocpath()+fileName);
+             if(docService.rowCount(where)>0){
+                return true;
+             }
+        }
+        return false;
     }
     private Answer upload() throws IOException {
         Answer answer = new Answer();
@@ -164,57 +173,48 @@ public class ConnectorAction extends BaseAction {
         if (null == sessionAccount) return null;
         List<DirFileInfor> addedFiles = new ArrayList<DirFileInfor>();       //文件列表
         if (null !=upload  && upload.size() > 0) {
-            for (int i = 0; i < upload.size(); i++) {
-                File inputFile =   upload.get(i);
-                //String mineType = CommonUtils.getMime(inputFile);
-                FileInputStream fis = new FileInputStream(inputFile);
-                String fileName = uploadFileName.get(i) ;
-                if("FTP".equals(sysDocserver.getServertype())){                        //文件上传到ftp服务器
-                    FtpUtil util = new FtpUtil();
-                    util.connect(sysDocserver.getServerip(),
-                            sysDocserver.getServerport(),
-                            sysDocserver.getFtpuser(),
-                            sysDocserver.getFtppassword(),
-                            sysDocserver.getServerpath() + targetDoc.getDocpath());
-                    util.uploadFile(fis, fileName);
-                    util.closeServer();
-                }else {                                                                 //文件保存到本地目录
-                    FileOutputStream fos = new FileOutputStream(sysDocserver.getServerpath() +targetDoc.getDocpath()+ fileName);
-                    byte[] buffer = new byte[1024];
-                    int len = 0;
-                    while ((len = fis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
+            if(!isFilesExist(targetDoc,uploadFileName)) {
+                for (int i = 0; i < upload.size(); i++) {
+                    File inputFile =   upload.get(i);
+                    String fileName = uploadFileName.get(i) ;
+                    String fileSize = String.valueOf(inputFile.length());
+                    String fileMime = CommonUtils.getMime(inputFile);
+                    //文件系统操作
+                    boolean result = this.save(inputFile,fileName,sysDocserver,targetDoc);
+                    //数据库操作
+                    if(result){
+                        SysDoc sysDoc = new SysDoc();
+                        sysDoc.setDocid(CommonUtils.getId());      //uuid
+                        sysDoc.setDocserverid(targetDoc.getDocserverid()); //当前激活的serverid
+                        sysDoc.setDocoldname(fileName);//原文件名
+                        sysDoc.setDocnewname(fileName);//文件名；
+                        sysDoc.setDoctype(fileName.substring(fileName.lastIndexOf(".")+1));//1 文件夹 0 文件   上传只能是文件
+                        sysDoc.setDoclength(fileSize); //文件大小
+                        sysDoc.setDocpath(targetDoc.getDocpath()+fileName);      //路径
+                        sysDoc.setCreater(sessionAccount.getAccountcode());   //创建者
+                        sysDoc.setCreatetime(CommonUtils.Time2String(new Date()));  //创建时间
+                        sysDoc.setFileid(null);// 挂接字段
+                        sysDoc.setTableid(null);//挂接表
+                        sysDoc.setAuthority(null);//权限
+                        sysDoc.setHeight(null);   //图片 高
+                        sysDoc.setWidth(null);    //图片 宽
+                        sysDoc.setHidden("1");
+                        sysDoc.setLocked("0");                     //是否锁定 1-锁定（不能剪切、删除 重命名）0-没有锁定（可以剪切、删除 重命名）
+                        sysDoc.setMwrite("1");                     //是否有写权限 1-有写权限
+                        sysDoc.setMread("1");                      //是否有读权限 1-有读权限
+                        sysDoc.setMime(fileMime);//mine 类型        //     getUploadContentType().get(i)
+                        sysDoc.setMtime(System.currentTimeMillis());//修改时间
+                        sysDoc.setParentid(this.getTarget());      //父节点
+                        if(docService.insertDoc(sysDoc)){
+                            DirFileInfor file = CommonUtils.copyDoc2Dfi(sysDoc, new DirFileInfor());
+                            addedFiles.add(file);
+                        }
                     }
-                    fis.close();
-                    fos.close();
                 }
-                SysDoc sysDoc = new SysDoc();
-                sysDoc.setDocid(CommonUtils.getId());      //uuid
-                sysDoc.setDocserverid(targetDoc.getDocserverid()); //当前激活的serverid
-                sysDoc.setDocoldname(fileName);//原文件名
-                sysDoc.setDocnewname(fileName);//文件名；
-                sysDoc.setDoctype("0");//1 文件夹 0 文件   上传只能是文件
-                sysDoc.setDoclength(String.valueOf(inputFile.length())); //文件大小
-                sysDoc.setDocpath(targetDoc.getDocpath()+fileName);      //路径
-                sysDoc.setCreater(sessionAccount.getAccountcode());   //创建者
-                sysDoc.setCreatetime(CommonUtils.Time2String(new Date()));  //创建时间
-                sysDoc.setFileid(null);// 挂接字段
-                sysDoc.setTableid(null);//挂接表
-                sysDoc.setAuthority(null);//权限
-                sysDoc.setHeight(null);   //图片 高
-                sysDoc.setWidth(null);    //图片 宽
-                sysDoc.setHidden("1");
-                sysDoc.setLocked("0");                     //是否锁定 1-锁定（不能剪切、删除 重命名）0-没有锁定（可以剪切、删除 重命名）
-                sysDoc.setMwrite("1");                     //是否有写权限 1-有写权限
-                sysDoc.setMread("1");                      //是否有读权限 1-有读权限
-                sysDoc.setMime(getUploadContentType().get(i));//mine 类型        //
-                sysDoc.setMtime(System.currentTimeMillis());//修改时间
-                sysDoc.setParentid(this.getTarget());      //父节点
-                if(docService.insertDoc(sysDoc)){
-                    DirFileInfor file = CommonUtils.copyDoc2Dfi(sysDoc, new DirFileInfor());
-                    addedFiles.add(file);
-                }
+            }else{
+                answer.setError("有同名文件存在！");
             }
+
         }
         answer.setAdded(addedFiles);
         answer.setDebug(new Debug());
