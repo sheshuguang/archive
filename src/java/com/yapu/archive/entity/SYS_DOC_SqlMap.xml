@@ -112,7 +112,7 @@
       CREATER, CREATETIME, FILEID, TABLEID,,AUTHORITY, HEIGHT , WIDTH  ,HIDDEN  , LOCKED   , MWRITE   , MREAD  , MIME  , MTIME  , PARENTID)
     values (#docid:VARCHAR#, #docserverid:VARCHAR#, #docoldname:VARCHAR#, #docnewname:VARCHAR#,
       #doctype:VARCHAR#, #doclength:VARCHAR#, #docpath:VARCHAR#, #creater:VARCHAR#,
-      #createtime:VARCHAR#, #fileid:VARCHAR#, #tableid:VARCHAR#,#authority:VARCHAR#, #height:INTEGER#, #width:INTEGER#,#hidden:VARCHAR#, #locked:VARCHAR#, #mwrite:VARCHAR#, #mread:VARCHAR#, #mime:VARCHAR#, #mtime:INTEGER#, #parentid:VARCHAR#)
+      #createtime:VARCHAR#, #fileid:VARCHAR#, #tableid:VARCHAR#,#authority:VARCHAR#, #height:VARCHAR#, #width:VARCHAR#,#hidden:VARCHAR#, #locked:VARCHAR#, #mwrite:VARCHAR#, #mread:VARCHAR#, #mime:VARCHAR#, #mtime:VARCHAR#, #parentid:VARCHAR#)
   </insert>
   <insert id="ibatorgenerated_insertSelective" parameterClass="com.yapu.archive.entity.SysDoc" >
     <!--
@@ -228,10 +228,10 @@
             #authority:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="height" >
-            #height:INTEGER#
+            #height:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="width" >
-            #width:INTEGER#
+            #width:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="hidden" >
             #hidden:VARCHAR#
@@ -249,7 +249,7 @@
             #mime:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="mtime" >
-            #mtime:INTEGER#
+            #mtime:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="parentid" >
             #parentid:VARCHAR#
@@ -309,10 +309,10 @@
             AUTHORITY = #record.authority:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="record.height" >
-            HEIGHT = #record.height:INTEGER#
+            HEIGHT = #record.height:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="record.width" >
-            WIDTH = #record.width:INTEGER#
+            WIDTH = #record.width:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="record.hidden" >
             HIDDEN = #record.hidden:VARCHAR#
@@ -359,14 +359,14 @@
       FILEID = #record.fileid:VARCHAR#,
       TABLEID = #record.tableid:VARCHAR#
       AUTHORITY=#record.authority:VARCHAR#,
-      HEIGHT=#record.height:INTEGER#,
-      WIDTH=#record.width:INTEGER#,
+      HEIGHT=#record.height:VARCHAR#,
+      WIDTH=#record.width:VARCHAR#,
       HIDDEN=#record.hidden:VARCHAR#,
       LOCKED=#record.locked:VARCHAR#,
       MWRITE=#record.mwrite:VARCHAR#,
       MREAD=#record.mread:VARCHAR#,
       MIME=#record.mime:VARCHAR#,
-      MTIME=#record.mtime:INTEGER#,
+      MTIME=#record.mtime:VARCHAR#,
       PARENTID=#record.parentid:VARCHAR#
     <isParameterPresent >
       <include refid="SYS_DOC.ibatorgenerated_Example_Where_Clause" />
@@ -410,34 +410,34 @@
         TABLEID = #tableid:VARCHAR#
       </isNotNull>
         <isNotNull prepend="," property="authority" >
-            #authority:VARCHAR#
+            AUTHORITY=#authority:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="height" >
-            #height:INTEGER#
+            HEIGHT=#height:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="width" >
-            #width:INTEGER#
+            WIDTH=#width:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="hidden" >
-            #hidden:VARCHAR#
+            HIDDEN=#hidden:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="locked" >
-            #locked:VARCHAR#
+            LOCKED=#locked:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="mwrite" >
-            #mwrite:VARCHAR#
+            MWRITE=#mwrite:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="mread" >
-            #mread:VARCHAR#
+            MREAD=#mread:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="mime" >
-            #mime:VARCHAR#
+            MIME=#mime:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="mtime" >
-            #mtime:INTEGER#
+            MTIME=#mtime:VARCHAR#
         </isNotNull>
         <isNotNull prepend="," property="parentid" >
-            #parentid:VARCHAR#
+            PARENTID=#parentid:VARCHAR#
         </isNotNull>
     </dynamic>
     where DOCID = #docid:VARCHAR#
@@ -459,14 +459,14 @@
       FILEID = #fileid:VARCHAR#,
       TABLEID = #tableid:VARCHAR#,
       AUTHORITY=#authority:VARCHAR#,
-      HEIGHT=#height:INTEGER#,
-      WIDTH=#width:INTEGER#,
+      HEIGHT=#height:VARCHAR#,
+      WIDTH=#width:VARCHAR#,
       HIDDEN=#hidden:VARCHAR#,
       LOCKED=#locked:VARCHAR#,
       MWRITE=#mwrite:VARCHAR#,
       MREAD=#mread:VARCHAR#,
       MIME=#mime:VARCHAR#,
-      MTIME=#mtime:INTEGER#,
+      MTIME=#mtime:VARCHAR#,
       PARENTID=#parentid:VARCHAR#
     where DOCID = #docid:VARCHAR#
   </update>

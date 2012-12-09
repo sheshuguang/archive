@@ -328,7 +328,7 @@ public class FtpUtil {
         result = true;
         // Path is the sub-path of the FTP path
         if (path.length() != 0) {
-            ftpClient.changeWorkingDirectory(path);
+            ftpClient.changeWorkingDirectory(new String(path.getBytes("GBK"),"iso-8859-1"));
         }
 
         return result;
@@ -366,7 +366,7 @@ public class FtpUtil {
     }
 
     public boolean removeDirectory(String path) throws IOException {
-        return ftpClient.removeDirectory(path);
+        return ftpClient.removeDirectory(new String(path.getBytes("GBK"),"iso-8859-1"));
     }
 
     // delete all subDirectory and files.
@@ -443,7 +443,7 @@ public class FtpUtil {
     }
 
     public boolean deleteFile(String pathName) throws IOException {
-        return ftpClient.deleteFile(pathName);
+        return ftpClient.deleteFile(new String(pathName.getBytes("GBK"),"iso-8859-1"));
     }
 
     // #2. upload to ftp server
@@ -478,7 +478,7 @@ public class FtpUtil {
         try {
             // can execute [OutputStream storeFileStream(String remote)]
             // Above method return's value is the local file stream.
-            flag = ftpClient.storeFile(newName, iStream);
+            flag = ftpClient.storeFile(new String(newName.getBytes("GBK"),"iso-8859-1"), iStream);
         } catch (IOException e) {
             flag = false;
             return flag;
@@ -511,5 +511,14 @@ public class FtpUtil {
 
     public InputStream downFile(String sourceFileName) throws IOException {
         return ftpClient.retrieveFileStream(sourceFileName);
+    }
+
+    public boolean rename(String oldName, String newName) {
+        try {
+           return ftpClient.rename(new String(oldName.getBytes("GBK"),"iso-8859-1"),new String(newName.getBytes("GBK"),"iso-8859-1")) ;
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return false;
+        }
     }
 }

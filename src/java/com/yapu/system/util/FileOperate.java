@@ -1,6 +1,8 @@
 package com.yapu.system.util;   
   
-import java.io.File;   
+import com.yapu.document.ConnectorException;
+
+import java.io.File;
 import java.io.FileInputStream;   
 import java.io.FileOutputStream;   
 import java.io.FileWriter;   
@@ -18,18 +20,21 @@ public class FileOperate {
      *            String 如 c:/fqf   
      * @return boolean   
      */  
-    public static void newFolder(String folderPath) {
+    public static boolean newFolder(String folderPath) {
+        boolean result =false;
         try {   
             String filePath = folderPath;   
             filePath = filePath.toString();   
             File myFilePath = new File(filePath);   
-            if (!myFilePath.exists()) {   
-                myFilePath.mkdir();
+            if (!myFilePath.exists()) {
+                result =  myFilePath.mkdir();
             }   
         } catch (Exception e) {   
-            System.out.println("新建目录操作出错 ");   
-            e.printStackTrace();   
-        }   
+            System.out.println("新建目录操作出错 ");
+            e.printStackTrace();
+            return false;
+        }
+        return  result;
     }   
   
     /**   
@@ -41,8 +46,8 @@ public class FileOperate {
      *            String 文件内容   
      * @return boolean   
      */  
-    public static void newFile(String filePathAndName, String fileContent) {
-  
+    public static boolean newFile(String filePathAndName, String fileContent) {
+        boolean result = false;
         try {   
             String filePath = filePathAndName;   
             filePath = filePath.toString();   
@@ -54,22 +59,34 @@ public class FileOperate {
             PrintWriter myFile = new PrintWriter(resultFile);   
             String strContent = fileContent;   
             myFile.println(strContent);   
-            resultFile.close();   
+            resultFile.close();
+            result =true;
   
         } catch (Exception e) {   
             System.out.println("新建文件操作出错 ");   
-            e.printStackTrace();   
+            e.printStackTrace();
+            return false;
         }   
-  
+         return result;
     }   
   
-    /**   
+    public static boolean delFileOrDir(String path){
+        File file = new File(path);
+        if (file == null || !file.exists()) {
+           return  false;
+        }
+        if (!file.isDirectory()) {
+            delFile(path);
+        }else{
+            delFolder(path);
+        }
+        return true;
+    }
+    /**
      * 删除文件   
      *    
      * @param filePathAndName   
-     *            String 文件路径及名称 如c:/fqf.txt   
-     * @param fileContent   
-     *            String   
+     *            String 文件路径及名称 如c:/fqf.txt
      * @return boolean   
      */  
     public static void delFile(String filePathAndName) {
@@ -90,10 +107,7 @@ public class FileOperate {
     /**   
      * 删除文件夹   
      *    
-     * @param filePathAndName   
-     *            String 文件夹路径及名称 如c:/fqf   
-     * @param fileContent   
-     *            String   
+     *            String
      * @return boolean   
      */  
     public static void delFolder(String folderPath) {
@@ -255,4 +269,14 @@ public class FileOperate {
         delFolder(oldPath);   
     }
 
+    public static boolean rename(String from, String to) {
+        try {
+            File fromFile = new File(from);
+            fromFile.renameTo(new File(to));
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
+    }
 }
