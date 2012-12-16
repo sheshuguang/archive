@@ -109,8 +109,8 @@ elFinder.prototype._options = {
 	 * @type Array
 	 */
 	commands : [
-		'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 'quicklook', 
-		'download', 'rm', 'duplicate', 'rename', 'mkdir', 'mkfile', 'upload', 'copy', 
+		'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 'quicklook',
+		'download', 'rm', 'duplicate', 'rename', 'mkdir', 'mkfile', 'upload', 'copy',
 		'cut', 'paste', 'edit', 'extract', 'archive', 'search', 'info', 'view', 'help', 'resize', 'sort', 'netmount'
 	],
 	
@@ -223,21 +223,24 @@ elFinder.prototype._options = {
 	uiOptions : {
 		// toolbar configuration
 		toolbar : [
-			['back', 'forward'],
-			['netmount'],
-			// ['reload'],
-			// ['home', 'up'],
-			['mkdir', 'mkfile', 'upload'],
-			['open', 'download', 'getfile'],
-			['info'],
-			['quicklook'],
-			['copy', 'cut', 'paste'],
-			['rm'],
-			['duplicate', 'rename', 'edit', 'resize'],
-			['extract', 'archive'],
+			['back', 'forward','reload','home', 'up'],
+			//['netmount'],
+			//['reload'],
+			//['home', 'up'],
+			//['mkdir', 'mkfile', 'upload'],
+			['mkdir', 'upload','open', 'download'],
+			//['open', 'download', 'getfile'],
+			//['open', 'download'],
+			//['info'],
+			//['quicklook'],
+			['copy', 'cut', 'paste','rm','rename'],
+			//['rm'],
+			//['duplicate', 'rename', 'edit', 'resize'],
+			//['rename'],
+			//['extract', 'archive'],
 			['search'],
-			['view', 'sort'],
-			['help']
+			['view', 'sort','info']
+			//,['help']
 		],
 		// directories tree options
 		tree : {
@@ -454,11 +457,13 @@ elFinder.prototype._options = {
 	 */
 	contextmenu : {
 		// navbarfolder menu
+		//navbar : ['open', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'info'],
 		navbar : ['open', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'info'],
 		// current directory menu
 		cwd    : ['reload', 'back', '|', 'upload', 'mkdir', 'mkfile', 'paste', '|', 'sort', '|', 'info'],
 		// current directory file menu
-		files  : ['getfile', '|','open', 'quicklook', '|', 'download', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'edit', 'rename', 'resize', '|', 'archive', 'extract', '|', 'info']
+		//files  : ['getfile', '|','open', 'quicklook', '|', 'download', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'edit', 'rename', 'resize', '|', 'archive', 'extract', '|', 'info']
+		files  : ['|','open', 'quicklook', '|', 'download', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'edit', 'rename', 'resize', '|', 'archive', 'extract', '|', 'info']
 	},
 
 	/**

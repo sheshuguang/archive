@@ -124,7 +124,7 @@ public class DocService implements IDocService {
 	 * (non-Javadoc)
 	 * @see com.yapu.archive.service.itf.IDocService#updateDoc(java.util.List)
 	 */
-	@Override
+
 	public int updateDoc(List<SysDoc> docList) {
 		if (docList.size() >0) {
 			//存储fileid有值的
@@ -182,7 +182,7 @@ public class DocService implements IDocService {
 		return docDao.countByExample(example);
 	}
 
-    @Override
+
     public List<SysDoc> selectChildrensByParentId(String parentId) {
         SysDocExample where = new SysDocExample();
         where.createCriteria().andParentidEqualTo(parentId);
@@ -190,7 +190,7 @@ public class DocService implements IDocService {
         return docList;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
+
     public List<SysDoc> selectChildrenDirsByParentId(String parentId) {
         SysDocExample where = new SysDocExample();
         where.createCriteria().andParentidEqualTo(parentId).andDoctypeEqualTo("1");
@@ -198,7 +198,7 @@ public class DocService implements IDocService {
         return dosList;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
+
     public boolean checkTarget(String targetId) {
         SysDoc tgdoc = selectByPrimaryKey(targetId);
         if(null!=tgdoc){
@@ -207,17 +207,17 @@ public class DocService implements IDocService {
         return false;
     }
 
-    @Override
+
     public boolean hasChildren(String targetId) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
+
     public boolean hasChildrenDir(String targetId) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
+
     public List<SysDoc> selectAllroot() {
         List<SysDocserver> sysDocserverList = this.sysDocserverDAO.selectByExample(new SysDocserverExample());
         List<SysDoc> rootDocList = new ArrayList<SysDoc>();
@@ -244,7 +244,7 @@ public class DocService implements IDocService {
         return rootDocList;
     }
 
-    @Override
+
     public SysDoc targetDoc(String target) {
         SysDoc sysDoc= new SysDoc();
         sysDoc = selectByPrimaryKey(target);

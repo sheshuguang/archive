@@ -10,6 +10,7 @@ import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.util.*;
 import eu.medsea.mimeutil.MimeUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.xwork.StringUtils;
 
 import java.io.*;
@@ -27,7 +28,9 @@ public class ConnectorAction extends BaseAction {
     private String cmd; // open
     private String name;//创建文件夹名
     private List<String> targets;
-
+    private String dst; //粘贴目标目录 id
+    private String cut; //0-复制 1-剪切
+    private String src; //源目录 id
     private List<File> upload;
     private List<String> uploadContentType;
     private List<String> uploadFileName;
@@ -66,9 +69,222 @@ public class ConnectorAction extends BaseAction {
         if(this.cmd.equals("rename")){jsonOuter.write(gson.toJson(rename()));}
         if(this.cmd.equals("upload")){jsonOuter.write(gson.toJson(upload()));}
         if(this.cmd.equals("rm")){jsonOuter.write(gson.toJson(rm()));}
+        if(this.cmd.equals("paste")){jsonOuter.write(gson.toJson(paste()));}
+        if(this.cmd.equals("duplicate")){jsonOuter.write(gson.toJson(duplicate()));}
         return  null;
 
     }
+
+    /**
+     * 预览
+     * @return
+     */
+    private Answer get(){
+        return null;
+    }
+
+    /**
+     * 下载文件
+     * @return
+     */
+    private Answer file(){
+        //target;
+        return null;
+    }
+
+    /**
+     * 创建副本
+     * @return
+     */
+    private Answer duplicate() {
+        Iterator it = targets.iterator();
+        return null;
+    }
+
+    private Answer paste() throws IOException {
+        SysAccount sessionAccount = (SysAccount) this.getHttpSession().getAttribute(Constants.user_in_session);
+        if (null == sessionAccount) return null;
+        Answer answer = new Answer();
+        List dinforAddList = new ArrayList();
+        List idsDelList = new ArrayList();
+        List toDocList = new ArrayList();       //文件列表
+        List fromDocList = new ArrayList();
+        SysDoc targetDoc = docService.selectByPrimaryKey(dst);
+        if(null==targetDoc){ //目标有可能是根目录
+            SysDocserver sysDocserver = (SysDocserver)docServerService.selectByPrimaryKey(dst);
+            if(null!=sysDocserver){
+                targetDoc= new SysDoc();
+                targetDoc.setDocid(sysDocserver.getDocserverid());
+                targetDoc.setDocserverid(sysDocserver.getDocserverid());
+                targetDoc.setDocpath("/");
+            }
+        }
+        SysDoc srcDocIn = docService.selectByPrimaryKey(src);
+        if(null == srcDocIn){//根目录处理
+            SysDocserver sysDocserver = (SysDocserver)docServerService.selectByPrimaryKey(src);
+            if(null!=sysDocserver){
+                srcDocIn= new SysDoc();
+                srcDocIn.setDocid(sysDocserver.getDocserverid());
+                srcDocIn.setDocserverid(sysDocserver.getDocserverid());
+                srcDocIn.setDocpath("/");
+            }
+        }
+
+        SysDocserver sysSrcDocserver = docServerService.selectByPrimaryKey(srcDocIn.getDocserverid());
+        SysDocserver sysDestDocserver = docServerService.selectByPrimaryKey(targetDoc.getDocserverid());
+        if(!sysSrcDocserver.getServertype().equals("LOCAL")||!sysDestDocserver.getServertype().equals("LOCAL")){
+               answer.setError("只能在本地目录之间进行粘贴！");
+        }else{
+            List exsitchilds = docService.selectChildrensByParentId(dst);
+            //先检查是否 存在同名文件
+            Iterator it = targets.iterator();
+            boolean  hasSameFile = false;
+            while (it.hasNext()) {
+                String docid = (String) it.next();
+                SysDoc doc = (SysDoc) docService.selectByPrimaryKey(docid);
+                if(null!=exsitchilds&&exsitchilds.size()>0){
+                    for(int i= 0 ; i<exsitchilds.size();i++){
+                        SysDoc childDoc = (SysDoc)exsitchilds.get(i);
+                        if (doc.getDocnewname().toUpperCase().equals(childDoc.getDocnewname().toUpperCase())) {
+                            hasSameFile = true;
+                            break;
+                        }
+                    }
+                }
+                if(hasSameFile){
+                    answer.setError("文件《"+doc.getDocnewname()+"》已经存在！");
+                    break;
+                }
+            }
+            //开始拷贝
+            if(!hasSameFile){
+                it = targets.iterator();
+                while (it.hasNext()) {
+                    String docid = (String) it.next();
+                    SysDoc srcDoc = (SysDoc) docService.selectByPrimaryKey(docid);
+                    SysDoc dstDoc = targetDoc;
+                    SysDocserver srcDocserver = (SysDocserver)docServerService.selectByPrimaryKey(srcDoc.getDocserverid());
+                    SysDocserver dstDocserver = (SysDocserver)docServerService.selectByPrimaryKey(dstDoc.getDocserverid());
+                    String srcDocPath = srcDocserver.getServerpath()+srcDoc.getDocpath();
+                    String dstDocPath = dstDocserver.getServerpath()+dstDoc.getDocpath();
+                    if(srcDoc.getDoctype().equals("1")){   //文件夹
+                        FileUtils.copyDirectoryToDirectory(new File(srcDocPath),new File(dstDocPath));
+                        if(this.cut.equals("1")) FileUtils.deleteDirectory(new File(srcDocPath));
+                    }else{ //文件
+                        FileUtils.copyFileToDirectory(new File(srcDocPath),new File(dstDocPath));
+                        if(this.cut.equals("1"))FileUtils.deleteQuietly(new File(srcDocPath));
+                    }
+                    copyDirOrFile(srcDoc, targetDoc, toDocList, fromDocList);
+                }
+                it = toDocList.iterator();
+                while (it.hasNext()) {
+                   SysDoc toDoc = (SysDoc) it.next();
+                    dinforAddList.add(CommonUtils.copyDoc2Dfi(toDoc, new DirFileInfor()));
+                }
+                if(this.cut.equals("1")){
+                    it = fromDocList.iterator();
+                    while (it.hasNext()){
+                        SysDoc fromDoc = (SysDoc) it.next();
+                        if(1==docService.deleteDoc(fromDoc.getDocid())) {
+                            idsDelList.add(fromDoc.getDocid());
+                        }
+                    }
+                }
+            }
+        }
+        answer.setAdded(dinforAddList);
+        answer.setRemoved(idsDelList);
+        answer.setDebug(new Debug());
+        return answer;  //To change body of created methods use File | Settings | File Templates.
+    }
+    private List copyDirOrFile(SysDoc doc,SysDoc newParentDoc,List toDocList,List fromDocList){
+        if(doc.getDoctype().equals("1")){ //文件夹
+            String oldDocId = doc.getDocid();
+            String  newDocId = CommonUtils.getId();
+            doc.setDocid(newDocId);
+            doc.setDocserverid(newParentDoc.getDocserverid());
+            doc.setDocpath(newParentDoc.getDocpath() + doc.getDocnewname()+"/");
+            doc.setParentid(newParentDoc.getDocid());
+            //doc.setCreater(sessionAccount.getAccountcode());
+            doc.setTableid(null);
+            doc.setFileid(null);
+            doc.setMtime(System.currentTimeMillis());//修改时间
+            if(docService.insertDoc(doc)){
+                toDocList.add(doc);
+
+                List childrenList = docService.selectChildrensByParentId(oldDocId);
+                fromDocList.add(docService.selectByPrimaryKey(oldDocId));
+                if (null!=childrenList&&childrenList.size()>0){
+                    for (int i=0 ;i<childrenList.size();i++){
+                        SysDoc child =(SysDoc)childrenList.get(i);
+                        copyDirOrFile(child,doc,toDocList,fromDocList);
+                    }
+                }
+
+            }
+        }else{
+            String  newDocId = CommonUtils.getId();
+            String  oldDocid =  doc.getDocid();
+            doc.setDocid(newDocId);
+            doc.setDocserverid(newParentDoc.getDocserverid());
+            doc.setDocpath(newParentDoc.getDocpath() + doc.getDocnewname());
+            doc.setParentid(newParentDoc.getDocid());
+            //doc.setCreater(sessionAccount.getAccountcode());
+            doc.setTableid(null);
+            doc.setFileid(null);
+            doc.setMtime(System.currentTimeMillis());//修改时间
+            if(docService.insertDoc(doc)){
+                toDocList.add(doc);
+
+                fromDocList.add(docService.selectByPrimaryKey(oldDocid));
+            }
+
+        }
+       return toDocList;
+    }
+    /*private boolean copyfile(String srcID,String  dstID){
+        SysDoc srcDoc = (SysDoc)docService.selectByPrimaryKey(srcID);
+        SysDoc dstDoc = (SysDoc)docService.selectByPrimaryKey(dstID);
+        SysDocserver srcDocserver = (SysDocserver)docServerService.selectByPrimaryKey(srcDoc.getDocserverid());
+        SysDocserver dstDocserver = (SysDocserver)docServerService.selectByPrimaryKey(dstDoc.getDocserverid());
+        String srcDocPath = srcDocserver.getServerpath()+srcDoc.getDocpath();
+        String dstDocPath = dstDocserver.getServerpath()+dstDoc.getDocpath();
+        //本地拷贝到本地
+        if(srcDocserver.getServertype().equals("LOCAL")&&dstDocserver.getServertype().equals("LOCAL")){
+            try {
+                if(srcDoc.getDoctype().equals("1")){  //文件夹
+                    FileUtils.copyDirectory(new File(srcDocPath),new File(dstDocPath));
+                }else{
+                    FileUtils.copyFile(new File(srcDocPath),new File(dstDocPath));
+                }
+                return true;
+            } catch (IOException e) {
+               e.printStackTrace();
+                return false;
+            }
+        }
+        //本地拷贝到FTP服务器
+        if(srcDocserver.getServertype().equals("LOCAL")&&dstDocserver.getServertype().equals("FTP")){
+            FtpUtil ftpUtil = new FtpUtil();
+            try {
+                //ftpUtil.upload(srcDocPath, dstDocPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        //FTP服务器拷贝到本地
+        if(srcDocserver.getServertype().equals("FTP")&&dstDocserver.getServertype().equals("LOCAL")){
+
+        }
+        //FTP服务器拷贝到FTP服务器
+        if(srcDocserver.getServertype().equals("FTP")&&dstDocserver.getServertype().equals("FTP")){
+            FtpUtil ftpUtil = new FtpUtil();
+        }
+
+        return false;
+    }*/
+
 
     private Answer rm() {
         Answer answer = new Answer();
@@ -79,6 +295,7 @@ public class ConnectorAction extends BaseAction {
             rm(target,removedList);
         }
         answer.setRemoved(removedList);
+        answer.setDebug(new Debug());
         return answer;
     }
     private void removeDirectory(String docId,List removedList){
@@ -246,7 +463,6 @@ public class ConnectorAction extends BaseAction {
         targetPath = targetPath.substring(0, targetPath.lastIndexOf('/'));
         try{
             if("FTP".equals(sysDocserver.getServertype())){   //在ftp服务器上创建文件夹
-
                 FtpUtil util = new FtpUtil();
                 util.connect(sysDocserver.getServerip(),
                         sysDocserver.getServerport(),
@@ -580,5 +796,28 @@ public class ConnectorAction extends BaseAction {
 
     public void setDocServerService(IDocserverService docServerService) {
         this.docServerService = docServerService;
+    }
+    public String getDst() {
+        return dst;
+    }
+
+    public void setDst(String dst) {
+        this.dst = dst;
+    }
+
+    public String getCut() {
+        return cut;
+    }
+
+    public void setCut(String cut) {
+        this.cut = cut;
+    }
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
     }
 }
