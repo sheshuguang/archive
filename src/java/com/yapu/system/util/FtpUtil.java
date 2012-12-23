@@ -510,6 +510,7 @@ public class FtpUtil {
     }*/
 
     public InputStream downFile(String sourceFileName) throws IOException {
+        sourceFileName = new String(sourceFileName.getBytes("GBK"),"iso-8859-1");
         return ftpClient.retrieveFileStream(sourceFileName);
     }
 

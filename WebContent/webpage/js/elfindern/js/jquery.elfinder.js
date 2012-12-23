@@ -1,5 +1,5 @@
 $.fn.elfinder = function(o) {
-	
+
 	if (o == 'instance') {
 		return this.getElFinder();
 	}

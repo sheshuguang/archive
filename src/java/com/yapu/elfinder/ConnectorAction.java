@@ -6,6 +6,7 @@ import com.yapu.archive.entity.SysDocExample;
 import com.yapu.archive.entity.SysDocserver;
 import com.yapu.archive.service.itf.IDocService;
 import com.yapu.archive.service.itf.IDocserverService;
+import com.yapu.document.DocMgrConnectorServlet;
 import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
 import com.yapu.system.util.*;
@@ -13,6 +14,7 @@ import eu.medsea.mimeutil.MimeUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.xwork.StringUtils;
 
+import javax.servlet.ServletOutputStream;
 import java.io.*;
 import java.util.*;
 
@@ -34,6 +36,10 @@ public class ConnectorAction extends BaseAction {
     private List<File> upload;
     private List<String> uploadContentType;
     private List<String> uploadFileName;
+
+    private SysDoc downDoc;
+    private String docName;
+    private String contentType;
 
     /*open - open directory
     file - output file contents to the browser (download)
@@ -71,8 +77,81 @@ public class ConnectorAction extends BaseAction {
         if(this.cmd.equals("rm")){jsonOuter.write(gson.toJson(rm()));}
         if(this.cmd.equals("paste")){jsonOuter.write(gson.toJson(paste()));}
         if(this.cmd.equals("duplicate")){jsonOuter.write(gson.toJson(duplicate()));}
+        //if(this.cmd.equals("file")){jsonOuter.write(gson.toJson(file()));}
         return  null;
 
+    }
+
+    public String getDocName() {
+        getResponse().setHeader("charset","ISO8859-1");
+        try {
+            return new String(this.docName.getBytes(), "ISO8859-1");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return  "未知文件名错误！";
+        }
+
+    }
+
+    public void setDocName(String docName) {
+        this.docName = docName;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public String downDoc(){
+        if (null == target || "".equals(target)) {
+            return ERROR;
+        }
+        //根据docid读取电子全文信息
+         downDoc = docService.selectByPrimaryKey(target);
+        if (null == downDoc || "".equals(downDoc)) {
+            return ERROR;
+        }
+        //得到原文件名
+        docName =downDoc.getDocnewname();
+        contentType = downDoc.getMime()+";charset=ISO8859-1";
+        return SUCCESS;
+    }
+
+    public InputStream getInputStream() throws FileNotFoundException {
+        //判断文件所属服务器
+        String serverid = downDoc.getDocserverid();
+        //得到所属服务器的信息
+        SysDocserver docServer = docServerService.selectByPrimaryKey(serverid);
+        if (null == docServer || "".equals(docServer)) {  return null; }
+        //判断服务器类型。根据不同类型，执行不同的操作
+        File file = null;
+        InputStream inputStream = null;
+        String serverType = docServer.getServertype();
+        if ("LOCAL".equals(serverType)) {
+            String path = docServer.getServerpath() + downDoc.getDocpath();
+            file = new File(path);
+            inputStream = new FileInputStream(file);
+        }else if("FTP".equals(serverType)){
+            FtpUtil util = new FtpUtil();
+            try {
+                util.connect(docServer.getServerip(),
+                        docServer.getServerport(),
+                        docServer.getFtpuser(),
+                        docServer.getFtppassword(),
+                        docServer.getServerpath() + downDoc.getDocpath());
+                inputStream =  util.downFile(docServer.getServerpath()+downDoc.getDocpath());
+//                FileInputStream file=new FileInputStream(inputstream);
+                util.closeServer();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return inputStream;
     }
 
     /**
@@ -83,12 +162,36 @@ public class ConnectorAction extends BaseAction {
         return null;
     }
 
+
     /**
      * 下载文件
      * @return
      */
     private Answer file(){
         //target;
+        File file = new File("E:\\develop\\xampp\\htdocs\\elFinder\\Jakefile.js");
+
+
+        FileInputStream fileIn = null;
+        try {
+
+            fileIn = new FileInputStream(file);
+            ServletOutputStream out = this.getResponse().getOutputStream();
+
+            byte[] outputByte = new byte[4096];
+            while (fileIn.read(outputByte, 0, 4096) != -1) {
+                out.write(outputByte, 0, 4096);
+            }
+            fileIn.close();
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+
         return null;
     }
 
@@ -819,5 +922,12 @@ public class ConnectorAction extends BaseAction {
 
     public void setSrc(String src) {
         this.src = src;
+    }
+    public SysDoc getDownDoc() {
+        return downDoc;
+    }
+
+    public void setDownDoc(SysDoc downDoc) {
+        this.downDoc = downDoc;
     }
 }

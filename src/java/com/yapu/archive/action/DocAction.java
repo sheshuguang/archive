@@ -47,7 +47,8 @@ public class DocAction extends BaseAction{
     private int chunk;
     private File file;
     private String savePath;
-    
+
+
     private String docName;
     private String contentType;
 

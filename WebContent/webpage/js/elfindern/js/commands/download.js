@@ -26,7 +26,7 @@ elFinder.prototype.commands.download = function() {
 	
 	this.exec = function(hashes) {
 		var fm      = this.fm,
-			base    = fm.options.url,
+			base    = fm.options.urlDownLoad||fm.options.url,
 			files   = filter(hashes),
 			dfrd    = $.Deferred(),
 			iframes = '',
@@ -47,7 +47,7 @@ elFinder.prototype.commands.download = function() {
 		});
 		
 		base += base.indexOf('?') === -1 ? '?' : '&';
-		
+		alert(base);
 		for (i = 0; i < files.length; i++) {
 			iframes += '<iframe class="downloader" id="downloader-' + files[i].hash+'" style="display:none" src="'+base + 'cmd=file&target=' + files[i].hash+'&download=1'+cdata+'"/>';
 		}

@@ -129,5 +129,14 @@
         <action name = "docAction_*" class = "docAction" method = "{1}"/>
 
         <action name = "connector" class = "connectorAction" method="run"/>
+
+        <action name="connectorDownload" class="connectorAction" method="downDoc">
+            <result type="stream">
+                <param name="contentType">${contentType}</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${docName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
     </package>
 </struts>

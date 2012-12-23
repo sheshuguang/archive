@@ -46,6 +46,11 @@ elFinder.prototype._options = {
 	 **/
 	transport : {},
 
+    /**
+     * 文件下载的URL
+     */
+    urlDownLoad : '',
+
 	/**
 	 * URL to upload file to.
 	 * If not set - connector URL will be used
