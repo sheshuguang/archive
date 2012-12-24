@@ -2,30 +2,31 @@ package com.yapu.system.util.lucene;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.LogByteSizeMergePolicy;
 import org.apache.lucene.index.LogMergePolicy;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.struts2.ServletActionContext;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.yapu.archive.entity.SysTempletfield;
 
 /**
- * lucene 索引相关操作
+ * lucene 数据库索引相关操作
  * @author wangf
  *
  */
@@ -34,18 +35,25 @@ public class Indexer {
 	
 	private String indexDir = "/LUCENE";
 	
+	/**
+	 * 创建索引
+	 * @param tablename		数据库表名
+	 * @param fieldList		字段list
+	 * @param dataList		数据list
+	 * @param openMode		创建模式   CREATE：全部重新创建。 APPEND：追加。CREATE_OR_APPEND：
+	 */
 	public void CreateIndex(String tablename,List fieldList,List dataList,String openMode) {
 		
 		IndexWriter indexWriter = null;
 		try {
 			// 创建表对应的独立索引存放目录
-//			String tableIndexDir = "e:\\LUCENE\\" + tablename;
 			String temp = indexDir + "/" + tablename;
 			String tableIndexDir = ServletActionContext.getServletContext().getRealPath(temp)+ File.separator;
 			System.out.println(tableIndexDir);
 			// 创建Directory对象
 			Directory dir = new SimpleFSDirectory(new File(tableIndexDir));
-			Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+//			Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+			Analyzer analyzer = new IKAnalyzer();
 			// 创建的是哪个版本的IndexWriterConfig
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
                     Version.LUCENE_36, analyzer);
@@ -108,12 +116,31 @@ public class Indexer {
 			HashMap tempMap = (HashMap) dataList.get(i);
 			for (SysTempletfield sysTempletfield : fieldList) {
 				if (sysTempletfield.getIssearch() == 1) {
-					doc.add(new Field(sysTempletfield.getEnglishname().toLowerCase(), 
-							tempMap.get(sysTempletfield.getEnglishname()).toString(),Field.Store.YES, Field.Index.ANALYZED));
+					String tmp = "";
+					if (null != tempMap.get(sysTempletfield.getEnglishname())) {
+						tmp = tempMap.get(sysTempletfield.getEnglishname()).toString();
+					}
+					if (null != tmp ) {
+						doc.add(new Field(sysTempletfield.getEnglishname().toLowerCase(), 
+								tmp,Field.Store.YES, Field.Index.ANALYZED));
+					}
 				}
 				else {
-					doc.add(new Field(sysTempletfield.getEnglishname().toLowerCase(), 
-							tempMap.get(sysTempletfield.getEnglishname()).toString(),Field.Store.YES, Field.Index.NOT_ANALYZED));
+					String tmp = "";
+					if (null != tempMap.get(sysTempletfield.getEnglishname())) {
+						tmp = tempMap.get(sysTempletfield.getEnglishname()).toString();
+					}
+					if (null != tmp ) {
+						String fieldName = sysTempletfield.getEnglishname().toLowerCase();
+						if ("treeid".equals(fieldName) || "id".equals(fieldName)) {
+							doc.add(new Field(sysTempletfield.getEnglishname().toLowerCase(), 
+									tmp,Field.Store.YES, Field.Index.NOT_ANALYZED));
+						}
+						else {
+							doc.add(new Field(sysTempletfield.getEnglishname().toLowerCase(), 
+									tmp,Field.Store.YES, Field.Index.NO));
+						}
+					}
 				}
 			}
 			// 写入IndexWriter
@@ -121,7 +148,64 @@ public class Indexer {
 				indexWriter.addDocument(doc);
 			}
 		}
+		indexWriter.close();
+	}
+	
+	
+	@SuppressWarnings("deprecation")
+	/** (代码为测试用。暂时不开发删除和更新索引。本系统采用全部重新建立索引的方式)
+	 * 根据数据库id ，删除索引
+	 * @param tableName		数据库表名。索引物理文件存在的文件夹
+	 * @param id			表id	
+	 * @return
+	 * @throws IOException
+	 */
+	public String deleteIndexer(String tableName,String id) throws IOException {
 		
+		String temp = indexDir + "/" + tableName;
+		String tableIndexDir = ServletActionContext.getServletContext().getRealPath(temp)+ File.separator;
+		// 创建Directory对象
+		Directory dir = new SimpleFSDirectory(new File(tableIndexDir));
+//		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+		Analyzer analyzer = new IKAnalyzer();
+		
+		Term term = new Term("id",id);
+		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
+                Version.LUCENE_36, analyzer);
+		
+		IndexWriter iw = new IndexWriter(dir, indexWriterConfig);
+		iw.deleteDocuments(term);
+		iw.close();
+
+		return null;
+	}
+	
+	public String updateIndexer(String tableName,List fieldList,List dataList) throws IOException {
+		
+		String temp = indexDir + "/" + tableName;
+		String tableIndexDir = ServletActionContext.getServletContext().getRealPath(temp)+ File.separator;
+		// 创建Directory对象
+		Directory dir = new SimpleFSDirectory(new File(tableIndexDir));
+//		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+		Analyzer analyzer = new IKAnalyzer();
+		
+		HashMap map = (HashMap) dataList.get(0);
+		
+		Term term = new Term("id",map.get("ID").toString());
+		
+		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
+                Version.LUCENE_36, analyzer);
+		
+		IndexWriter iw = new IndexWriter(dir, indexWriterConfig);
+		Document doc = new Document();
+		doc.add(new Field("id",map.get("ID").toString(),Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field("treeid",map.get("TREEID").toString(),Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field("ajh",map.get("AJH").toString(),Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field("tm",map.get("TM").toString(),Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field("ztz",map.get("ZRZ").toString(),Field.Store.YES, Field.Index.ANALYZED));
+		iw.updateDocument(term, doc);
+		iw.close();
+		return null;
 	}
 
 }

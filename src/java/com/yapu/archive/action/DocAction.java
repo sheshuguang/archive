@@ -40,6 +40,7 @@ public class DocAction extends BaseAction{
     private String docId;
 
     private SysDoc doc;
+    private SysDocserver docServer;
     private String tableid;
     private String selectRowid;
     private int chunks;
@@ -359,7 +360,7 @@ public class DocAction extends BaseAction{
     	//判断文件所属服务器
     	String serverid = doc.getDocserverid();
     	//得到所属服务器的信息
-    	SysDocserver docServer = docserverService.selectByPrimaryKey(serverid);
+    	docServer = docserverService.selectByPrimaryKey(serverid);
     	if (null == docServer || "".equals(docServer)) {
     		return ERROR;
     	}
@@ -368,14 +369,14 @@ public class DocAction extends BaseAction{
     	if ("LOCAL".equals(serverType)) {
     		savePath = docServer.getServerpath();
     	}
+    	//TODO 需要增加ftp类型的下载
     	return SUCCESS;
     }
     
     public InputStream getInputStream() throws FileNotFoundException {
-//    	docName = "文档 阿斯 顿飞.doc";
-//    	InputStream aa = ServletActionContext.getServletContext().getResourceAsStream("/aa.doc");
-//    	FileInputStream aa = new FileInputStream("d:\\文档 阿斯 顿飞.doc");
-    	String fileName = savePath + doc.getDocnewname();
+//    	String fileName = savePath + doc.getDocnewname();
+    	String savePath = docServer.getServerpath();
+    	String fileName = savePath + doc.getDocpath();
     	FileInputStream aa = new FileInputStream(fileName);
     	return aa;
 	}
@@ -538,6 +539,12 @@ public class DocAction extends BaseAction{
 		this.contentType = contentType;
 	}
 
+	public SysDocserver getDocServer() {
+		return docServer;
+	}
 
+	public void setDocServer(SysDocserver docServer) {
+		this.docServer = docServer;
+	}
 
 }

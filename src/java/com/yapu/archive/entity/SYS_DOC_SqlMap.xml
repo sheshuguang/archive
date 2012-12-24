@@ -409,36 +409,36 @@
       <isNotNull prepend="," property="tableid" >
         TABLEID = #tableid:VARCHAR#
       </isNotNull>
-        <isNotNull prepend="," property="authority" >
-            #authority:VARCHAR#
-        </isNotNull>
-        <isNotNull prepend="," property="height" >
-            #height:INTEGER#
-        </isNotNull>
-        <isNotNull prepend="," property="width" >
-            #width:INTEGER#
-        </isNotNull>
-        <isNotNull prepend="," property="hidden" >
-            #hidden:VARCHAR#
-        </isNotNull>
-        <isNotNull prepend="," property="locked" >
-            #locked:VARCHAR#
-        </isNotNull>
-        <isNotNull prepend="," property="mwrite" >
-            #mwrite:VARCHAR#
-        </isNotNull>
-        <isNotNull prepend="," property="mread" >
-            #mread:VARCHAR#
-        </isNotNull>
-        <isNotNull prepend="," property="mime" >
-            #mime:VARCHAR#
-        </isNotNull>
-        <isNotNull prepend="," property="mtime" >
-            #mtime:INTEGER#
-        </isNotNull>
-        <isNotNull prepend="," property="parentid" >
-            #parentid:VARCHAR#
-        </isNotNull>
+      <isNotNull prepend="," property="authority" >
+        AUTHORITY = #authority:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="height" >
+        HEIGHT = #height:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="width" >
+        WIDTH = #width:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="hidden" >
+        HIDDEN = #hidden:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="locked" >
+        LOCKED = #locked:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mwrite" >
+        MWRITE = #mwrite:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mread" >
+        MREAD = #mread:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mime" >
+        MIME = #mime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mtime" >
+        MTIME = #mtime:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="parentid" >
+        PARENTID = #parentid:VARCHAR#
+      </isNotNull>
     </dynamic>
     where DOCID = #docid:VARCHAR#
   </update>

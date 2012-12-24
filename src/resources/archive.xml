@@ -265,6 +265,7 @@
     	<property name="orgService" ref="publicOrgService" />
     	<property name="treeService" ref="treeService" />
     	<property name="searchService" ref="searchService" />
+    	<property name="dynamicService" ref="dynamicService" />
     </bean>
     <bean id="indexerAction" class="com.yapu.archive.action.IndexerAction">
     	<property name="tableService" ref="tableService" />

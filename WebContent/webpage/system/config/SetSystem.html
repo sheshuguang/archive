@@ -6,6 +6,32 @@
 			
 		});
 	}
+	
+	function deleteIndexer() {
+		var par ="";
+		$.post("deleteIndexer.action",par,function(data){
+			
+		});
+	}
+	function appendIndexer() {
+		var par ="";
+		$.post("appendIndexer.action",par,function(data){
+			
+		});
+	}
+	function updateIndexer() {
+		var par ="";
+		$.post("updateIndexer.action",par,function(data){
+			
+		});
+	}
+	
 </script>
 
-<Button type="button" onClick="createIndex()">indexer</Button>
+<Button type="button" class="btn" onClick="createIndex()">创建数据库索引</Button>
+
+<Button type="button" class="btn" onClick="deleteIndexer()">测试删除数据库索引</Button>
+
+<Button type="button" class="btn" onClick="updateIndexer()">测试更新数据库索引</Button>
+
+<Button type="button" class="btn" onClick="appendIndexer()">测试追加数据库索引</Button>
