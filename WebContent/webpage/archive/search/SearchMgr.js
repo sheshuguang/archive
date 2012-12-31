@@ -234,29 +234,32 @@ function showResultList(list) {
 	for (var i=0;i<list.length;i++) {
 		doc += "<table class=\"table table-bordered table-condensed\" width=\"100%\">";
 		doc += "<tr><td width=\"70px\">所属档案库</td><td>"+$("#" + list[i].treeid + "-name").html()+"</td>";
-		if (list[i].tabletype == "A") {
-			doc += "<td width=\"70px\">类别</td><td width=\"250px\">案卷级</td></tr>";
-		}
-		else if (list[i].tabletype=="W" || list[i].tabletype=="F"){
-			doc += "<td width=\"70px\">类别</td><td width=\"250px\">文件级</td></tr>";
-		}
-		else{
-			doc += "<td width=\"70px\">类别</td><td width=\"250px\">未知</td></tr>";
-		}
+//		if (searchCommon.templettype == "A") {
+//			doc += "<td width=\"70px\">类别</td><td width=\"250px\">案卷级</td></tr>";
+//		}
+//		else if (list[i].tabletype=="W" || list[i].tabletype=="F"){
+//			doc += "<td width=\"70px\">类别</td><td width=\"250px\">文件级</td></tr>";
+//		}
+//		else{
+//			doc += "<td width=\"70px\">类别</td><td width=\"250px\">未知</td></tr>";
+//		}
 		
 		var ajhOrWjh = "";
 		if (searchCommon.tabletype == '01') {
 			if (searchCommon.templettype == "A") {
 				ajhOrWjh = list[i]["ajh"];
+				doc += "<td width=\"70px\">类别</td><td width=\"250px\">案卷级</td></tr>";
 				doc += "<tr><td>案卷号</td><td>"+ajhOrWjh+"</td><td>责任者</td><td>"+list[i].zrz+"</td></tr>";
 			}
 			else {
 				ajhOrWjh = list[i].wjh;
+				doc += "<td width=\"70px\">类别</td><td width=\"250px\">文件级</td></tr>";
 				doc += "<tr><td>文件号</td><td>"+ajhOrWjh+"</td><td>责任者</td><td>"+list[i].zrz+"</td></tr>";
 			}
 		}
 		else {
 			ajhOrWjh = list[i].wjh;
+			doc += "<td width=\"70px\">类别</td><td width=\"250px\">文件级</td></tr>";
 			doc += "<tr><td>文件号</td><td>"+ajhOrWjh+"</td><td>责任者</td><td>"+list[i].zrz+"</td></tr>";
 		}
 		doc += "<tr><td>归档单位</td><td>"+list[i].gddw+"</td><td>归档日期</td><td>"+list[i].gdrq+"</td></tr>";

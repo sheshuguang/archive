@@ -12,6 +12,7 @@ import com.yapu.archive.entity.*;
 import com.yapu.archive.service.itf.IDocService;
 import com.yapu.elfinder.DirFileInfor;
 import com.yapu.system.util.CommonUtils;
+import com.yapu.system.util.FileOperate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class DocService implements IDocService {
 	private SysDocDAO docDao;
 	private SysTableDAO tableDao;
 	private DynamicDAO dynamicDao;
-    private SysDocserverDAO sysDocserverDAO;
+    private SysDocserverDAO docserverDao;
 
 
 
@@ -34,12 +35,30 @@ public class DocService implements IDocService {
 		if (null != docID && !"".equals(docID)) {
 			//删除电子文件记录前，要删除物理文件
 			SysDoc doc = docDao.selectByPrimaryKey(docID);
+			SysDocserver docserver = docserverDao.selectByPrimaryKey(doc.getDocserverid());
 			if (null != doc) {
 				try {
-					//TODO 删除物理文件
-					
-					//删除文件记录
-					return docDao.deleteByPrimaryKey(docID);
+					//删除物理文件
+					if ("LOCAL".equals(docserver.getServertype())) {
+						//得到服务器路径
+						String serverPath = docserver.getServerpath();
+						if (!serverPath.substring(serverPath.length()-1,serverPath.length()).equals("/")) {
+							serverPath += "/";
+	                    }
+						serverPath += doc.getDocpath(); 
+						FileOperate fo = new FileOperate();
+						boolean b = fo.delFile(serverPath);
+						if (b) {
+							//删除文件记录
+							return docDao.deleteByPrimaryKey(docID);
+						}
+						else {
+							return 0;
+						}
+					}
+					else {
+						//TODO 处理ftp删除
+					}
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					return 0;
@@ -219,7 +238,7 @@ public class DocService implements IDocService {
 
     @Override
     public List<SysDoc> selectAllroot() {
-        List<SysDocserver> sysDocserverList = this.sysDocserverDAO.selectByExample(new SysDocserverExample());
+        List<SysDocserver> sysDocserverList = this.docserverDao.selectByExample(new SysDocserverExample());
         List<SysDoc> rootDocList = new ArrayList<SysDoc>();
         for (SysDocserver sysDocserver : sysDocserverList){
             SysDoc sysDoc= new SysDoc();
@@ -249,7 +268,7 @@ public class DocService implements IDocService {
         SysDoc sysDoc= new SysDoc();
         sysDoc = selectByPrimaryKey(target);
         if(null!=sysDoc) return sysDoc;
-        SysDocserver sysDocserver = this.sysDocserverDAO.selectByPrimaryKey(target);
+        SysDocserver sysDocserver = this.docserverDao.selectByPrimaryKey(target);
         if(null!=sysDocserver){
             sysDoc= new SysDoc();
             sysDoc.setDocid(sysDocserver.getDocserverid());
@@ -271,7 +290,7 @@ public class DocService implements IDocService {
         SysDocserverExample example = new SysDocserverExample();
         SysDocserverExample.Criteria criteria = example.createCriteria();
         criteria.andServerstateEqualTo(1);       //激活的服务器
-        List<SysDocserver> sysDocserverList = this.sysDocserverDAO.selectByExample(example);
+        List<SysDocserver> sysDocserverList = this.docserverDao.selectByExample(example);
         if (null != sysDocserverList && sysDocserverList.size() > 0) {
             SysDocserver docserver = (SysDocserver)sysDocserverList.get(0);
             sysDoc= new SysDoc();
@@ -302,12 +321,14 @@ public class DocService implements IDocService {
 	public void setDynamicDao(DynamicDAO dynamicDao) {
 		this.dynamicDao = dynamicDao;
 	}
-    public SysDocserverDAO getSysDocserverDAO() {
-        return sysDocserverDAO;
-    }
-
-    public void setSysDocserverDAO(SysDocserverDAO sysDocserverDAO) {
-        this.sysDocserverDAO = sysDocserverDAO;
-    }
+	public SysDocserverDAO getDocserverDao() {
+		return docserverDao;
+	}
+	public void setDocserverDao(SysDocserverDAO docserverDao) {
+		this.docserverDao = docserverDao;
+	}
+	
+    
+	
 	
 }

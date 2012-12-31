@@ -553,6 +553,76 @@ public class SysDocExample {
             addCriterion("DOCTYPE not between", value1, value2, "doctype");
             return this;
         }
+        
+        public Criteria andDocextIsNull() {
+            addCriterion("DOCEXT is null");
+            return this;
+        }
+
+        public Criteria andDocextIsNotNull() {
+            addCriterion("DOCEXT is not null");
+            return this;
+        }
+
+        public Criteria andDocextEqualTo(String value) {
+            addCriterion("DOCEXT =", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocDocextNotEqualTo(String value) {
+            addCriterion("DOCEXT <>", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocextGreaterThan(String value) {
+            addCriterion("DOCEXT >", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocextGreaterThanOrEqualTo(String value) {
+            addCriterion("DOCEXT >=", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocextLessThan(String value) {
+            addCriterion("DOCEXT <", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocextLessThanOrEqualTo(String value) {
+            addCriterion("DOCEXT <=", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocextLike(String value) {
+            addCriterion("DOCEXT like", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocextNotLike(String value) {
+            addCriterion("DOCEXT not like", value, "docext");
+            return this;
+        }
+
+        public Criteria andDocextIn(List values) {
+            addCriterion("DOCEXT in", values, "docext");
+            return this;
+        }
+
+        public Criteria andDocextNotIn(List values) {
+            addCriterion("DOCEXT not in", values, "docext");
+            return this;
+        }
+
+        public Criteria andDocextBetween(String value1, String value2) {
+            addCriterion("DOCEXT between", value1, value2, "docext");
+            return this;
+        }
+
+        public Criteria andDocextNotBetween(String value1, String value2) {
+            addCriterion("DOCEXT not between", value1, value2, "docext");
+            return this;
+        }
 
         public Criteria andDoclengthIsNull() {
             addCriterion("DOCLENGTH is null");
@@ -971,6 +1041,76 @@ public class SysDocExample {
 
         public Criteria andTableidNotBetween(String value1, String value2) {
             addCriterion("TABLEID not between", value1, value2, "tableid");
+            return this;
+        }
+        
+        public Criteria andTreeidIsNull() {
+            addCriterion("TREEID is null");
+            return this;
+        }
+
+        public Criteria andTreeidIsNotNull() {
+            addCriterion("TREEID is not null");
+            return this;
+        }
+
+        public Criteria andTreeidEqualTo(String value) {
+            addCriterion("TREEID =", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidNotEqualTo(String value) {
+            addCriterion("TREEID <>", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidGreaterThan(String value) {
+            addCriterion("TREEID >", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidGreaterThanOrEqualTo(String value) {
+            addCriterion("TREEID >=", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidLessThan(String value) {
+            addCriterion("TREEID <", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidLessThanOrEqualTo(String value) {
+            addCriterion("TREEID <=", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidLike(String value) {
+            addCriterion("TREEID like", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidNotLike(String value) {
+            addCriterion("TREEID not like", value, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidIn(List values) {
+            addCriterion("TREEID in", values, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidNotIn(List values) {
+            addCriterion("TREEID not in", values, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidBetween(String value1, String value2) {
+            addCriterion("TREEID between", value1, value2, "treeid");
+            return this;
+        }
+
+        public Criteria andTreeidNotBetween(String value1, String value2) {
+            addCriterion("TREEID not between", value1, value2, "treeid");
             return this;
         }
 

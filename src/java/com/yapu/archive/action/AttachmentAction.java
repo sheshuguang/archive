@@ -54,7 +54,7 @@ public class AttachmentAction extends BaseAction {
 			return null;
 		}
 		
-		if (itemsList.size() <= 0) {
+		if (itemsList.size() <= 0 || null == itemsList) {
 			result = "没有找到数据，请重新尝试或与管理员联系。";
 			out.write(result);
 			return null;

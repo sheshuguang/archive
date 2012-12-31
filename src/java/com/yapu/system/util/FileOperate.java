@@ -72,18 +72,19 @@ public class FileOperate {
      *            String   
      * @return boolean   
      */  
-    public static void delFile(String filePathAndName) {
+    public static boolean delFile(String filePathAndName) {
         try {   
             String filePath = filePathAndName;   
             filePath = filePath.toString();   
             java.io.File myDelFile = new java.io.File(filePath);   
-            myDelFile.delete();   
+            return myDelFile.delete();   
   
         } catch (Exception e) {   
             System.out.println("删除文件操作出错 ");   
             e.printStackTrace();   
   
-        }   
+        }
+		return false;   
   
     }   
   

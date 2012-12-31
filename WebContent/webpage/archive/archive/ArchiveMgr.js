@@ -130,9 +130,6 @@ $(function() {
 		width: 720,
 		modal: true,
 		buttons: {
-			"打开": function() {
-				alert("docwindows");
-			},
 			"关闭": function() {
 				$( this ).dialog( "close" );
 			}
@@ -172,79 +169,5 @@ function showArchiveImportTab(tableType) {
 	us.addtab($("#importtab"),'案卷导入','ajax', url);
 }
 
-/*
- * 生成doc现实的列表
- */
-function getDoclist(row) {
-	var str = "<li class=\"docli\">";
-	str += "<div class=\"docdiv\"><a href=\"downDoc.action?docId="+ row.docid +"\">";
-	var docType = row.doctype;
-	var typeCss = "";
-	if (docType == "DOC" || docType == "XLS" || docType=="PPT") {
-		typeCss = "file-icon-office";
-	}
-	else if (docType == "TXT") {
-		typeCss = "file-icon-text";
-	}
-	else if (docType == "JPG" || docType == "GIF" || docType=="BMP" || docType=="JPEG" || docType=="TIF") {
-		typeCss = "file-icon-image";
-	}
-	else if (docType == "PDF") {
-		typeCss = "file-icon-pdf";
-	}
-	else if (docType == "ZIP") {
-		typeCss = "file-icon-zip";
-	}
-	else if (docType == "RAR") {
-		typeCss = "file-icon-rar";
-	}
-	else if (docType == "FLASH") {
-		typeCss = "file-icon-flash";
-	}
-	else {
-		
-	}
-	str += "<img class=\"file-icon "+typeCss+" \">";
-	str += "</a></div>";
-	var name = row.docoldname;
-//	if (row.docoldname.length > 8) {
-//		name = row.docoldname.substr(0,8) + "..." + "." + docType;
-//	}
-	str += "<div title=\""+row.docoldname+"\"><div class=\"docfilename\"><a href=\"downDoc.action?docId="+ row.docid +"\">" + name + "</a></div></div>";
-	str += "</li>";
-	return str;
-}
 
 
-
-// 打开电子全文windows
-function showDocwindow(id, tableid) {
-	archiveCommon.selectRowid = id;
-	archiveCommon.selectTableid = tableid;
-	
-	var par = "selectRowid="+ id + "&tableid="+tableid;
-	var rowList = [];
-	//同步读取数据
-	$.ajax({
-		async : false,
-		url : "listLinkDoc.action?"+ par,
-		type : 'post',
-		dataType : 'script',
-		success : function(data) {
-			if (data != "error") {
-//				authorityGridconfig.rows = rowList;
-//				var rowList = [];
-				rowList = eval(data);
-				$("#doclist").html("");
-				for (var i=0;i<rowList.length;i++) {
-					$("#doclist").append(getDoclist(rowList[i]));
-				}
-			} else {
-				us.openalert('读取数据时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
-			}
-		}
-	});
-	
-	$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
-	$("#docwindows").dialog( "open" );
-}

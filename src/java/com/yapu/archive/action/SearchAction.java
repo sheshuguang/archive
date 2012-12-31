@@ -29,8 +29,8 @@ import com.yapu.system.service.itf.IAccountService;
 import com.yapu.system.service.itf.IOrgService;
 import com.yapu.system.util.Constants;
 
-public class SearchAction extends BaseAction {
-	private static final long serialVersionUID = 5004188718476484590L;
+public class SearchAction extends BaseAction{
+private static final long serialVersionUID = 5004188718476484590L;
 	
 	private IAccountService accountService;
 	private IOrgService orgService;
@@ -171,7 +171,18 @@ public class SearchAction extends BaseAction {
 			tableInfoList.add(map);
 		}
 		
-		for (SysTree tree :childTreeList) {
+		//取得当前帐户权限范围，该档案类型下的子节点
+		List<SysTree> treeList = getTreeNode();
+		List<SysTree> tmpTreeList = new ArrayList<SysTree>();
+		for (int i=0;i<childTreeList.size();i++) {
+			for (int j=0;j<treeList.size();j++) {
+				if (childTreeList.get(i).getTreeid().equals(treeList.get(j).getTreeid())) {
+					tmpTreeList.add(childTreeList.get(i));
+				}
+			}
+		}
+		
+		for (SysTree tree :tmpTreeList) {
 			HashMap map = new HashMap();
 			map.put("treeid", tree.getTreeid());
 			String ajStr = "";
@@ -234,6 +245,7 @@ public class SearchAction extends BaseAction {
 			List<SysTree> treeList = new ArrayList<SysTree>();
 			treeList = getTreeNode();
 			for(SysTree tree:treeList) {
+				//TODO 这里有问题。档案根节点下。现在查parent为0的。但0下面的，有可能当前帐户也没有权限。不能都查出来。
 				if ("0".equals(tree.getParentid())) {
 					List a = getSearchNumberByTreeid(tree.getTreeid());
 					for (int i=0;i<a.size();i++) {
@@ -256,7 +268,6 @@ public class SearchAction extends BaseAction {
 	}
 	
 	public String search() throws IOException, ParseException {
-		
 		PrintWriter out = this.getPrintWriter();
 		HashMap bb = new HashMap();
 		//根据treeid来执行不同的查询
@@ -269,17 +280,46 @@ public class SearchAction extends BaseAction {
 				return "";
 			}
 			for (SysTree tree :treeList) {
-				if ("0".equals(tree.getParentid())) {
-					bb = searchData(tree);
-					if (((List)bb.get("DATA")).size() > 0) {
-						break;
+				if (!"0".equals(tree.getParentid())) {
+					if ("W".equals(tree.getTreetype())) {
+						bb = searchData(tree);
+						if (((List)bb.get("DATA")).size() > 0) {
+							break;
+						}
 					}
 				}
 			}
 		}
 		else {
 			SysTree tree = treeService.selectByPrimaryKey(treeid);
-			bb = searchData(tree);
+			if ("0".equals(tree.getParentid())) {
+				//获得当前帐户的树节点范围
+				List<SysTree> treeList = new ArrayList<SysTree>();
+				treeList = getTreeNode();
+				
+				//获得该节点下的子节点
+				List<SysTree> childList = getChildTree(tree.getTreeid());
+				
+				//得到当前帐户能管理的子节点。
+				List<SysTree> tmpList = new ArrayList<SysTree>();
+				for (int i=0;i<childList.size();i++) {
+					for (int j=0;j<treeList.size();j++) {
+						if (childList.get(i).getTreeid().equals(treeList.get(j).getTreeid())) {
+							tmpList.add(childList.get(i));
+						}
+					}
+				}
+				
+				for (SysTree tmp : tmpList) {
+					bb = searchData(tmp);
+					if (((List)bb.get("DATA")).size() > 0) {
+						break;
+					}
+				}
+			}
+			else {
+				bb = searchData(tree);
+			}
 		}
 		
 		List result = new ArrayList();
@@ -510,5 +550,4 @@ public class SearchAction extends BaseAction {
 	public void setSelectid(String selectid) {
 		this.selectid = selectid;
 	}
-	
 }

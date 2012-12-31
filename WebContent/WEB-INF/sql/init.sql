@@ -4,12 +4,14 @@
   DOCOLDNAME varchar(300) ,
   DOCNEWNAME varchar(255) ,
   DOCTYPE varchar(20) ,
+  DOCEXT varchar(20),
   DOCLENGTH varchar(10) ,
   DOCPATH varchar(300) ,
   CREATER varchar(20) ,
   CREATETIME varchar(30) ,
   FILEID varchar(40) ,
   TABLEID varchar(40) ,
+  TREEID varchar(40) ,
   PARENTID varchar(40) ,
   MTIME varchar(20) ,
   LOCKED char(2) ,
@@ -167,6 +169,10 @@ insert into sys_function(
 	FUNCTIONID,FUNCHINESENAME,FUNENGLISHNAME,FUNPATH,FUNORDER,FUNSYSTEM,FUNPARENT,FUNICON) 
 	values (
 	'11','高级检索','SEARCHADVANCED','webpage/archive/search/SearchAdvanced.html',8,1,9,'icon-page');
+insert into sys_function(
+	FUNCTIONID,FUNCHINESENAME,FUNENGLISHNAME,FUNPATH,FUNORDER,FUNSYSTEM,FUNPARENT,FUNICON) 
+	values (
+	'12','全文检索','SEARCHFILE','webpage/archive/search/SearchFile.html',9,1,9,'icon-page');
 
 
 

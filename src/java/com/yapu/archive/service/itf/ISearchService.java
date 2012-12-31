@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.lucene.queryParser.ParseException;
 
 import com.yapu.archive.entity.SysTempletfield;
+import com.yapu.archive.entity.SysTree;
 
 
 /**
@@ -49,4 +50,14 @@ public interface ISearchService {
 	 * @throws IOException
 	 */
 	HashMap search(String tableName, List<SysTempletfield> tmpList,String searchTxt,String treeid,int currentPage,int pageSize) throws IOException;
+	/**
+	 * 电子全文检索
+	 * @param keyword		检索内容
+	 * @param docserverid	全文服务器id。
+	 * @param treeidList	当前帐户能管理的树节点集合。以集合范围来检索
+	 * @param currentPage	当前页
+	 * @param pageSize		每页条数
+	 * @return
+	 */
+	HashMap search(String keyword,String docserverid,List<SysTree> treeList,int currentPage,int pageSize);
 }
