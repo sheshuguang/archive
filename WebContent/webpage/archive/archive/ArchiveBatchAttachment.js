@@ -105,9 +105,7 @@ $(function() {
 		var a = archiveCommon.yesItems;
 		if (a.length > 0) {
 			var bb = encodeURIComponent(JSON.stringify(a));
-			alert(bb);
 			var par = "items=" + bb + "&tableType=" + archiveCommon.tableType + "&treeid=" + archiveCommon.selectTreeid;
-
 			$.post("saveBatchAttArchive.action",par,function(data){
 					new $.Zebra_Dialog(data, {
 		  				'buttons':  false,

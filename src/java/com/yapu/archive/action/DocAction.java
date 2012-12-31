@@ -58,6 +58,9 @@ public class DocAction extends BaseAction{
     
     private String docName;
     private String contentType;
+    //fileid treeid 为单个档案挂接上传文件时用到
+    private String fileid;
+    private String treeid;
 
     public String getSavePath() {
         return savePath;
@@ -170,15 +173,33 @@ public class DocAction extends BaseAction{
             doc.setDocext(docExt.substring(1).toUpperCase());
             doc.setCreater(sessionAccount.getAccountcode());
             doc.setCreatetime(CommonUtils.getTimeStamp());
-            doc.setFileid("");
-            doc.setTableid("");
-            doc.setTreeid("");
+            if (null != this.getFileid() && !"".equals(this.getFileid())) {
+            	doc.setFileid(this.getFileid());
+            }
+            else {
+            	doc.setFileid("");
+            }
+            
+            if (null != this.getTableid() && !"".equals(this.getTableid())) {
+            	doc.setTableid(this.getTableid());
+            }
+            else {
+            	doc.setTableid("");
+            }
+            
+            if (null != this.getTreeid() && !"".equals(this.getTreeid())) {
+            	doc.setTreeid(this.getTreeid());
+            }
+            else {
+            	doc.setTreeid("");
+            }
+            
+            
             doc.setParentid(docserver.getDocserverid());
             doc.setLocked("0");
             doc.setMread("1");
             doc.setMwrite("1");
             doc.setHidden("1");
-            
             //TODO 这里要跟阿佘对一下doc的上传字段怎么写。
             
             if ("FTP".equals(docserver.getServertype())) {
@@ -618,6 +639,22 @@ public class DocAction extends BaseAction{
 
 	public void setTableService(ITableService tableService) {
 		this.tableService = tableService;
+	}
+
+	public String getFileid() {
+		return fileid;
+	}
+
+	public void setFileid(String fileid) {
+		this.fileid = fileid;
+	}
+
+	public String getTreeid() {
+		return treeid;
+	}
+
+	public void setTreeid(String treeid) {
+		this.treeid = treeid;
 	}
 
 }

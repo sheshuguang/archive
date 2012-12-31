@@ -224,7 +224,7 @@
     <bean id="ftpAction" class="com.yapu.archive.action.FtpAction">
         <property name="docserverService" ref="docserverService" />
     </bean>
-    <bean id="docAction" class="com.yapu.archive.action.DocAction">
+    <bean id="docAction" class="com.yapu.archive.action.DocAction" scope="prototype">
         <property name="docserverService" ref="docserverService" />
         <property name="docService" ref="docService" />
         <property name="dynamicService" ref="dynamicService" />

@@ -361,8 +361,48 @@ $(function(){
 	
 	ajGridconfig.dataView.syncGridSelection(ajGridconfig.grid, true);
 	
+	/**
+	 * 电子文件窗口
+	 */
+	$("#docwindows").dialog({
+		autoOpen: false,
+		height: 420,
+		width: 720,
+		modal: true,
+		buttons: {
+			"挂接":function() {
+				uploadFile();
+			},
+			"关闭": function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	//声明上传控件。#uploadFile，作为公共的资源，在archiveMgr.js里
+	$("#uploadFile").dialog({
+        autoOpen: false,
+        height: 460,
+        width: 630,
+        modal: true,
+        buttons: {
+            '关闭': function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        	
+        }
+    });
 });
-
+/**
+ * 显示和隐藏电子全文删除按钮
+ * @param b		true false 是否隐藏
+ * @param id	按钮ID
+ */
 function showDocDelectButton(b,id) {
 	if (b) {
 		$("#" + id).css("display","inline-block");
@@ -374,7 +414,7 @@ function showDocDelectButton(b,id) {
 
 /*
  * 生成doc现实的列表
- * onMouseOut=\"this.className='Off'\" onMouseOver=\"this.className='Up'\"
+ * 
  */
 function getDoclist(row) {
 	var str = "<li class=\"docli\" onMouseOut=\"showDocDelectButton(false,'"+row.docid+"')\" onMouseOver=\"showDocDelectButton(true,'"+row.docid+"')\">";
@@ -474,9 +514,7 @@ function delectDoc(id) {
 		type : 'post',
 		dataType : 'script',
 		success : function(data) {
-			alert("d  " + data);
 			if (data != "error") {
-				alert(data);
 				rowList = eval(data);
 				$("#doclist").html("");
 				for (var i=0;i<rowList.length;i++) {
@@ -489,4 +527,37 @@ function delectDoc(id) {
 	});
 	
 	$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
+}
+
+function uploadFile() {
+	$("#uploader").pluploadQueue({
+        // General settings
+        runtimes : 'flash,html5,html4',
+        url : 'docUpload.action?fileid=' +archiveCommon.selectRowid + '&tableid=' + archiveCommon.selectTableid + '&treeid=' + archiveCommon.selectTreeid, 
+        max_file_size : '200mb',
+        //缩略图形式。
+//        resize : {width :32, height : 32, quality : 90},
+//        unique_names : true,
+        chunk_size: '2mb',
+        // Flash settings
+        flash_swf_url : '../../js/plupload/js/plupload.flash.swf'
+        // Silverlight settings
+//        silverlight_xap_url : '/example/plupload/js/plupload.silverlight.xap'
+    });
+    $('#formId').submit(function(e) {
+        var uploader = $('#uploader').pluploadQueue();
+        if (uploader.files.length > 0) {
+            // When all files are uploaded submit form
+            uploader.bind('StateChanged', function() {
+                if (uploader.files.length === (uploader.total.uploaded + uploader.total.failed)) {
+                    $('#formId')[0].submit();
+                }
+            });
+            uploader.start();
+        } else {
+            alert('请先上传数据文件.');
+        }
+        return false;
+    });
+    $( "#uploadFile" ).dialog( "open");
 }

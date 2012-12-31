@@ -124,20 +124,6 @@ $(function() {
         tabWidth:120
     });
 	
-	$("#docwindows").dialog({
-		autoOpen: false,
-		height: 420,
-		width: 720,
-		modal: true,
-		buttons: {
-			"关闭": function() {
-				$( this ).dialog( "close" );
-			}
-		},
-		close: function() {
-			
-		}
-	});
 });
 
 function showTreeList(ob,id,text) {
