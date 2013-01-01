@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 电子文件操作 -->
+	<package name="doc" extends="struts-archive" >
+
+        <!-- 读取当前登录帐户上传的全文库中未挂接的电子全文数据 -->
+        <action name="listNoLinkDocAsAccount" class="docAction" method="listNoLinkDocAsAccount"></action>
+        <!-- 根据选择的档案条目读取所属电子全文数据 -->
+        <action name="listLinkDoc" class="docAction" method="listLinkDoc"></action>
+        <!--打开电子全文页签-->
+        <action name="showDocListTab" class="docAction" method="showDocListTab">
+            <result name="success">/webpage/archive/archive/DocList.html</result>
+        </action>
+        <!--上传文件-->
+        <action name="uploadFile" class="docAction" method="uploadFile"></action>
+        
+        <action name="listDoc" class="docAction" method="list"></action>
+        <!-- 下载测试  application/octet-stream-->
+        <action name="downDoc" class="docAction" method="downDoc">
+        	<result type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${docName}"</param>
+				<param name="bufferSize">4096</param>
+		    </result>
+	    </action>
+        <action name="readDoc" class="docAction" method="readDoc">
+      		<!-- 指定被下载资源的位置   
+         		<param name="inputPath">/upload/</param>   --> 
+	        <result name="success" type="stream">
+	            <param name="contentType">${contentType}</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">${docName}</param>
+	            <param name="bufferSize">4096</param>
+	        </result>
+	    </action>
+        
+        <!-- test upload end-->
+        <action name ="docUpload" class ="docAction" method="upload">
+            <param name="savePath">/WEB-INF/files/upload</param>
+        </action >
+        <!-- 删除电子全文 -->
+        <action name ="docDelete" class ="docAction" method="delete">
+        </action >
+        <action name ="docRead" class ="docAction" method="read">
+            <param name="savePath">/WEB-INF/files/swfdoc</param>
+        </action >
+        <action name = "docAction_*" class = "docAction" method = "{1}"/>
+
+    </package>
+</struts>

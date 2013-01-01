@@ -74,37 +74,6 @@
 		<!-- 删除档案-->
 		<action name="deleteArchive" class="archiveAction" method="delete"></action>
 
-        <!-- ======================doc =============================-->
-        <!-- 读取当前登录帐户上传的全文库中未挂接的电子全文数据 -->
-        <action name="listNoLinkDocAsAccount" class="docAction" method="listNoLinkDocAsAccount"></action>
-        <!-- 根据选择的档案条目读取所属电子全文数据 -->
-        <action name="listLinkDoc" class="docAction" method="listLinkDoc"></action>
-        <!--打开电子全文页签-->
-        <action name="showDocListTab" class="docAction" method="showDocListTab">
-            <result name="success">/webpage/archive/archive/DocList.html</result>
-        </action>
-        <!--上传文件-->
-        <action name="uploadFile" class="docAction" method="uploadFile"></action>
-        <action name="listDoc" class="docAction" method="list"></action>
-        <!-- 下载测试  application/octet-stream-->
-        <action name="downDoc" class="docAction" method="downDoc">
-        	<result type="stream">
-				<param name="contentType">${contentType}</param>
-				<param name="inputName">inputStream</param>
-				<param name="contentDisposition">attachment;filename="${docName}"</param>
-				<param name="bufferSize">4096</param>
-		    </result>
-	    </action>
-        <action name="readDoc" class="docAction" method="readDoc">
-      		<!-- 指定被下载资源的位置   
-         		<param name="inputPath">/upload/</param>   --> 
-	        <result name="success" type="stream">
-	            <param name="contentType">${contentType}</param>
-	            <param name="inputName">inputStream</param>
-	            <param name="contentDisposition">${docName}</param>
-	            <param name="bufferSize">4096</param>
-	        </result>
-	    </action>
     
         <!-- =============== 导入 ================== -->
         <!-- 读取导入文件 -->
@@ -117,17 +86,6 @@
 		<!-- 保存批量挂接-->
 		<action name="saveBatchAttArchive" class="attachmentAction" method="insertBatchAttachmentArchive"></action>
         
-        <!-- test upload end-->
-        <action name ="docUpload" class ="docAction" method="upload">
-            <param name="savePath">/WEB-INF/files/upload</param>
-        </action >
-        <action name ="docDelete" class ="docAction" method="delete">
-        </action >
-        <action name ="docRead" class ="docAction" method="read">
-            <param name="savePath">/WEB-INF/files/swfdoc</param>
-        </action >
-        <action name = "docAction_*" class = "docAction" method = "{1}"/>
-
         <action name = "connector" class = "connectorAction" method="run"/>
 
         <action name="connectorDownload" class="connectorAction" method="downDoc">

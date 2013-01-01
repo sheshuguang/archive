@@ -361,4 +361,203 @@ $(function(){
 	
 	ajGridconfig.dataView.syncGridSelection(ajGridconfig.grid, true);
 	
+	/**
+	 * 电子文件窗口
+	 */
+	$("#docwindows").dialog({
+		autoOpen: false,
+		height: 420,
+		width: 720,
+		modal: true,
+		buttons: {
+			"挂接":function() {
+				uploadFile();
+			},
+			"关闭": function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	//声明上传控件。#uploadFile，作为公共的资源，在archiveMgr.js里
+	$("#uploadFile").dialog({
+        autoOpen: false,
+        height: 460,
+        width: 630,
+        modal: true,
+        buttons: {
+            '关闭': function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        	
+        }
+    });
 });
+/**
+ * 显示和隐藏电子全文删除按钮
+ * @param b		true false 是否隐藏
+ * @param id	按钮ID
+ */
+function showDocDelectButton(b,id) {
+	if (b) {
+		$("#" + id).css("display","inline-block");
+	}
+	else {
+		$("#" + id).css("display","none");
+	}
+}
+
+/*
+ * 生成doc现实的列表
+ * 
+ */
+function getDoclist(row) {
+	var str = "<li class=\"docli\" onMouseOut=\"showDocDelectButton(false,'"+row.docid+"')\" onMouseOver=\"showDocDelectButton(true,'"+row.docid+"')\">";
+	str += "<div class=\"docdiv\"><a href=\"downDoc.action?docId="+ row.docid +"\">";
+	var docType = row.docext;
+	var typeCss = "";
+	if (docType == "DOC" || docType == "XLS" || docType=="PPT") {
+		typeCss = "file-icon-office";
+	}
+	else if (docType == "TXT") {
+		typeCss = "file-icon-text";
+	}
+	else if (docType == "JPG" || docType == "GIF" || docType=="BMP" || docType=="JPEG" || docType=="TIF") {
+		typeCss = "file-icon-image";
+	}
+	else if (docType == "PDF") {
+		typeCss = "file-icon-pdf";
+	}
+	else if (docType == "ZIP") {
+		typeCss = "file-icon-zip";
+	}
+	else if (docType == "RAR") {
+		typeCss = "file-icon-rar";
+	}
+	else if (docType == "FLASH") {
+		typeCss = "file-icon-flash";
+	}
+	else {
+		
+	}
+	str += "<img class=\"file-icon "+typeCss+" \">";
+	str += "</a></div>";
+	var name = row.docoldname;
+//	if (row.docoldname.length > 8) {
+//		name = row.docoldname.substr(0,8) + "..." + "." + docType;
+//	}
+	str += "<div title=\""+row.docoldname+"\"><div class=\"docfilename\"><a href=\"downDoc.action?docId="+ row.docid +"\">" + name + "</a></div></div>";
+	str += "<div><button type=\"button\" id=\""+row.docid+"\" style=\"display:none\" onClick=\"delectDoc('"+row.docid+"')\" class=\"btn btn-danger btn-small\">删除</button></div>";
+	str += "</li>";
+	return str;
+}
+
+
+
+// 打开电子全文windows
+function showDocwindow(id, tableid) {
+	archiveCommon.selectRowid = id;
+	archiveCommon.selectTableid = tableid;
+	
+	var par = "selectRowid="+ id + "&tableid="+tableid;
+	var rowList = [];
+	//同步读取数据
+	$.ajax({
+		async : false,
+		url : "listLinkDoc.action?"+ par,
+		type : 'post',
+		dataType : 'script',
+		success : function(data) {
+			if (data != "error") {
+				rowList = eval(data);
+				$("#doclist").html("");
+				for (var i=0;i<rowList.length;i++) {
+					$("#doclist").append(getDoclist(rowList[i]));
+				}
+			} else {
+				us.openalert('读取数据时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
+			}
+		}
+	});
+	
+	$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
+	$("#docwindows").dialog( "open" );
+}
+
+function delectDoc(id) {
+	//同步读取数据
+	$.ajax({
+		async : false,
+		url : "docDelete.action?docId="+ id,
+		type : 'post',
+		dataType : 'script',
+		success : function(data) {
+			if (data != "error") {
+				us.openalert('删除文件完毕! ','系统提示','alertbody alert_Information');
+			} else {
+				us.openalert('删除文件时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
+			}
+		}
+	});
+	
+	var par = "selectRowid="+ archiveCommon.selectRowid + "&tableid="+archiveCommon.selectTableid;
+	var rowList = [];
+	//同步读取数据
+	$.ajax({
+		async : false,
+		url : "listLinkDoc.action?"+ par,
+		type : 'post',
+		dataType : 'script',
+		success : function(data) {
+			if (data != "error") {
+				rowList = eval(data);
+				$("#doclist").html("");
+				for (var i=0;i<rowList.length;i++) {
+					$("#doclist").append(getDoclist(rowList[i]));
+				}
+			} else {
+				us.openalert('读取数据时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
+			}
+		}
+	});
+	
+	$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
+}
+
+function uploadFile() {
+	$("#uploader").pluploadQueue({
+        // General settings
+        runtimes : 'flash,html5,html4',
+        url : 'docUpload.action?fileid=' +archiveCommon.selectRowid + '&tableid=' + archiveCommon.selectTableid + '&treeid=' + archiveCommon.selectTreeid, 
+        max_file_size : '200mb',
+        //缩略图形式。
+//        resize : {width :32, height : 32, quality : 90},
+//        unique_names : true,
+        chunk_size: '2mb',
+        // Flash settings
+        flash_swf_url : '../../js/plupload/js/plupload.flash.swf'
+        // Silverlight settings
+//        silverlight_xap_url : '/example/plupload/js/plupload.silverlight.xap'
+    });
+    $('#formId').submit(function(e) {
+        var uploader = $('#uploader').pluploadQueue();
+        if (uploader.files.length > 0) {
+            // When all files are uploaded submit form
+            uploader.bind('StateChanged', function() {
+                if (uploader.files.length === (uploader.total.uploaded + uploader.total.failed)) {
+                    $('#formId')[0].submit();
+                }
+            });
+            uploader.start();
+        } else {
+            alert('请先上传数据文件.');
+        }
+        return false;
+    });
+    $( "#uploadFile" ).dialog( "open");
+}

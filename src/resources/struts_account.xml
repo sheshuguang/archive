@@ -19,6 +19,8 @@
 		<!-- 保存用户帐户-->
 		<action name="moveAccount" class="accountAction" method="moveAccount"></action>
 		
+		<!-- 修改帐户密码 -->
+		<action name="updatePass" class="accountAction" method="updateAccountPassword"></action>
 
     </package>
 </struts>

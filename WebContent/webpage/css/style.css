@@ -129,9 +129,13 @@ ol,ul {
 	width: 100px;
 	margin: 3px;
 	/*padding: 3px;*/
-	padding: 0pt 15px 25px;
+	padding: 0pt 10px 15px;
 	list-style-type: none;
 }
+
+#docwindows li:hover { 
+background: #6699CC; 
+} 
 
 .docdiv {
 	margin: 1px 25px 10px;

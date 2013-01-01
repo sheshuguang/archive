@@ -106,7 +106,8 @@
         <property name="docDao" ref="docDao" />
         <property name="tableDao" ref="tableDao" />
         <property name="dynamicDao" ref="dynamicDao" />
-        <property name="sysDocserverDAO" ref="docserverDao"/>
+        <property name="docserverDao" ref="docserverDao"/>
+        
     </bean>
     <bean id="functionService" class="com.yapu.system.service.impl.FunctionService">
         <property name="functionDao" ref="functionDao" />
@@ -177,6 +178,9 @@
     <bean id="indexerService" class="com.yapu.archive.service.impl.IndexerService">
         
     </bean>
+    <bean id="searchService" class="com.yapu.archive.service.impl.SearchService">
+    	<property name="treeDao" ref="treeDao" />
+    </bean>
     
     <!-- PublisService -->
     <bean id="publicAccountService" class="com.yapu.publics.service.PublicAccountService" parent="accountService">
@@ -220,9 +224,11 @@
     <bean id="ftpAction" class="com.yapu.archive.action.FtpAction">
         <property name="docserverService" ref="docserverService" />
     </bean>
-    <bean id="docAction" class="com.yapu.archive.action.DocAction">
+    <bean id="docAction" class="com.yapu.archive.action.DocAction" scope="prototype">
         <property name="docserverService" ref="docserverService" />
         <property name="docService" ref="docService" />
+        <property name="dynamicService" ref="dynamicService" />
+        <property name="tableService" ref="tableService" />
     </bean>
     <bean id="templetAction" class="com.yapu.archive.action.TempletAction">
         <property name="templetService" ref="templetService" />
@@ -262,7 +268,15 @@
     	<property name="accountService" ref="publicAccountService" />
     	<property name="orgService" ref="publicOrgService" />
     	<property name="treeService" ref="treeService" />
+    	<property name="searchService" ref="searchService" />
     	<property name="dynamicService" ref="dynamicService" />
+    </bean>
+    <bean id="searchFileAction" class="com.yapu.archive.action.SearchFileAction">
+    	<property name="accountService" ref="publicAccountService" />
+    	<property name="orgService" ref="publicOrgService" />
+    	<property name="treeService" ref="treeService" />
+    	<property name="searchService" ref="searchService" />
+    	<property name="docServerService" ref="docserverService"/>
     </bean>
     <bean id="indexerAction" class="com.yapu.archive.action.IndexerAction">
     	<property name="tableService" ref="tableService" />
@@ -270,6 +284,8 @@
     	<property name="templetfieldService" ref="templetfieldService" />
     	<property name="dynamicService" ref="dynamicService" />
     	<property name="indexerService" ref="indexerService" />
+    	<property name="docService" ref="docService" />
+    	<property name="docServerService" ref="docserverService"/>
     </bean>
     
     <bean id="dispatchAction" class="com.yapu.system.action.DispatchAction">

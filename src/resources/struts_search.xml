@@ -7,8 +7,19 @@
 	<package name="search" extends="struts-default" >
 	
 		<!-- 读取档案类型 -->
-		<action name="getTemplet" class="searchAction" method="getTemplet"></action>
+		<action name="getSearchTree" class="searchAction" method="getSearchTree"></action>
+		<!-- 读取查询数量 -->
+		<action name="searchNumber" class="searchAction" method="getSearchNumber"></action>
+		
 		<!-- 执行查询 -->
 		<action name="search" class="searchAction" method="search"></action>
+		
+		
+		<!-- 根据表名和id 在数据库中查找记录。并显示在前台 -->
+		<action name="getSelectData" class="searchAction" method="getSelectData"></action>
+		
+		
+		<!-- 执行全文查询 -->
+		<action name="searchFile" class="searchFileAction" method="search"></action>
 	</package>
 </struts>

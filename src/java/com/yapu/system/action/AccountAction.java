@@ -30,6 +30,7 @@ import com.yapu.system.entity.SysOrg;
 import com.yapu.system.service.itf.IAccountService;
 import com.yapu.system.service.itf.IConfigService;
 import com.yapu.system.service.itf.IOrgService;
+import com.yapu.system.util.Constants;
 import com.yapu.system.util.MD5;
 
 public class AccountAction extends BaseAction {
@@ -49,7 +50,6 @@ public class AccountAction extends BaseAction {
 	
 	private String selectAccounts;
 	private String targetorgid;
-	
 	
 	public String showListAccount() {
 		return SUCCESS;
@@ -252,6 +252,40 @@ public class AccountAction extends BaseAction {
 		out.write(gson.toJson(treeList));
 		return null;
 		
+	}
+	
+	public String updateAccountPassword() throws IOException {
+		String result = "保持完毕。";
+		PrintWriter out = this.getPrintWriter();
+		Gson gson = new Gson();
+		HashMap map = gson.fromJson(par, new TypeToken<HashMap<String,String>>(){}.getType());
+		
+		// 读取session里的登录帐户
+		SysAccount account = (SysAccount) this.getHttpSession().getAttribute(
+				Constants.user_in_session);
+		if (null == account) {
+			// TODO 这里因为session过期，以后处理
+			return null;
+		}
+		String oldpassword = map.get("oldpassword").toString();
+		String newpassword = map.get("newpassword").toString();
+		if (!account.getPassword().equals(MD5.encode(oldpassword))) {
+			result = "原密码错误。请重新操作。";
+			out.write(result);
+			return null;
+		}
+		
+		account.setPassword(MD5.encode(newpassword));
+		int num = accountService.updateAccount(account);
+		if (num > 0) {
+			out.write(result);
+			return null;
+		}
+		else {
+			result = "保存失败。请重新操作。";
+			out.write(result);
+			return null;
+		}
 	}
 	
 	/**

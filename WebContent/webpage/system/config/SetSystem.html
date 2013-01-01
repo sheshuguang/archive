@@ -1,11 +1,78 @@
 
+<link rel="stylesheet" type="text/css"
+	href="../../js/bootstrap/css/bootstrap.css" />
+<script type="text/javascript"
+	src="../../js/bootstrap/js/bootstrap.js"></script>
+
 <script>
 	function createIndex() {
-		var par ="";
-		$.post("createIndexer.action",par,function(data){
-			
+		us.openloading("正在创建数据库索引，请稍等......");
+		var par = "";
+		$.post("createIndexer.action", par, function(data) {
+			us.closeloading();
+			us.openalert(
+				'数据库索引创建完毕!',
+				'系统提示',
+				'alertbody alert_Information'
+			);
+		});
+	}
+
+	function createFilesIndex() {
+		var result = "";
+		us.openloading("正在创建电子全文索引，请稍等......");
+		//同步创建电子全文索引
+		$.ajax({
+			async : false,
+			url : "createFilesIndexer.action",
+			type : 'post',
+			dataType : 'script',
+			success : function(data) {
+				var aa = eval(data);
+				if (aa.toString() == "success") {
+					us.closeloading();
+					us.openalert(
+						'电子全文索引创建完毕!',
+						'系统提示',
+						'alertbody alert_Information'
+					);
+				} else {
+					us.openalert(
+						'<span style="color:red">读取数据时出错.</span></br>请关闭浏览器，重新登录尝试或与管理员联系!',
+						'系统提示',
+						'alertbody alert_Information'
+					);
+				}
+			}
+		});
+	}
+	
+	function deleteIndexer() {
+		var par = "";
+		$.post("deleteIndexer.action", par, function(data) {
+
+		});
+	}
+	function appendIndexer() {
+		var par = "";
+		$.post("appendIndexer.action", par, function(data) {
+
+		});
+	}
+	function updateIndexer() {
+		var par = "";
+		$.post("updateIndexer.action", par, function(data) {
+
 		});
 	}
 </script>
 
-<Button type="button" onClick="createIndex()">indexer</Button>
+<Button type="button" class="btn" onClick="createIndex()">创建数据库索引</Button>
+
+<button type="button" class="btn" onClick="createFilesIndex()">创建电子全文索引</button>
+
+<Button type="button" class="btn" onClick="deleteIndexer()">测试删除数据库索引</Button>
+
+<Button type="button" class="btn" onClick="updateIndexer()">测试更新数据库索引</Button>
+
+<Button type="button" class="btn" onClick="appendIndexer()">测试追加数据库索引</Button>

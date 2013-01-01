@@ -2,12 +2,16 @@ package com.yapu.archive.action;
 
 import DBstep.iMsgServer2000;
 import com.google.gson.Gson;
+import com.yapu.archive.entity.DynamicExample;
 import com.yapu.archive.entity.SysDoc;
 import com.yapu.archive.entity.SysDocExample;
 import com.yapu.archive.entity.SysDocserver;
 import com.yapu.archive.entity.SysDocserverExample;
+import com.yapu.archive.entity.SysTable;
 import com.yapu.archive.service.itf.IDocService;
 import com.yapu.archive.service.itf.IDocserverService;
+import com.yapu.archive.service.itf.IDynamicService;
+import com.yapu.archive.service.itf.ITableService;
 import com.yapu.archive.vo.UploadVo;
 import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
@@ -20,6 +24,7 @@ import org.springframework.dao.support.DaoSupport;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +45,9 @@ public class DocAction extends BaseAction{
     private String docId;
 
     private SysDoc doc;
+    private SysDocserver docServer;
+    private IDynamicService dynamicService;
+    private ITableService tableService;
     private String tableid;
     private String selectRowid;
     private int chunks;
@@ -51,6 +59,9 @@ public class DocAction extends BaseAction{
 
     private String docName;
     private String contentType;
+    //fileid treeid 为单个档案挂接上传文件时用到
+    private String fileid;
+    private String treeid;
 
     public String getSavePath() {
         return savePath;
@@ -60,6 +71,10 @@ public class DocAction extends BaseAction{
         this.savePath = savePath;
     }
 
+    /**
+     * 打开电子全文页签
+     * @return
+     */
     public String showDocListTab() {
         return SUCCESS;
     }
@@ -67,21 +82,23 @@ public class DocAction extends BaseAction{
     public String list() throws IOException {
         PrintWriter out = this.getPrintWriter();
         SysDocExample example = new SysDocExample();
-       // SysDocExample.Criteria criteria = example.createCriteria();
-       // criteria.andFileidEqualTo(selectRowid);
-       // criteria.andTableidEqualTo(tableid);
     	List<SysDoc> docList = docService.selectByWhereNotPage(example);
     	Gson gson = new Gson();
     	out.write(gson.toJson(docList));
     	return null;
     }
     
+    /**
+     * 根据选择的档案条目读取所属电子全文数据
+     * @return
+     * @throws IOException
+     */
     public String listLinkDoc() throws IOException {
     	PrintWriter out = this.getPrintWriter();
     	SysDocExample example = new SysDocExample();
         SysDocExample.Criteria criteria = example.createCriteria();
         criteria.andFileidEqualTo(selectRowid);
-        criteria.andTableidEqualTo(tableid);
+//        criteria.andTableidEqualTo(tableid);
      	List<SysDoc> docList = docService.selectByWhereNotPage(example);
      	Gson gson = new Gson();
      	out.write(gson.toJson(docList));
@@ -130,14 +147,22 @@ public class DocAction extends BaseAction{
         }
         cat(this.file, dstFile);
         if (chunk == chunks - 1) {   // 完成一整个文件;
-            String docType = "";//扩展名
+        	
+        	
+        	SysDocserverExample example = new SysDocserverExample();
+            example.createCriteria().andServerstateEqualTo(1);
+            List<SysDocserver> docserverList = docserverService.selectByWhereNotPage(example);
+            SysDocserver docserver = docserverList.get(0);
+            
+            String docExt = "";//扩展名
             String oldName = dstFile.getName();
             String docId = UUID.randomUUID().toString();
 
             if (oldName.lastIndexOf(".") >= 0) {
-                docType = oldName.substring(oldName.lastIndexOf("."));
+                docExt = oldName.substring(oldName.lastIndexOf("."));
             }
-            String newName = docId+docType;
+//            String newName = docId+docExt;
+            String newName = oldName;
             File newFile =new File(contextPath+newName);
             dstFile.renameTo(newFile);
             SysDoc doc = new SysDoc();
@@ -145,13 +170,39 @@ public class DocAction extends BaseAction{
             doc.setDocnewname(newName);
             doc.setDoclength(CommonUtils.formatFileSize(newFile.length()));
             doc.setDocoldname(oldName);
-            doc.setDoctype(docType.substring(1).toUpperCase());
+            doc.setDoctype("0");
+            doc.setDocext(docExt.substring(1).toUpperCase());
             doc.setCreater(sessionAccount.getAccountcode());
             doc.setCreatetime(CommonUtils.getTimeStamp());
-            SysDocserverExample example = new SysDocserverExample();
-            example.createCriteria().andServerstateEqualTo(1);
-            List<SysDocserver> docserverList = docserverService.selectByWhereNotPage(example);
-            SysDocserver docserver = docserverList.get(0);
+            if (null != this.getFileid() && !"".equals(this.getFileid())) {
+            	doc.setFileid(this.getFileid());
+            }
+            else {
+            	doc.setFileid("");
+            }
+            
+            if (null != this.getTableid() && !"".equals(this.getTableid())) {
+            	doc.setTableid(this.getTableid());
+            }
+            else {
+            	doc.setTableid("");
+            }
+            
+            if (null != this.getTreeid() && !"".equals(this.getTreeid())) {
+            	doc.setTreeid(this.getTreeid());
+            }
+            else {
+            	doc.setTreeid("");
+            }
+            
+            
+            doc.setParentid(docserver.getDocserverid());
+            doc.setLocked("0");
+            doc.setMread("1");
+            doc.setMwrite("1");
+            doc.setHidden("1");
+            //TODO 这里要跟阿佘对一下doc的上传字段怎么写。
+            
             if ("FTP".equals(docserver.getServertype())) {
                 FtpUtil util = new FtpUtil();
                 util.connect(docserver.getServerip(),
@@ -176,14 +227,46 @@ public class DocAction extends BaseAction{
                 newFile.renameTo(new File(savePath + newName));
             }
             doc.setDocpath( docserver.getServerpath() + newName);
+            doc.setDocpath(newName);
             doc.setDocserverid(docserver.getDocserverid());
             docService.insertDoc(doc);
 
         }
         return null;
     }
+    /**
+     * 删除电子全文
+     * @return
+     * @throws Exception
+     */
     public String delete() throws Exception {
-        docService.deleteDoc(this.getDocId());
+    	PrintWriter out = this.getPrintWriter();
+    	String result = "success";
+    	SysDoc doc = docService.selectByPrimaryKey(this.getDocId());
+    	SysTable table = tableService.selectByPrimaryKey(doc.getTableid());
+        
+    	//修改档案全文标识
+    	//检查档案下是否还有全文
+    	SysDocExample sde = new SysDocExample();
+    	SysDocExample.Criteria sdec = sde.createCriteria();
+    	sdec.andFileidEqualTo(doc.getFileid());
+    	List<SysDoc> docList = docService.selectByWhereNotPage(sde);
+    	boolean b = true;
+    	if (docList.size() == 1) {
+    		String sql = "update " + table.getTablename() + " set isdoc=0 where id='" + doc.getFileid() + "'";
+    		List<String> sqlList = new ArrayList<String>();
+    		sqlList.add(sql);
+        	b = dynamicService.update(sqlList);
+    	}
+    	
+    	if (b) {
+    		int num = docService.deleteDoc(doc.getDocid());
+    	}
+        else {
+        	result = "error";
+        	out.write(result);
+        }
+    	out.write(result);
         return null;
     }
     public String read() throws Exception {
@@ -356,11 +439,11 @@ public class DocAction extends BaseAction{
     	}
     	//得到原文件名
     	docName = doc.getDocoldname();
-    	contentType = getContentType(doc.getDoctype());
+    	contentType = getContentType(doc.getDocext());
     	//判断文件所属服务器
     	String serverid = doc.getDocserverid();
     	//得到所属服务器的信息
-    	SysDocserver docServer = docserverService.selectByPrimaryKey(serverid);
+    	docServer = docserverService.selectByPrimaryKey(serverid);
     	if (null == docServer || "".equals(docServer)) {
     		return ERROR;
     	}
@@ -369,14 +452,18 @@ public class DocAction extends BaseAction{
     	if ("LOCAL".equals(serverType)) {
     		savePath = docServer.getServerpath();
     	}
+    	//TODO 需要增加ftp类型的下载
     	return SUCCESS;
     }
     
     public InputStream getInputStream() throws FileNotFoundException {
-//    	docName = "文档 阿斯 顿飞.doc";
-//    	InputStream aa = ServletActionContext.getServletContext().getResourceAsStream("/aa.doc");
-//    	FileInputStream aa = new FileInputStream("d:\\文档 阿斯 顿飞.doc");
-    	String fileName = savePath + doc.getDocnewname();
+//    	String fileName = savePath + doc.getDocnewname();
+    	String serverPath = docServer.getServerpath();
+    	if (!serverPath.substring(serverPath.length()-1,serverPath.length()).equals("/")) {
+    		serverPath += "/";
+        }
+    	String fileName = serverPath + doc.getDocpath();
+//    	String fileName = doc.getDocpath();
     	FileInputStream aa = new FileInputStream(fileName);
     	return aa;
 	}
@@ -420,7 +507,7 @@ public class DocAction extends BaseAction{
             return "application/vnd.ms-excel;charset=utf-8";
     	}
     	else if("DOC".equals(docType.toUpperCase())) {
-            return "application/msword;charset=utf-8";      
+            return "application/msword;charset=utf-8";
     	}
     	else if("PDF".equals(docType.toUpperCase())) {
             return "application/pdf;charset=utf-8";
@@ -539,6 +626,36 @@ public class DocAction extends BaseAction{
 		this.contentType = contentType;
 	}
 
+	public SysDocserver getDocServer() {
+		return docServer;
+	}
 
+	public void setDocServer(SysDocserver docServer) {
+		this.docServer = docServer;
+	}
+
+	public void setDynamicService(IDynamicService dynamicService) {
+		this.dynamicService = dynamicService;
+	}
+
+	public void setTableService(ITableService tableService) {
+		this.tableService = tableService;
+	}
+
+	public String getFileid() {
+		return fileid;
+	}
+
+	public void setFileid(String fileid) {
+		this.fileid = fileid;
+	}
+
+	public String getTreeid() {
+		return treeid;
+	}
+
+	public void setTreeid(String treeid) {
+		this.treeid = treeid;
+	}
 
 }

@@ -217,3 +217,30 @@ us.openconfirm = function(text, title,fn1, fn2) {
 	      }
 	    });
 }
+
+us.openloading = function(text) {
+	if ( $("#dialog-loading").length > 0 ) {
+		$("#loadingtext").html(text);
+		return $("#dialog-loading").modal({
+		    backdrop:false,
+		    keyboard:false,
+		    show:true
+		});
+	}
+	var html = $(
+		    '<div class="modal hide fade" id="dialog-loading" style="display: none;width:400px;left:60%;top:60%">' +
+		    '  <div class="modal-body">' +
+		    '   <img alt="" src="../../images/icons/loading.gif" height="20" width="20" > <span id="loadingtext">' + text + '</span>'+
+		    '  </div>' + 
+		    '</div>');
+	return $(html).modal({
+	    backdrop:false,
+	    keyboard:false,
+	    show:true
+	});
+}
+
+us.closeloading = function() {
+	return $('#dialog-loading').modal('hide');
+}
+

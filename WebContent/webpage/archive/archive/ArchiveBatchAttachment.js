@@ -14,7 +14,7 @@ $(function() {
 	//声明上传控件。#uploadFile，作为公共的资源，在archiveMgr.js里
 	$("#uploadFile").dialog({
         autoOpen: false,
-        height: 410,
+        height: 460,
         width: 630,
         modal: true,
         buttons: {
@@ -94,7 +94,8 @@ $(function() {
             });
 		}
 	});
-    //保存挂接结果
+    //保存挂接结果  //TODO 测试中发现文件名有被篡改的。例如   第十二章 开发Struts 2+Spring应用_免费.pdf  通过挂接后，
+	//变为    第十二章 开发Struts 2 Spring应用_免费.pdf  中间+变为空格了。这个有时间需要修改。
 	$( "#savearchive" ).button({
 		text: false,
 		icons: {
@@ -103,8 +104,8 @@ $(function() {
 	}).click(function() {
 		var a = archiveCommon.yesItems;
 		if (a.length > 0) {
-			var par = "items=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType + "&treeid=" + archiveCommon.selectTreeid;
-
+			var bb = encodeURIComponent(JSON.stringify(a));
+			var par = "items=" + bb + "&tableType=" + archiveCommon.tableType + "&treeid=" + archiveCommon.selectTreeid;
 			$.post("saveBatchAttArchive.action",par,function(data){
 					new $.Zebra_Dialog(data, {
 		  				'buttons':  false,
@@ -163,6 +164,7 @@ $(function() {
 						//添加到挂接全文grid
 						var item = attNoItems[i];
 						item.fileid = fileid;
+						item.treeid = archiveCommon.selectTreeid;
 						attYesGridConfig.dataView.addItem(item);
                         archiveCommon.yesItems.push(item);
 						//
@@ -202,6 +204,7 @@ $(function() {
 			for ( var i = 0; i < attNoSelectRows.length; i++) {
 				var item = attNoGridConfig.dataView.getItem(attNoSelectRows[i]);
 				item.fileid = fileid;
+				item.treeid = archiveCommon.selectTreeid;
 				attYesGridConfig.dataView.addItem(item);
                 archiveCommon.yesItems.push(item);
 			};
@@ -235,19 +238,21 @@ $(function() {
                 runtimes : 'flash,html5,html4',
                 url : 'docUpload.action',
                 max_file_size : '200mb',
+                //缩略图形式。
+//                resize : {width :32, height : 32, quality : 90},
 //                unique_names : true,
                 chunk_size: '2mb',
                 // Specify what files to browse for
-                filters : [
-                           {title : "所有文件", extensions : "*.*"},
-		                   {title : "Image files", extensions : "jpg,gif,png"},
-				           {title : "rar files", extensions : "rar"},
-				           {title : "pdf files", extensions : "pdf"},
-				           {title : "office files", extensions : "doc,docx,ppt,pptx,xls,xlsx"},
-				           {title : "exe files", extensions : "exe"},
-				           {title : "Zip files", extensions : "zip,rar,exe"}
-		            
-                ],
+//                filters : [
+//                           {title : "所有文件", extensions : "*.*"},
+//		                   {title : "Image files", extensions : "jpg,gif,png"},
+//				           {title : "rar files", extensions : "rar"},
+//				           {title : "pdf files", extensions : "pdf"},
+//				           {title : "office files", extensions : "docx,ppt,pptx,xls,xlsx"},
+//				           {title : "exe files", extensions : "exe"},
+//				           {title : "Zip files", extensions : "zip,rar,exe"}
+//		            
+//                ],
 
                 // Flash settings
                 flash_swf_url : '../../js/plupload/js/plupload.flash.swf'
@@ -439,7 +444,7 @@ $(function() {
 	getNoAttData();
 	attNoGridConfig.columns = [
          {id: "docoldname", name: "文件名", field: "docoldname" },
-         {id: "doctype", name: "文件类型", field: "doctype" },
+         {id: "docext", name: "文件类型", field: "docext" },
          {id: "doclength", name: "文件大小", field: "doclength" },
          {id: "creater", name: "上传者", field: "creater" },
          {id: "createtime", name: "上传时间", field: "createtime" }
@@ -477,7 +482,7 @@ $(function() {
 	//========已对应的全文grid=========
 	attYesGridConfig.columns = [
                    {id: "docoldname", name: "文件名", field: "docoldname" },
-                   {id: "doctype", name: "文件类型", field: "doctype" },
+                   {id: "docext", name: "文件类型", field: "docext" },
                    {id: "doclength", name: "文件大小", field: "doclength" },
                    {id: "creater", name: "上传者", field: "creater" },
                    {id: "createtime", name: "上传时间", field: "createtime" },

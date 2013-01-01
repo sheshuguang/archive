@@ -8,12 +8,14 @@ public class SysDoc {
     private String docoldname;
     private String docnewname;
     private String doctype;
+    private String docext;
     private String doclength;
     private String docpath;
     private String creater;
     private String createtime;
     private String fileid;
     private String tableid;
+    private String treeid;
     private String  authority;      //权限 参考linux文件系统
     private Integer  height;        //高
     private Integer width;           //宽
@@ -146,8 +148,16 @@ public class SysDoc {
     public void setDoctype(String doctype) {
         this.doctype = CommonUtils.replaceNull2Space(doctype).toUpperCase();
     }
+    
+    public String getDocext() {
+		return docext;
+	}
 
-    public String getDoclength() {
+	public void setDocext(String docext) {
+		this.docext = docext;
+	}
+
+	public String getDoclength() {
         return doclength;
     }
 
@@ -194,4 +204,13 @@ public class SysDoc {
     public void setTableid(String tableid) {
         this.tableid = tableid;
     }
+
+	public String getTreeid() {
+		return treeid;
+	}
+
+	public void setTreeid(String treeid) {
+		this.treeid = treeid;
+	}
+    
 }

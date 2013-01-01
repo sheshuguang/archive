@@ -72,7 +72,7 @@ public class ArchiveAction extends BaseAction {
 	        List<SysTable> tableList = treeService.getTreeOfTable(treeid);
 	        String tableid = "";
 	        for (SysTable table :tableList) {
-	            if (tableType.endsWith(table.getTabletype())) {
+	            if (tableType.equals(table.getTabletype())) {
 	                tableid = table.getTableid();
 	            }
 	        }
@@ -192,7 +192,7 @@ public class ArchiveAction extends BaseAction {
 	        List<SysTable> tableList = treeService.getTreeOfTable(treeid);
 	        String tableid = "";
 	        for (SysTable table :tableList) {
-	            if (tableType.endsWith(table.getTabletype())) {
+	            if (tableType.equals(table.getTabletype())) {
 	                tableid = table.getTableid();
 	                break;
 	            }
