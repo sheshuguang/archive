@@ -23,9 +23,10 @@ function setGridResize() {
 	
 	$gridDiv.height( $jerTabGrid.innerHeight() - gridHeader -  gridMenu - gridPager - 8);
 //	alert($gridDiv.height());
-	var gridHdrH	= $gridDiv.find('.slick-header').outerHeight()
-	,	$gridList	= $gridDiv.find('.slick-viewport') ;
-	$gridList.height( $gridDiv.innerHeight() - gridHdrH );
+	
+//	var gridHdrH	= $gridDiv.find('.slick-header').outerHeight();
+//	$gridList	= $gridDiv.find('.slick-viewport') ;
+//	$gridList.height( $gridDiv.innerHeight() - gridHdrH );
 }
 
 $(function() {
@@ -43,25 +44,70 @@ $(function() {
 			var tab_pages = $pane.find('.tab_pages').outerHeight();
 			$jerTabContent = $pane.find('#jerichotab_contentholder');
 			$jerTabContent.height( state.innerHeight - tab_pages);  //-8
+			
+			
+			$jerTabContent.find('.curholder').height($jerTabContent.innerHeight() - 5);
+			$jerTabContent.find('.holder').height($jerTabContent.innerHeight() - 5);
+			
+			$jerTabContent.find('.gridC').height($jerTabContent.innerHeight() - 9);
+			
+			//griddiv的高  -20 gridHeader /   -35   gridMenu  / 20  gridPager  /8 空隙
+			$jerTabContent.find('.grid-div').height( $jerTabContent.innerHeight() - 20 -  35 - 20 - 29);
+			
+			$jerTabContent.find('.slick-viewport').height(  $jerTabContent.innerHeight() - 20 -  35 - 20 - 56);
+			
+			
 			//修改tab页的高
-			$jerTabPage = $jerTabContent.children('.curholder');
-			$jerTabPage.height($jerTabContent.innerHeight() - 5);
+//			$jerTabPage = $jerTabContent.children('.curholder');
+//			$jerTabPage.height($jerTabContent.innerHeight() - 5);
+			
+//			$jerTabContent.find('.gridC').height();
 			
 			//修改tab页内grid 外层div的高 $jerTabContent.innerHeight
-			$jerTabGrid = $jerTabContent.find('.gridC');
-			$jerTabGrid.height($jerTabPage.innerHeight() - 4);
+			
+//			$jerTabGrid = $jerTabPage.find('.gridC');
+//			$jerTabGrid.height($jerTabContent.innerHeight() - 7);
 			
 			//修改grid本身div高
-			var gridHeader = $jerTabGrid.children('.grid-header').outerHeight();  //标题栏
-			var gridMenu = $jerTabGrid.children('.grid-menu').outerHeight();			//菜单栏
-			$gridDiv = $jerTabGrid.children('.grid-div');			//griddiv
-			var gridPager = $jerTabGrid.children('.grid-pager').outerHeight();			//分页
+//			var gridHeader = $jerTabGrid.children('.grid-header').outerHeight();  //标题栏
+//			var gridMenu = $jerTabGrid.children('.grid-menu').outerHeight();			//菜单栏
+////			$gridDiv = $jerTabGrid.children('.grid-div');			//griddiv
+//			var gridPager = $jerTabGrid.children('.grid-pager').outerHeight();			//分页
+//			
+//			$gridDiv.height( $jerTabGrid.innerHeight() - gridHeader -  gridMenu - gridPager - 8);
 			
-			$gridDiv.height( $jerTabGrid.innerHeight() - gridHeader -  gridMenu - gridPager - 8);
+//			$gridDiv.find('.slick-viewport').height($gridDiv.innerHeight() - $gridDiv.find('.slick-header').outerHeight());
+//			$gridDiv.find('.slick-header').height('50');
+//			var gridHdrH	= $gridDiv.find('.slick-header').outerHeight()
+//			,	$gridList	= $gridDiv.find('.slick-viewport') ;
+//			alert(gridHdrH);
+//			$gridList.height( $gridDiv.innerHeight() - gridHdrH );
 			
-			var gridHdrH	= $gridDiv.find('.slick-header').outerHeight()
-			,	$gridList	= $gridDiv.find('.slick-viewport') ;
-			$gridList.height( $gridDiv.innerHeight() - gridHdrH );
+			
+			//当浏览器高度变化时。修改子对象的高
+			//设置tab的高
+//			var tab_pages = $pane.find('.tab_pages').outerHeight();
+//			$jerTabContent = $pane.find('#jerichotab_contentholder');
+//			$jerTabContent.height( state.innerHeight - tab_pages);  //-8
+//			//修改tab页的高
+//			$jerTabPage = $jerTabContent.children('.curholder');
+//			$jerTabPage.height($jerTabContent.innerHeight() - 5);
+//			
+//			//修改tab页内grid 外层div的高 $jerTabContent.innerHeight
+//			$jerTabGrid = $jerTabPage.find('.gridC');
+//			$jerTabGrid.height($jerTabPage.innerHeight() - 4);
+//			
+//			//修改grid本身div高
+//			var gridHeader = $jerTabGrid.children('.grid-header').outerHeight();  //标题栏
+//			var gridMenu = $jerTabGrid.children('.grid-menu').outerHeight();			//菜单栏
+//			$gridDiv = $jerTabGrid.children('.grid-div');			//griddiv
+//			var gridPager = $jerTabGrid.children('.grid-pager').outerHeight();			//分页
+//			
+//			$gridDiv.height( $jerTabGrid.innerHeight() - gridHeader -  gridMenu - gridPager - 8);
+//			
+//			var gridHdrH	= $gridDiv.find('.slick-header').outerHeight()
+//			,	$gridList	= $gridDiv.find('.slick-viewport') ;
+//			$gridList.height( $gridDiv.innerHeight() - gridHdrH );
 		}
 	});
 	//生成档案tree

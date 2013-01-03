@@ -233,6 +233,7 @@ $(function(){
 	});
 	// 创建grid
 	ajGridconfig.grid = new Slick.Grid("#archivediv", ajGridconfig.dataView, ajGridconfig.columns, ajGridconfig.options);
+	
 	//设置录入错误时提示。例如不能为空的字段
 	ajGridconfig.grid.onValidationError.subscribe(function(e, args) {
 //		alert(args.validationResults.msg);
