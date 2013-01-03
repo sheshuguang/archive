@@ -12,6 +12,7 @@ import com.yapu.archive.service.itf.IDocService;
 import com.yapu.archive.service.itf.IDocserverService;
 import com.yapu.archive.service.itf.IDynamicService;
 import com.yapu.archive.service.itf.ITableService;
+import com.yapu.archive.service.itf.ITreeService;
 import com.yapu.archive.vo.UploadVo;
 import com.yapu.system.common.BaseAction;
 import com.yapu.system.entity.SysAccount;
@@ -146,8 +147,8 @@ public class DocAction extends BaseAction{
         }
         cat(this.file, dstFile);
         if (chunk == chunks - 1) {   // 完成一整个文件;
-        	
-        	
+        	//声明一个标识，是否是单个文件挂接。如果fileid有值，应该把档案条目的isdos设置为1
+        	boolean isdoc = false;
         	SysDocserverExample example = new SysDocserverExample();
             example.createCriteria().andServerstateEqualTo(1);
             List<SysDocserver> docserverList = docserverService.selectByWhereNotPage(example);
@@ -175,6 +176,7 @@ public class DocAction extends BaseAction{
             doc.setCreatetime(CommonUtils.getTimeStamp());
             if (null != this.getFileid() && !"".equals(this.getFileid())) {
             	doc.setFileid(this.getFileid());
+            	isdoc = true;
             }
             else {
             	doc.setFileid("");
@@ -229,7 +231,14 @@ public class DocAction extends BaseAction{
             doc.setDocpath(newName);
             doc.setDocserverid(docserver.getDocserverid());
             docService.insertDoc(doc);
-
+            //把档案条目的isdoc字段设置
+            if (isdoc) {
+            	SysTable table = tableService.selectByPrimaryKey(doc.getTableid());
+            	String sql = "update " + table.getTablename() + " set isdoc = 1 where id='" + this.getFileid() + "'";
+            	List<String> sqlList = new ArrayList<String>();
+            	sqlList.add(sql);
+            	dynamicService.update(sqlList);
+            }
         }
         return null;
     }
@@ -656,5 +665,6 @@ public class DocAction extends BaseAction{
 	public void setTreeid(String treeid) {
 		this.treeid = treeid;
 	}
+
 
 }

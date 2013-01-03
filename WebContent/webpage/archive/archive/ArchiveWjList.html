@@ -2,24 +2,49 @@
 
 <script type="text/javascript" src="ArchiveWjList.js"></script>
 
-<div id="wjGrid" style="position: relative;  overflow: hidden">
-	<div id="grid_header_wj" class="grid-header" style="width: 100%"></div>
-	<div style="width:100%;height:35px">
-		<div class="toolbar ui-widget-header ui-corner-all" style=" width:100%;height:35px">
-			<button id="wjadd">添加</button>
-			<button id="wjdelete">删除</button> | 
-			<button id="wjupdate">编辑</button>
-			<button id="wjendupdate">结束编辑</button> | 
-			<button id="wjbatchupdate">批量修改</button>
-			<button id="wjimport">导入</button> | 
-			<button id="wjfilter">过滤</button>
-			<button id="wjbatchatt">批量挂接</button>
-		</div>
+<div id="wjGrid" class="gridC" style="position: relative; height:100%; overflow: hidden">
+	<div id="grid_header_wj" class="grid-header" style="width: 100%;height:20px"></div>
+	<div style="width:100%;height:35px" class="grid-menu">
+		<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
+			<li><a href="javascript:void(0);" onClick="wjadd()">添加</a></li>
+			<li class="dropdown"><a href="#" data-toggle="dropdown"
+				class="dropdown-toggle">编辑 <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="javascript:void(0);" onClick="wjupdate()">编辑状态</a></li>
+					<li><a href="javascript:void(0);" onClick="wjendupdate()">取消编辑状态</a></li>
+					<li class="divider"></li>
+					<li><a href="javascript:void(0);" onClick="wjbatchupdate()">批量修改</a></li>
+				</ul>
+			</li>
+			<li><a href="javascript:void(0);" onClick="wjdelete()">删除</a></li>
+			<li class="dropdown"><a href="#" data-toggle="dropdown"
+				class="dropdown-toggle">数据操作 <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="javascript:void(0);" onClick="wjimport()">导入</a></li>
+					<li><a href="javascript:void(0);" onClick="">导出</a></li>
+					<li class="divider"></li>
+					<li><a href="javascript:void(0);" onClick="wjfilter()">过滤</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a href="#" data-toggle="dropdown"
+				class="dropdown-toggle">全文挂接 <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="javascript:void(0);" onClick="wjlinkfile()">挂接</a></li>
+					<li><a href="javascript:void(0);" onClick="wjbatchatt()">批量挂接</a></li>
+				</ul>
+			</li>
+			<li><a href="javascript:void(0);" onClick="wjrefresh()">刷新</a></li>
+		</ul>
 	</div>
-	<div id="wjdiv" class="grid-div" style="width: 100%; height: 82%;"></div>
-	<div id="pager_wj" style="width: 100%; height: 20px;"></div>
+	<div id="wjdiv" class="grid-div" style="width: 100%; height: 100%;"></div>
+	<div id="pager_wj" class="grid-pager" style="width: 100%; height: 20px;"></div>
 </div>
 
-<div id="inlineFilterPanel_wj" style="display: none; background: #dddddd; padding: 3px; color: black;font-size:9pt">
-	 请选择过滤字段：<select id="selectfield_wj"></select> 过滤值：<input type="text" id="txtSearch_wj">
+<div id="inlineFilterPanel_wj"
+	style="display: none; background: #dddddd; padding: 1px; color: black; font-size: 9pt">
+	<form class="form-inline">
+		请选择过滤字段：<select id="selectfield_wj"></select> 过滤值：<input type="text"
+			id="txtSearch_wj">   
+			<a href="javascript:void(0);" class="btn btn-info btn-small" style="color: #FFFFFF" onClick="wjfilter()">关闭</a>
+	</form>
 </div>

@@ -176,7 +176,9 @@ $.layout = {
 			//	$.layout.defaults.zIndexes.pane_normal
 			}
 		,	cssDemo: { // DEMO CSS - applied if: options.PANE.applyDemoStyles=true
-				padding:	"10px"
+				//修改wangf 解决iframepadding过大的问题。原始值为10
+				//padding:	"0px"
+				padding:	"0px"
 			,	background:	"#FFF"
 			,	border:		"1px solid #BBB"
 			,	overflow:	"auto"

@@ -1,6 +1,33 @@
 
 var archiveCommon = new us.archive.Archive();
 
+function setGridResize() {
+	//当浏览器高度变化时。修改子对象的高
+	$content = $('body').find('#center');
+	var tab_pages = $content.find('.tab_pages').outerHeight();
+	//修改tab页内grid 外层div的高 $jerTabContent.innerHeight
+	$jerTabContent = $('div').find('#jerichotab_contentholder');
+	$jerTabContent.height($content.innerHeight() - tab_pages);
+	//修改tab页的高
+	$jerTabPage = $jerTabContent.children('.curholder');
+	$jerTabPage.height($jerTabContent.innerHeight() - 5);
+	
+	$jerTabGrid = $jerTabContent.find('.gridC');
+	$jerTabGrid.height($jerTabPage.innerHeight() - 4);
+	
+	//修改grid本身div高
+	var gridHeader = $jerTabGrid.children('.grid-header').outerHeight();  //标题栏
+	var gridMenu = $jerTabGrid.children('.grid-menu').outerHeight();			//菜单栏
+	$gridDiv = $jerTabGrid.children('.grid-div');			//griddiv
+	var gridPager = $jerTabGrid.children('.grid-pager').outerHeight();			//分页
+	
+	$gridDiv.height( $jerTabGrid.innerHeight() - gridHeader -  gridMenu - gridPager - 8);
+//	alert($gridDiv.height());
+	var gridHdrH	= $gridDiv.find('.slick-header').outerHeight()
+	,	$gridList	= $gridDiv.find('.slick-viewport') ;
+	$gridList.height( $gridDiv.innerHeight() - gridHdrH );
+}
+
 $(function() {
 	pageLayout = $('body').layout({
 		applyDefaultStyles: false,
@@ -11,30 +38,32 @@ $(function() {
 			resizable	:	true
 		},
 		center__onresize:	function (pane, $pane, state, options) {
-//			var gridHdrH	= $pane.children('.slick-header').outerHeight(),
-//				$gridList	= $pane.children('.slick-viewport') ;
-//			$gridList.height( state.innerHeight - gridHdrH );
-//			$.fn.jerichoTab.resize();
-//			var tabw = $('.archivetab').outerWidth();
-//			var tabh = $('.archivetab').outerHeight();
-//			$('.archivetab').width(state.innerWidth - 5);
-//			$('.archivetab').height(state.outerHeight - 5);
+			//当浏览器高度变化时。修改子对象的高
+			//设置tab的高
+			var tab_pages = $pane.find('.tab_pages').outerHeight();
+			$jerTabContent = $pane.find('#jerichotab_contentholder');
+			$jerTabContent.height( state.innerHeight - tab_pages);  //-8
+			//修改tab页的高
+			$jerTabPage = $jerTabContent.children('.curholder');
+			$jerTabPage.height($jerTabContent.innerHeight() - 5);
 			
+			//修改tab页内grid 外层div的高 $jerTabContent.innerHeight
+			$jerTabGrid = $jerTabContent.find('.gridC');
+			$jerTabGrid.height($jerTabPage.innerHeight() - 4);
+			
+			//修改grid本身div高
+			var gridHeader = $jerTabGrid.children('.grid-header').outerHeight();  //标题栏
+			var gridMenu = $jerTabGrid.children('.grid-menu').outerHeight();			//菜单栏
+			$gridDiv = $jerTabGrid.children('.grid-div');			//griddiv
+			var gridPager = $jerTabGrid.children('.grid-pager').outerHeight();			//分页
+			
+			$gridDiv.height( $jerTabGrid.innerHeight() - gridHeader -  gridMenu - gridPager - 8);
+			
+			var gridHdrH	= $gridDiv.find('.slick-header').outerHeight()
+			,	$gridList	= $gridDiv.find('.slick-viewport') ;
+			$gridList.height( $gridDiv.innerHeight() - gridHdrH );
 		}
 	});
-//	using('tree', function () {
-//		$('#archivetree').tree({
-//			checkbox : false,
-//			url : 'loadTreeData.action?parentid=root',
-//			onBeforeExpand : function(node, param) {
-//				$('#archivetree').tree('options').url = "loadTreeData.action?parentid="
-//						+ node.id;
-//			},
-//			onSelect : function(node) {
-//				showTreeList(node);
-//			}
-//		});
-//	});
 	//生成档案tree
 	var tree = $("#archivetree").jstree({ 
 		//生成的jstree包含哪些插件功能
@@ -93,7 +122,7 @@ $(function() {
 	})//单击事件
      .bind('click.jstree', function(event) {               
         var eventNodeName = event.target.nodeName;
-        if (eventNodeName == 'INS') {                   
+        if (eventNodeName == 'INS') {
             return;               
         } else if (eventNodeName == 'A') {                   
             var $subject = $(event.target).parent();                   
@@ -102,9 +131,6 @@ $(function() {
             	var id = $(event.target).parents('li').attr('id');
             	var text = $(event.target).text();
             	showTreeList(tree,id,text);
-              //选择的id值
-//               alert($(event.target).parents('li').attr('id'));
-//               alert($(event.target).text());
             }               
         }           
     });
@@ -130,7 +156,6 @@ function showTreeList(ob,id,text) {
 	archiveCommon.selectTreeName = text;
 	archiveCommon.selectTreeid = id;
 	var url = "showArchiveList.action?treeid=" + id;
-//	us.showtab($('#tab'),url, '档案管理', 'icon-page');
 	us.addtab(ob,'档案管理','ajax', url);
 }
 

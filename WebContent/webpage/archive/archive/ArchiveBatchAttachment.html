@@ -6,11 +6,11 @@
 		<div style="position: relative; width: 100%; height: 230px; overflow: hidden">
 			<div id="grid-header-attachment" class="grid-header" style="width: 100%">批量挂接</div>
 			<div style="width:100%;height:35px">
-				<div class="toolbar ui-widget-header ui-corner-all" style=" width:100%;height:35px">
-					<button id="setcondition">设置挂接条件</button>
-					<button id="deletearchive">移除档案</button> | 
-					<button id="savearchive">保存</button>
-				</div>
+				<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
+					<li><a href="javascript:void(0);" onClick="setcondition()">设置挂接条件</a></li>
+					<li><a href="javascript:void(0);" onClick="deletearchive()">移除档案</a></li>
+					<li><a href="javascript:void(0);" onClick="savearchive()">保存</a></li>
+				</ul>
 			</div>
 			<div id="archiveAttachmentDiv" class="grid-div" style="width: 100%; height: 70%"></div>
 		</div>
@@ -20,12 +20,12 @@
 		<div id="nofilediv" style="position: relative; width: 100%; height: 250px; overflow: hidden">
 			<div class="grid-header" style="width: 100%">未挂接文件</div>
 			<div style="width:100%;height:35px">
-				<div class="toolbar ui-widget-header ui-corner-all" style=" width:100%;height:35px">
-					<button id="autofile">批量挂接</button>
-					<button id="selffile">手动挂接</button> | 
-					<button id="uploadfile">上传</button>
-					<button id="deletefile">移除</button> | 
-				</div>
+				<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
+					<li><a href="javascript:void(0);" onClick="autofile()">批量挂接</a></li>
+					<li><a href="javascript:void(0);" onClick="selffile()">手动挂接</a></li>
+					<li><a href="javascript:void(0);" onClick="uploadfile()">上传</a></li>
+					<li><a href="javascript:void(0);" onClick="deletefile()">移除</a></li>
+				</ul>
 			</div>
 			<div id="archiveAttachmentDiv-no" class="grid-div" style="width: 100%; height: 75%"></div>
 		</div>
@@ -34,9 +34,9 @@
 		<div style="position: relative; width: 100%; height: 250px; overflow: hidden">
 			<div class="grid-header" style="width: 100%">已挂接文件</div>
 			<div style="width:100%;height:35px">
-				<div class="toolbar ui-widget-header ui-corner-all" style=" width:100%;height:35px">
-					<button id="deleteyesfile">移除</button>
-				</div>
+				<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
+						<li><a href="javascript:void(0);" onClick="deleteyesfile()">移除</a></li>
+					</ul>
 			</div>
 			<div id="archiveAttachmentDiv-yes" class="grid-div" style="width: 100%; height: 75%"></div>
 		</div>
@@ -45,17 +45,24 @@
 
 
 
-
-<div id="setrequwindows" style="display:none;">
-	<div style="margin:10px 0px 0px 10px;">
-		<form id="importArchiveForm" action="upload.action" method="post">
-			
-			<p>
-				<button id="importBtn" >导入</button>
-				<button id="closeBtn">关闭</button>
-			</p>
-		</form>
-	</div>
+<!-- 挂接条件窗口 -->
+<div id="setrequwindows">
+	<form class="form-horizontal" style="margin-top:20px;">
+		<fieldset>
+          <div class="control-group">
+            <label for="selectfield" class="control-label">更改字段</label>
+            <div class="controls">
+            	<select id="selectfield" class="span2"></select>
+            </div>
+          </div>
+          <div class="control-group" id="updatecontentdiv">
+            <label for="updatetxt" class="control-label">更改内容</label>
+            <div class="controls">
+            	<input type="text" id="updatetxt" class="span2">
+            	<p class="help-block" id="updatetxterror"></p>
+            </div>
+          </div>
+        </fieldset>
+	</form>
 </div>
-
 

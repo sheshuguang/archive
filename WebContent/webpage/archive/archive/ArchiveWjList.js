@@ -1,219 +1,168 @@
 
 
 var wjGridconfig = new us.archive.ui.Gridconfig();
-
-$(function(){
-	//生成grid的toolbar_aj
-	$( "#wjadd" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-plusthick"
-		}
-	})
-	.click(function() {
-		wjGridconfig.grid.setOptions({
-			autoEdit : true
+//wj insert a new row
+function wjadd() {
+	wjGridconfig.grid.setOptions({
+		autoEdit : true
+	});
+	wjGridconfig.grid.gotoCell(wjGridconfig.dataView.getLength(),3,true);
+}
+//wj data delete
+function wjdelete() {
+	var selectRows = wjGridconfig.grid.getSelectedRows();
+	selectRows.sort(function compare(a, b) {
+		return b - a;
+	});
+	if (selectRows.length > 0) {
+		us.openconfirm('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span>' + 
+				' 条案卷记录吗? <br><span style="color:red">注意：删除文件记录，将同时删除文件及文件下所有数据、电子全文，请谨慎操作！</span> ','系统提示',
+				function() {
+					var deleteRows = [];
+	        		
+	        		for ( var i = 0; i < selectRows.length; i++) {
+						var item = wjGridconfig.dataView.getItem(selectRows[i]);
+						deleteRows.push(item);
+					}
+	        		var par = "par=" + JSON.stringify(deleteRows) + "&tableType=02";
+	        		$.post("deleteArchive.action",par,function(data){
+	        				if (data == "SUCCESS") {
+	        					for ( var i = 0; i < selectRows.length; i++) {
+		        					var item = wjGridconfig.dataView.getItem(selectRows[i]);
+		        					wjGridconfig.dataView.deleteItem(item.id);
+		        				};
+		        				us.openalert('删除成功。 ','系统提示','alertbody alert_Information');
+	        				}
+	        				else {
+	        					us.openalert(data,'系统提示','alertbody alert_Information');
+	        				}
+	        			}
+	        		);
+				},
+				function() {
+					
+				}
+		);
+	}
+	else {
+		us.openalert("请选择要删除的数据",'系统提示','alertbody alert_Information');
+	}
+}
+//open wj grid update mode
+function wjupdate() {
+	wjGridconfig.grid.setOptions({
+		autoEdit : true
+	});
+}
+//close wj grid update mode
+function wjendupdate() {
+	wjGridconfig.grid.setOptions({
+		autoEdit : false
+	});
+}
+//open wj batch update dialog
+function wjbatchupdate() {
+	var selectRows = wjGridconfig.grid.getSelectedRows();
+	selectRows.sort(function compare(a, b) {
+		return b - a;
+	});
+	if (selectRows.length > 0) {
+		$( "#batchwindows" ).dialog({
+			autoOpen: false,
+			height: 280,
+			width: 500,
+			title:'批量修改',
+			modal: true,
+			resizable:false,
+			create: function(event, ui) {
+				$("#selectfield").empty();
+				for (var i=0;i<wjGridconfig.columns_fields.length;i++) {
+					if (wjGridconfig.columns_fields[i].id != "rownum" && wjGridconfig.columns_fields[i].id != "isdoc" && wjGridconfig.columns_fields[i].id != "files") {
+						$("#selectfield").append("<option value='"+wjGridconfig.columns_fields[i].id+"'>"+wjGridconfig.columns_fields[i].name+"</option>");
+					}
+				}
+			},
+			open:function(event,ui) {
+				$("#updatetxt").val("");
+			},
+			buttons: {
+				"提交": function() {
+					us.batchUpdate(wjGridconfig.grid,wjGridconfig.dataView,true,'02');
+				},
+				"关闭": function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
 		});
-		wjGridconfig.grid.gotoCell(wjGridconfig.dataView.getLength(),3,true);
-	});
-	$( "#wjdelete" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-trash"
-		}
-	})
-	.click(function() {
-		var selectRows = wjGridconfig.grid.getSelectedRows();
-		selectRows.sort(function compare(a, b) {
-			return b - a;
-		});
-		if (selectRows.length > 0) {
-			$.Zebra_Dialog('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span> 条文件记录吗? <br><span style="color:red">注意：删除案卷记录，将同时删除案卷及案卷下所有文件数据、电子全文，请谨慎操作！</span> ', {
-				'type':     'question',
-                'title':    '系统提示',
-                'buttons':  ['确定', '取消'],
-                'onClose':  function(caption) {
-                	if (caption == '确定') {
-                		var deleteRows = [];
-                		
-                		for ( var i = 0; i < selectRows.length; i++) {
-        					var item = wjGridconfig.dataView.getItem(selectRows[i]);
-        					deleteRows.push(item);
-        				}
-                		var par = "par=" + JSON.stringify(deleteRows) + "&tableType=02";
-                		$.post("deleteArchive.action",par,function(data){
-                				if (data == "SUCCESS") {
-                					for ( var i = 0; i < selectRows.length; i++) {
-    		        					var item = wjGridconfig.dataView.getItem(selectRows[i]);
-    		        					wjGridconfig.dataView.deleteItem(item.id);
-    		        				};
-    		        				new $.Zebra_Dialog("删除成功。", {
-    					  				'buttons':  false,
-    					   			    'modal': false,
-    					   			    'position': ['right - 20', 'top + 20'],
-    					   			    'auto_close': 3500
-    					            });
-//                					$.Zebra_Dialog("删除成功。", {
-//                		                'type':     'information',
-//                		                'title':    '系统提示',
-//                		                'buttons':  ['确定']
-//                		            });
-                				}
-                				else {
-                					new $.Zebra_Dialog(data, {
-    					  				'buttons':  false,
-    					   			    'modal': false,
-    					   			    'position': ['right - 20', 'top + 20'],
-    					   			    'auto_close': 3500
-    					            });
-                				}
-                			}
-                		);
-                	}
-                }
-	        });
-		}
-		else {
-			$.Zebra_Dialog('请选择要删除的数据。 ', {
-                'type':     'information',
-                'title':    '系统提示',
-                'buttons':  ['确定']
-            });
-		}
-	});
-	$( "#wjupdate" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-wrench"
-		}
-	})
-	.click(function() {
-		wjGridconfig.grid.setOptions({
-			autoEdit : true
-		});
-	});
-	$( "#wjendupdate" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-grip-solid-horizontal"
-		}
-	})
-	.click(function() {
-		wjGridconfig.grid.setOptions({
-			autoEdit : false
-		});
-	});
-	$( "#wjbatchupdate" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-gear"
-		}
-	})
-	.click(function() {
-		var selectRows = wjGridconfig.grid.getSelectedRows();
-		selectRows.sort(function compare(a, b) {
-			return b - a;
-		});
-		if (selectRows.length > 0) {
-				$.window({
-					showModal	: true,
-		   			modalOpacity: 0.5,
-				    title		: "批量修改",
-				    content		: $("#batchwindows"),
-				    width		: 300,
-				    height		: 200,
-				    showFooter	: false,
-				    showRoundCorner: true,
-				    minimizable	: false,
-				    maximizable	: false,
-				    onShow		: function(wnd) {
-				    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
-						var selectContent = container.find("#selectfield"); // 尋找container底下的指定select框
-						var batchBtn = container.find("#batchBtn"); // 尋找container底下的指定更改按钮
-						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-						batchBtn.unbind("click"); 
-						batchBtn.click( function(){
-							us.batchUpdate(wjGridconfig.grid,wjGridconfig.dataView,true,wnd,'02');
-						});
-						//修改关闭按钮事件
-						var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
-						//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-						closeBtn.unbind("click"); 
-						closeBtn.click( function(){
-							wnd.close();
-						});
-//						var value = inputer.val(); // 取得值
-						selectContent.empty();
-						
-						for (var i=0;i<wjGridconfig.columns_fields.length;i++) {
-							if (wjGridconfig.columns_fields[i].id != "rownum" && wjGridconfig.columns_fields[i].id != "isdoc" && wjGridconfig.columns_fields[i].id != "files") {
-								selectContent.append("<option value='"+wjGridconfig.columns_fields[i].id+"'>"+wjGridconfig.columns_fields[i].name+"</option>");
-							}
-						}
-				    }
-				});
-		}
-		else {
-			$.Zebra_Dialog('请选择要修改的数据。 ', {
-                'type':     'information',
-                'title':    '系统提示',
-                'buttons':  ['确定']
-            });
-		}
-	});
-	$( "#wjimport" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-calculator"
-		}
-	})
-	.click(function() {
-		showArchiveImportTab('02');
-	});
-	$( "#wjfilter" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-circle-zoomout"
-		}
-	})
-	.click(function() {
-		if ($(wjGridconfig.grid.getTopPanel()).is(":visible")) {
-			wjGridconfig.grid.hideTopPanel();
-		} else {
-			wjGridconfig.grid.showTopPanel();
-		}
-	});
-	$( "#wjbatchatt" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-flag"
-		}
-	})
-	.click(function() {
 		
-	});
-	$("#wjGrid").css({  height: $('#center').height()-25});
-	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=02&importType=0";
-	$.ajax({
-		async: false,
-		url: "getField.action?" + par,
-		type:'post',
-		dataType: 'script',
-        success: function(data) {
-			if (data != "error") {
-				wjGridconfig.columns_fields = fields;
-				wjGridconfig.fieldsDefaultValue= fieldsDefaultValue;
-			}
-			else {
-				$.Zebra_Dialog('读取字段信息时出错，请关闭浏览器，重新登录尝试或与管理员联系! ', {
-	                'type':     'information',
-	                'title':    '系统提示',
-	                'buttons':  ['确定']
-	            });
-			}
-        }
-	});
-	
+		$( "#batchwindows" ).dialog('open');
+	}
+	else {
+		us.openalert('请选择要修改的数据。 ','系统提示','alertbody alert_Information');
+	}
+}
+//open wj import data tab
+function wjimport() {
+	showArchiveImportTab('02');
+}
+//show wj grid filter div
+function wjfilter() {
+	if ($(wjGridconfig.grid.getTopPanel()).is(":visible")) {
+		wjGridconfig.grid.hideTopPanel();
+	} else {
+		wjGridconfig.grid.showTopPanel();
+	}
+}
+// wj Single archive link files
+function wjlinkfile() {
+	var selectRows = wjGridconfig.grid.getSelectedRows();
+	if (selectRows.length == 0) {
+		us.openalert('请选择要挂接的档案记录! ',
+				'系统提示',
+				'alertbody alert_Information'
+		);
+		return ;
+	}
+	else if (selectRows.length > 1) {
+		us.openalert('只能选择一条要挂接的档案记录! ',
+				'系统提示',
+				'alertbody alert_Information'
+		);
+		return ;
+	}
+	var item = wjGridconfig.dataView.getItem(selectRows[0]);
+	showDocwindow(item.id,wjGridconfig.selectTableid);
+}
+
+//open batch att tab
+function wjbatchatt() {
+	var selectRows = wjGridconfig.grid.getSelectedRows();
+	if (selectRows.length > 0) {
+		selectRows.sort(function compare(a, b) {
+			return a - b;
+		});
+		archiveCommon.showBatchAttachment(wjGridconfig,'02',selectRows);
+	}
+	else {
+		us.openalert('请选择要批量挂接的档案记录! ',
+				'系统提示',
+				'alertbody alert_Information'
+		);
+	}
+}
+//refresh wjdata
+function wjrefresh() {
+	var data = [];
+	readwjdata();
+	wjGridconfig.dataView.setItems(data);
+	wjGridconfig.dataView.setItems(wjGridconfig.rows);
+}
+
+//read wj Archive data
+function readwjdata() {
 	//同步读取数据
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=02&isAllWj=" + archiveCommon.isAllWj +"&selectAid=" + archiveCommon.selectAid;
 	$.ajax({
@@ -225,15 +174,39 @@ $(function(){
 			if (data != "error") {
 				wjGridconfig.rows = rowList;
 			} else {
-				$.Zebra_Dialog('读取数据时出错，请尝试重新操作或与管理员联系! ', {
-	                'type':     'information',
-	                'title':    '系统提示',
-	                'buttons':  ['确定']
-	            });
+				us.openalert('<span style="color:red">读取数据时出错!<span></br>请尝试重新操作或与管理员联系。',
+						'系统提示',
+						'alertbody alert_Information'
+				);
 			}
 		}
 	});
-	
+}
+
+$(function(){
+	setGridResize();
+//	$("#wjGrid").css({  height: $('#center').height()-25});
+	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=02&importType=0";
+	$.ajax({
+		async: false,
+		url: "getField.action?" + par,
+		type:'post',
+		dataType: 'script',
+        success: function(data) {
+			if (data != "error") {
+				wjGridconfig.columns_fields = fields;
+				wjGridconfig.fieldsDefaultValue= fieldsDefaultValue;
+				wjGridconfig.selectTableid = tableid;
+			}
+			else {
+				us.openalert('<span style="color:red">读取字段信息时出错!<span></br>请关闭浏览器，重新登录尝试或与管理员联系。',
+						'系统提示',
+						'alertbody alert_Information'
+				);
+			}
+        }
+	});
+	readwjdata();
 	$("#grid_header_wj").html(archiveCommon.selectTreeName + '_文件列表');
 	
 	// 创建checkbox列
@@ -258,12 +231,10 @@ $(function(){
 	wjGridconfig.grid = new Slick.Grid("#wjdiv", wjGridconfig.dataView, wjGridconfig.columns, wjGridconfig.options);
 	//设置录入错误时提示。例如不能为空的字段
 	wjGridconfig.grid.onValidationError.subscribe(function(e, args) {
-//		alert(args.validationResults.msg);
-		$.Zebra_Dialog(args.validationResults.msg, {
-            'type':     'information',
-            'title':    '系统提示',
-            'buttons':  ['确定']
-        });
+		us.openalert(args.validationResults.msg,
+				'系统提示',
+				'alertbody alert_Information'
+		);
 	});
 	// 设置grid的选择模式。行选择
 	// grid.setSelectionModel(new Slick.RowSelectionModel());
@@ -330,11 +301,10 @@ $(function(){
 		var par = "importData=[" + JSON.stringify(item) + "]&tableType=02";
 		$.post("saveImportArchive.action",par,function(data){
 				if (data != "保存完毕。") {
-					$.Zebra_Dialog(data, {
-		                'type':     'information',
-		                'title':    '系统提示',
-		                'buttons':  ['确定']
-		            });
+					us.openalert(data,
+							'系统提示',
+							'alertbody alert_Information'
+					);
 				} 
 			}
 		);
@@ -346,11 +316,10 @@ $(function(){
 		var par = "importData=[" + JSON.stringify(item) + "]&tableType=02";
 		$.post("updateImportArchive.action",par,function(data){
 				if (data != "保存完毕。") {
-					$.Zebra_Dialog(data, {
-		                'type':     'information',
-		                'title':    '系统提示',
-		                'buttons':  ['确定']
-		            });
+					us.openalert(data,
+							'系统提示',
+							'alertbody alert_Information'
+					);
 				} 
 			}
 		);
@@ -381,6 +350,8 @@ $(function(){
 	wjGridconfig.dataView.endUpdate();
 	
 	wjGridconfig.dataView.syncGridSelection(wjGridconfig.grid, true);
+	
+	setGridResize();
 	
 	//如果是显示全部文件。屏蔽导入按钮
 	if (archiveCommon.isAllWj == '1') {

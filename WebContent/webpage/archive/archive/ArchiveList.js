@@ -1,208 +1,171 @@
 
 
 var ajGridconfig = new us.archive.ui.Gridconfig();
-
-$(function(){
-	//生成grid的toolbar_aj
-	$( "#add" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-plusthick"
-		}
-	})
-	.click(function() {
-		ajGridconfig.grid.setOptions({
-			autoEdit : true
-		});
-		ajGridconfig.grid.gotoCell(ajGridconfig.dataView.getLength(),4,true);
+//insert a new row
+function add() {
+	ajGridconfig.grid.setOptions({
+		autoEdit : true
 	});
-	$( "#update" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-wrench"
-		}
-	}).click(function() {
-		ajGridconfig.grid.setOptions({
-			autoEdit : true
-		});
+	ajGridconfig.grid.gotoCell(ajGridconfig.dataView.getLength(),4,true);
+}
+//open update mode
+function update() {
+	ajGridconfig.grid.setOptions({
+		autoEdit : true
 	});
-	$( "#endupdate" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-grip-solid-horizontal"
-		}
-	})
-	.click(function() {
-		ajGridconfig.grid.setOptions({
-			autoEdit : false
-		});
+}
+//end update mode
+function endupdate() {
+	ajGridconfig.grid.setOptions({
+		autoEdit : false
 	});
-	$( "#batchupdate" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-gear"
-		}
-	})
-	.click(function() {
-		var selectRows = ajGridconfig.grid.getSelectedRows();
-		selectRows.sort(function compare(a, b) {
-			return b - a;
-		});
-		if (selectRows.length > 0) {
-			$( "#batchwindows" ).dialog({
-				autoOpen: false,
-				height: 250,
-				width: 300,
-				title:'批量修改',
-				modal: true,
-				resizable:false,
-				create: function(event, ui) {
-					$("#selectfield").empty();
-					for (var i=0;i<ajGridconfig.columns_fields.length;i++) {
-						if (ajGridconfig.columns_fields[i].id != "rownum" && ajGridconfig.columns_fields[i].id != "isdoc" && ajGridconfig.columns_fields[i].id != "files") {
-							$("#selectfield").append("<option value='"+ajGridconfig.columns_fields[i].id+"'>"+ajGridconfig.columns_fields[i].name+"</option>");
-						}
+}
+//delete rows
+function del() {
+	var selectRows = ajGridconfig.grid.getSelectedRows();
+	selectRows.sort(function compare(a, b) {
+		return b - a;
+	});
+	if (selectRows.length > 0) {
+		us.openconfirm('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span>' + 
+				' 条案卷记录吗? <br><span style="color:red">注意：删除案卷记录，将同时删除案卷及案卷下所有文件数据、电子全文，请谨慎操作！</span> ','系统提示',
+				function() {
+					var deleteRows = [];
+	        		
+	        		for ( var i = 0; i < selectRows.length; i++) {
+						var item = ajGridconfig.dataView.getItem(selectRows[i]);
+						deleteRows.push(item);
 					}
+	        		var par = "par=" + JSON.stringify(deleteRows) + "&tableType=01";
+	        		$.post("deleteArchive.action",par,function(data){
+	        				if (data == "SUCCESS") {
+	        					for ( var i = 0; i < selectRows.length; i++) {
+		        					var item = ajGridconfig.dataView.getItem(selectRows[i]);
+		        					ajGridconfig.dataView.deleteItem(item.id);
+		        				};
+		        				us.openalert('删除成功。 ','系统提示','alertbody alert_Information');
+	        				}
+	        				else {
+	        					us.openalert(data,'系统提示','alertbody alert_Information');
+	        				}
+	        			}
+	        		);
 				},
-				open:function(event,ui) {
-					$("#updatetxt").val("");
-				},
-				buttons: {
-					"提交": function() {
-						us.batchUpdate(ajGridconfig.grid,ajGridconfig.dataView,true,'01');
-					},
-					"关闭": function() {
-						$( this ).dialog( "close" );
-					}
-				},
-				close: function() {
+				function() {
 					
 				}
-			});
-			$( "#batchwindows" ).dialog('open');
-		}
-		else {
-			us.openalert('请选择要修改的数据。 ','系统提示','alertbody alert_Information');
-		}
+		);
+	}
+	else {
+		us.openalert('请选择要删除的数据。 ','系统提示','alertbody alert_Information');
+	}
+}
+//open batchupdate dialog
+function batchupdate() {
+	var selectRows = ajGridconfig.grid.getSelectedRows();
+	selectRows.sort(function compare(a, b) {
+		return b - a;
 	});
-	$( "#delete" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-trash"
-		}
-	}).click(function() {
-		var selectRows = ajGridconfig.grid.getSelectedRows();
-		selectRows.sort(function compare(a, b) {
-			return b - a;
-		});
-		if (selectRows.length > 0) {
-			us.openconfirm('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span>' + 
-					' 条案卷记录吗? <br><span style="color:red">注意：删除案卷记录，将同时删除案卷及案卷下所有文件数据、电子全文，请谨慎操作！</span> ','系统提示',
-					function() {
-						var deleteRows = [];
-		        		
-		        		for ( var i = 0; i < selectRows.length; i++) {
-							var item = ajGridconfig.dataView.getItem(selectRows[i]);
-							deleteRows.push(item);
-						}
-		        		var par = "par=" + JSON.stringify(deleteRows) + "&tableType=01";
-		        		$.post("deleteArchive.action",par,function(data){
-		        				if (data == "SUCCESS") {
-		        					for ( var i = 0; i < selectRows.length; i++) {
-			        					var item = ajGridconfig.dataView.getItem(selectRows[i]);
-			        					ajGridconfig.dataView.deleteItem(item.id);
-			        				};
-			        				us.openalert('删除成功。 ','系统提示','alertbody alert_Information');
-		        				}
-		        				else {
-		        					us.openalert(data,'系统提示','alertbody alert_Information');
-		        				}
-		        			}
-		        		);
-					},
-					function() {
-						
+	if (selectRows.length > 0) {
+		$( "#batchwindows" ).dialog({
+			autoOpen: false,
+			height: 280,
+			width: 500,
+			title:'批量修改',
+			modal: true,
+			resizable:false,
+			create: function(event, ui) {
+				$("#selectfield").empty();
+				for (var i=0;i<ajGridconfig.columns_fields.length;i++) {
+					if (ajGridconfig.columns_fields[i].id != "rownum" && ajGridconfig.columns_fields[i].id != "isdoc" && ajGridconfig.columns_fields[i].id != "files") {
+						$("#selectfield").append("<option value='"+ajGridconfig.columns_fields[i].id+"'>"+ajGridconfig.columns_fields[i].name+"</option>");
 					}
-			);
-		}
-		else {
-			us.openalert('请选择要删除的数据。 ','系统提示','alertbody alert_Information');
-		}
-	});
-	$( "#import" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-calculator"
-		}
-	}).click(function() {
-		showArchiveImportTab('01');
-	});
-	$( "#Filter" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-circle-zoomout"
-		}
-	}).click(function() {
-		if ($(ajGridconfig.grid.getTopPanel()).is(":visible")) {
-			ajGridconfig.grid.hideTopPanel();
-		} else {
-			ajGridconfig.grid.showTopPanel();
-		}
-	});
-	$( "#allwj" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-script"
-		}
-	}).click(function() {
-		showWjTab("","1");
-	});
-	$( "#batchatt" ).button({
-		text: false,
-		icons: {
-			primary: "ui-icon-flag"
-		}
-	}).click(function() {
-		var selectRows = ajGridconfig.grid.getSelectedRows();
-		if (selectRows.length > 0) {
-			selectRows.sort(function compare(a, b) {
-				return a - b;
-			});
-			archiveCommon.showBatchAttachment(ajGridconfig,'01',selectRows);
-		}
-		else {
-			us.openalert('请选择要批量挂接的档案记录! ',
-					'系统提示',
-					'alertbody alert_Information'
-			);
-		}
-	});
-	
-	
-	$("#ajGrid").css({  height: $('#center').height()-25});
-	//同步读取字段
-	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=01&importType=0";
-	$.ajax({
-		async : false,
-		url : "getField.action?" + par,
-		type : 'post',
-		dataType : 'script',
-		success : function(data) {
-			if (data != "error") {
-				ajGridconfig.columns_fields = fields;
-				ajGridconfig.fieldsDefaultValue = fieldsDefaultValue;
-				var temptype = templettype;
-				if (temptype == "F") {
-					$('#allwj').button("disable"); 
 				}
-			} else {
-				us.openalert('<span style="color:red">读取字段信息时出错.</span></br>请关闭浏览器，重新登录尝试或与管理员联系!',
-						'系统提示',
-						'alertbody alert_Information'
-				);
+			},
+			open:function(event,ui) {
+				$("#updatetxt").val("");
+			},
+			buttons: {
+				"提交": function() {
+					us.batchUpdate(ajGridconfig.grid,ajGridconfig.dataView,true,'01');
+				},
+				"关闭": function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
 			}
-		}
-	});
+		});
+		$( "#batchwindows" ).dialog('open');
+	}
+	else {
+		us.openalert('请选择要修改的数据。 ','系统提示','alertbody alert_Information');
+	}
+}
+//open import data dialog
+function importdata() {
+	showArchiveImportTab('01');
+}
+//show filter div
+function filter() {
+	if ($(ajGridconfig.grid.getTopPanel()).is(":visible")) {
+		ajGridconfig.grid.hideTopPanel();
+	} else {
+		ajGridconfig.grid.showTopPanel();
+	}
+}
+//show allwj tab
+function allwj() {
+	showWjTab("","1");
+}
+//open batch att tab
+function batchatt() {
+	var selectRows = ajGridconfig.grid.getSelectedRows();
+	if (selectRows.length > 0) {
+		selectRows.sort(function compare(a, b) {
+			return a - b;
+		});
+		archiveCommon.showBatchAttachment(ajGridconfig,'01',selectRows);
+	}
+	else {
+		us.openalert('请选择要批量挂接的档案记录! ',
+				'系统提示',
+				'alertbody alert_Information'
+		);
+	}
+}
+//Single archive link files
+function linkfile() {
+	var selectRows = ajGridconfig.grid.getSelectedRows();
+	if (selectRows.length == 0) {
+		us.openalert('请选择要挂接的档案记录! ',
+				'系统提示',
+				'alertbody alert_Information'
+		);
+		return ;
+	}
+	else if (selectRows.length > 1) {
+		us.openalert('只能选择一条要挂接的档案记录! ',
+				'系统提示',
+				'alertbody alert_Information'
+		);
+		return ;
+	}
+	var item = ajGridconfig.dataView.getItem(selectRows[0]);
+//	alert(ajGridconfig.selectTableid);
+	showDocwindow(item.id,ajGridconfig.selectTableid);
+}
+//refresh data
+function refresh() {
+	var data = [];
+	readData();
+	ajGridconfig.dataView.setItems(data);
+	ajGridconfig.dataView.setItems(ajGridconfig.rows);
+}
+
+//read Archive data
+function readData() {
 	//同步读取数据
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=01";
 	$.ajax({
@@ -221,6 +184,36 @@ $(function(){
 			}
 		}
 	});
+}
+
+$(function(){
+	setGridResize();
+//	$("#ajGrid").css({  height: $('#center').height()-25});
+	//同步读取字段
+	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=01&importType=0";
+	$.ajax({
+		async : false,
+		url : "getField.action?" + par,
+		type : 'post',
+		dataType : 'script',
+		success : function(data) {
+			if (data != "error") {
+				ajGridconfig.columns_fields = fields;
+				ajGridconfig.fieldsDefaultValue = fieldsDefaultValue;
+				ajGridconfig.selectTableid = tableid;
+				var temptype = templettype;
+				if (temptype == "F") {
+					$('#allwj').button("disable"); 
+				}
+			} else {
+				us.openalert('<span style="color:red">读取字段信息时出错.</span></br>请关闭浏览器，重新登录尝试或与管理员联系!',
+						'系统提示',
+						'alertbody alert_Information'
+				);
+			}
+		}
+	});
+	readData();
 	
 	$("#grid_header_aj").html(archiveCommon.selectTreeName + '_档案列表');
 	
@@ -346,11 +339,19 @@ $(function(){
 		ajGridconfig.grid.updateRowCount();
 		ajGridconfig.grid.render();
 	});
+	
+//	ajGridconfig.dataView.onPagingInfoChanged.subscribe(function (e, pagingInfo) {
+//	    var divSize = 2 + (options.rowHeight * (pagingInfo.pageSize +1)); 
+//	    alert(divSize);
+//	    $("#ajGrid").css( 'height' , divSize+'px' );
+//	    ajGridconfig.grid.resizeCanvas();
+//	});
 
 	ajGridconfig.dataView.onRowsChanged.subscribe(function(e, args) {
 		ajGridconfig.grid.invalidateRows(args.rows);
 		ajGridconfig.grid.render();
 	});
+	
 	ajGridconfig.dataView.beginUpdate();
 	ajGridconfig.dataView.setItems(ajGridconfig.rows);
 	ajGridconfig.dataView.setFilterArgs({
@@ -360,6 +361,7 @@ $(function(){
 	ajGridconfig.dataView.endUpdate();
 	
 	ajGridconfig.dataView.syncGridSelection(ajGridconfig.grid, true);
+	
 	
 	/**
 	 * 电子文件窗口
@@ -390,6 +392,28 @@ $(function(){
         modal: true,
         buttons: {
             '关闭': function() {
+            	var par = "selectRowid="+ archiveCommon.selectRowid + "&tableid="+archiveCommon.selectTableid;
+				var rowList = [];
+				//同步读取数据
+				$.ajax({
+					async : false,
+					url : "listLinkDoc.action?"+ par,
+					type : 'post',
+					dataType : 'script',
+					success : function(data) {
+						if (data != "error") {
+							rowList = eval(data);
+							$("#doclist").html("");
+							for (var i=0;i<rowList.length;i++) {
+								$("#doclist").append(getDoclist(rowList[i]));
+							}
+						} else {
+							us.openalert('读取数据时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
+						}
+					}
+				});
+				
+				$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
                 $( this ).dialog( "close" );
             }
         },
@@ -490,43 +514,51 @@ function showDocwindow(id, tableid) {
 }
 
 function delectDoc(id) {
-	//同步读取数据
-	$.ajax({
-		async : false,
-		url : "docDelete.action?docId="+ id,
-		type : 'post',
-		dataType : 'script',
-		success : function(data) {
-			if (data != "error") {
-				us.openalert('删除文件完毕! ','系统提示','alertbody alert_Information');
-			} else {
-				us.openalert('删除文件时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
+	us.openconfirm('确定要<span style="color:red">删除</span>选中的电子全文吗？' + 
+			'<br><span style="color:red">注意：将彻底删除电子全文，请谨慎操作！</span> ','系统提示',
+			function() {
+				//同步读取数据
+				$.ajax({
+					async : false,
+					url : "docDelete.action?docId="+ id,
+					type : 'post',
+					dataType : 'script',
+					success : function(data) {
+						if (data != "error") {
+							us.openalert('删除文件完毕! ','系统提示','alertbody alert_Information');
+						} else {
+							us.openalert('删除文件时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
+						}
+					}
+				});
+				
+				var par = "selectRowid="+ archiveCommon.selectRowid + "&tableid="+archiveCommon.selectTableid;
+				var rowList = [];
+				//同步读取数据
+				$.ajax({
+					async : false,
+					url : "listLinkDoc.action?"+ par,
+					type : 'post',
+					dataType : 'script',
+					success : function(data) {
+						if (data != "error") {
+							rowList = eval(data);
+							$("#doclist").html("");
+							for (var i=0;i<rowList.length;i++) {
+								$("#doclist").append(getDoclist(rowList[i]));
+							}
+						} else {
+							us.openalert('读取数据时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
+						}
+					}
+				});
+				
+				$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
+			},
+			function() {
+				
 			}
-		}
-	});
-	
-	var par = "selectRowid="+ archiveCommon.selectRowid + "&tableid="+archiveCommon.selectTableid;
-	var rowList = [];
-	//同步读取数据
-	$.ajax({
-		async : false,
-		url : "listLinkDoc.action?"+ par,
-		type : 'post',
-		dataType : 'script',
-		success : function(data) {
-			if (data != "error") {
-				rowList = eval(data);
-				$("#doclist").html("");
-				for (var i=0;i<rowList.length;i++) {
-					$("#doclist").append(getDoclist(rowList[i]));
-				}
-			} else {
-				us.openalert('读取数据时出错，请尝试重新操作或与管理员联系! ','系统提示','alertbody alert_Information');
-			}
-		}
-	});
-	
-	$("#docwindows").dialog('option', 'title', '电子全文列表--(共 ' + rowList.length + "个文件)");
+	);
 }
 
 function uploadFile() {
@@ -555,7 +587,7 @@ function uploadFile() {
             });
             uploader.start();
         } else {
-            alert('请先上传数据文件.');
+        	us.openalert('请先上传数据文件! ','系统提示','alertbody alert_Information');
         }
         return false;
     });

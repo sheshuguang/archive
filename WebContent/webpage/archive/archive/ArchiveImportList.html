@@ -5,12 +5,12 @@
 <div id="importgrid" style="position: relative; width: 100%; height: 100%; overflow: hidden">
 	<div id="grid-header_import" class="grid-header" style="width: 100%">案卷</div>
 	<div style="width:100%;height:35px">
-		<div class="toolbar ui-widget-header ui-corner-all" style=" width:100%;height:35px">
-			<button id="importselectfile">选择文件</button> | 
-			<button id="importbatchupdate">批量修改</button>
-			<button id="importdelete">删除</button> | 
-			<button id="importsave">保存</button>
-		</div>
+		<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
+			<li><a href="javascript:void(0);" onClick="selectfile()">选择文件</a></li>
+			<li><a href="javascript:void(0);" onClick="importbatchupdate()">批量修改</a></li>
+			<li><a href="javascript:void(0);" onClick="importdelete()">删除</a></li>
+			<li><a href="javascript:void(0);" onClick="importsave()">保存</a></li>
+		</ul>
 	</div>
 	<div id="archiveImportDiv" class="grid-div"
 		style="width: 100%; height: 82%;"></div>

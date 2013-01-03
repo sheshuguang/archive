@@ -234,15 +234,6 @@ function showResultList(list) {
 	for (var i=0;i<list.length;i++) {
 		doc += "<table class=\"table table-bordered table-condensed\" width=\"100%\">";
 		doc += "<tr><td width=\"70px\">所属档案库</td><td>"+$("#" + list[i].treeid + "-name").html()+"</td>";
-//		if (searchCommon.templettype == "A") {
-//			doc += "<td width=\"70px\">类别</td><td width=\"250px\">案卷级</td></tr>";
-//		}
-//		else if (list[i].tabletype=="W" || list[i].tabletype=="F"){
-//			doc += "<td width=\"70px\">类别</td><td width=\"250px\">文件级</td></tr>";
-//		}
-//		else{
-//			doc += "<td width=\"70px\">类别</td><td width=\"250px\">未知</td></tr>";
-//		}
 		
 		var ajhOrWjh = "";
 		if (searchCommon.tabletype == '01') {

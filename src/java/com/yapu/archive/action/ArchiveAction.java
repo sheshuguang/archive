@@ -174,7 +174,7 @@ public class ArchiveAction extends BaseAction {
         //添加【文件级】【是否有全文】2个固定不需要编辑的字段。
         //1。得到treeid对应的templet，templet的type如果是A，则是标准档案，是F则是纯文件级。标准档案才添加文件级按钮
         SysTemplet templet = treeService.getTreeOfTemplet(treeid);
-        
+        String tableid = "";
       //增加行号字段
 //        result.append("{id:'rownum',name:'行号',field:'rownum',behavior:'select',cssClass:'cell-selection',width:40,cannotTriggerInsert:true,resizable:false,selectable:false,formatter:function(row,column,value) {return row+1;}},");
         result.append("{id:'rownum',name:'行号',field:'rownum',behavior:'select',cssClass:'cell-selection',width:50,cannotTriggerInsert:true,resizable:false,selectable:false,sortable: true},");
@@ -190,7 +190,7 @@ public class ArchiveAction extends BaseAction {
 	        result.append("formatter:function(row,column,value,columnDef, dataContext){");
 	        //得到表名 ，为了电子全文
 	        List<SysTable> tableList = treeService.getTreeOfTable(treeid);
-	        String tableid = "";
+//	        Stringtableid = "";
 	        for (SysTable table :tableList) {
 	            if (tableType.equals(table.getTabletype())) {
 	                tableid = table.getTableid();
@@ -279,6 +279,7 @@ public class ArchiveAction extends BaseAction {
 		else {
 			result.append(";var templettype = 'A' ");
 		}
+		result.append(";var tableid='" + tableid + "'");
 		out.write(result.toString());
 		return null;
 	}
@@ -329,7 +330,7 @@ public class ArchiveAction extends BaseAction {
                 }
                 //添加电子全文标识
 //                sb.append("\"docs\":\"1\",");
-                sb.append("\"docs\":").append(tempMap.get("ISDOC").toString()).append(",");
+//                sb.append("\"docs\":").append(tempMap.get("ISDOC").toString()).append(",");
                 sb.append("\"rownum\":").append(i+1).append(",");
                 //grid控件需要小写的id。数据库中存的是大写的id，这里全部采用小写字段名
 				for (SysTempletfield sysTempletfield : templetfieldList) {

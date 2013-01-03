@@ -10,11 +10,6 @@
 <!-- 各种图标 按钮 tab等 -->
 <link rel="stylesheet" type="text/css" href="../../images/images.css" />
 
-<!-- jquery-easyui css 
-<link rel="stylesheet" type="text/css" href="../../js/jquery-easyui/themes/gray/easyui.css" />-->
-
-<!-- jquery-window css 弹出式windows css
-<link type="text/css" href="../../js/jquery-window/css/jquery.window.css" rel="stylesheet">-->
 <!-- jquery -->
 <script type="text/javascript" src="../../js/jquery-1.7.1.js"></script>
 
@@ -46,8 +41,6 @@
 	href="../../js/bootstrap/css/bootstrap.css" />
 <script type="text/javascript"
 	src="../../js/bootstrap/js/bootstrap.js"></script>
-
-
 
 <!-- slick grid -->
 <link rel="stylesheet" href="../../js/SlickGrid/slick.grid.css" type="text/css" />
@@ -122,15 +115,24 @@ var copyMap = new HashMap();
 			</div>
 			
 		</div>
-	</div>
-	<div id="batchwindows" title="批量修改">
-		<form>
-			<fieldset class="fieldset">
-				<label for="selectfield" class="label">更改字段</label>  
-				<select id="selectfield" ></select></br>
-				<label for="updatetxt" class="label">更改内容</label>
-				<input type="text" id="updatetxt" class="text ui-widget-content ui-corner-all input" />
-			</fieldset>
+	</div> 
+	<div id="batchwindows" style="display:none">
+		<form class="form-horizontal" style="margin-top:20px;">
+			<fieldset>
+	          <div class="control-group">
+	            <label for="selectfield" class="control-label">更改字段</label>
+	            <div class="controls">
+	            	<select id="selectfield" class="span2"></select>
+	            </div>
+	          </div>
+	          <div class="control-group" id="updatecontentdiv">
+	            <label for="updatetxt" class="control-label">更改内容</label>
+	            <div class="controls">
+	            	<input type="text" id="updatetxt" class="span2">
+	            	<p class="help-block" id="updatetxterror"></p>
+	            </div>
+	          </div>
+	        </fieldset>
 		</form>
 	</div>
 	<!-- 电子全文列表 -->
@@ -142,7 +144,7 @@ var copyMap = new HashMap();
 	<input type="hidden" id="importtab" />
 	<input type="hidden" id="batchatttab" />
 
-    <div id="uploadFile" style="width:700px;" title="上传电子全文">
+    <div id="uploadFile" style="width:700px;" title="上传电子全文" style="display:none">
         <div style="width: 100%;height:90%;">
             <form id="formId" action="submit.action" method="post">
             	<input type="hidden" id="fileid" name="fileid" value="abcd"> 

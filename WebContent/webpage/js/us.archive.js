@@ -22,6 +22,7 @@ us.archive.Archive = function() {
 	// 关于电子文件，选择的行id
 	this.selectRowid = "";
 	this.selectTableid = "";
+	
 	this.sortcol = "title";
 	this.sortdir = 1;
 	this.searchString = "";
@@ -52,7 +53,6 @@ us.archive.Archive.prototype.showBatchAttachment = function(grid,tableType,rows)
 	};
 	var url = "dispatch.action?page=/webpage/archive/archive/ArchiveBatchAttachment.html";
 	us.addtab($("#batchatttab"),'批量挂接','ajax', url);
-//	us.showtab($('#tab'),url, '批量挂接', 'icon-page');
 	
 }
 
@@ -176,11 +176,10 @@ us.archive.Authority.prototype.openSelectRoleWindows = function(target) {
 					if (data != "error") {
 						authorityGridconfig.rows = rowList;
 					} else {
-						$.Zebra_Dialog('读取数据时出错，请尝试重新操作或与管理员联系! ', {
-			                'type':     'information',
-			                'title':    '系统提示',
-			                'buttons':  ['确定']
-			            });
+						us.openalert('<span style="color:red">读取数据时出错!<span></br>请尝试重新操作或与管理员联系。',
+								'系统提示',
+								'alertbody alert_Information'
+						);
 					}
 				}
 			});
@@ -199,11 +198,10 @@ us.archive.Authority.prototype.openSelectRoleWindows = function(target) {
 					handler:function(){
 						var selectRows = authorityGridconfig.grid.getSelectedRows();
 						if (selectRows.length != 1) {
-							$.Zebra_Dialog('只能选择一个角色.<br>请重新选择。 ', {
-				                'type':     'information',
-				                'title':    '系统提示',
-				                'buttons':  ['确定']
-				            });
+							us.openalert('<span style="color:red">只能选择一个角色!<span></br>请重新选择。',
+									'系统提示',
+									'alertbody alert_Information'
+							);
 						}
 						else {
 							var item = authorityGridconfig.grid.getDataItem(selectRows[0]);
@@ -225,20 +223,17 @@ us.archive.Authority.prototype.openSelectRoleWindows = function(target) {
 							$.post(action,par,function(data){
 								if (data != "error") {
 									showRoleObject.html(data);
-									$.Zebra_Dialog("保存成功！", {
-						                'type':     'information',
-						                'title':    '系统提示',
-						                'buttons':  ['确定']
-						            });
+									us.openalert('保存成功.',
+											'系统提示',
+											'alertbody alert_Information'
+									);
 								}
 								else {
-									$.Zebra_Dialog("保存失败，请重新操作或与管理员联系！", {
-						                'type':     'information',
-						                'title':    '系统提示',
-						                'buttons':  ['确定']
-						            });
+									us.openalert('<span style="color:red">保存失败!<span></br>请重新操作或与管理员联系。',
+											'系统提示',
+											'alertbody alert_Information'
+									);
 								}
-								
 							});
 						}
 					}

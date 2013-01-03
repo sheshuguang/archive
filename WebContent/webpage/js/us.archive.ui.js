@@ -37,7 +37,8 @@ us.archive.ui.Gridconfig = function(a) {
 		enableCellNavigation : true,
 		autoEdit : false,
 		enableColumnReorder : true,
-		topPanelHeight : 32
+		topPanelHeight : 32,
+		autoHeight: false
 	};
 }
 //public function
