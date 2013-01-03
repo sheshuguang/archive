@@ -323,7 +323,8 @@ public class CommonUtils {
         return (String) uuid.generate();
     }
     public static DirFileInfor copyDoc2Dfi(SysDoc doc, DirFileInfor dfi){
-        dfi.setDirs(Integer.valueOf(doc.getDoctype()));
+        dfi.setDirs(0);
+        if(doc.getDoctype().equals("1"))  dfi.setDirs(1);
         dfi.setMime(doc.getMime());
         dfi.setHash(doc.getDocid());
         dfi.setLocked(Integer.valueOf(doc.getLocked()));
@@ -345,15 +346,16 @@ public class CommonUtils {
         }
        return false;
     }
-    public static void main(String[] args) {
-		System.out.println(isNumber("a123.123"));
-	}
     public static String getMime(File file) {
+        MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
         Collection<MimeType> mimes = MimeUtil.getMimeTypes(file);
         if (!mimes.isEmpty()) {
             return mimes.iterator().next().toString();
         }
-        // not found try the second method...
         return new MimetypesFileTypeMap().getContentType(file);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

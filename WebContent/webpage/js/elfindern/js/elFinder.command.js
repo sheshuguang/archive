@@ -12,6 +12,7 @@ elFinder.prototype.command = function(fm) {
 	 * @type  elFinder
 	 */
 	this.fm = fm;
+
 	
 	/**
 	 * Command name, same as class name

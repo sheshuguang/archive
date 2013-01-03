@@ -56,7 +56,8 @@ public class DocAction extends BaseAction{
     private int chunk;
     private File file;
     private String savePath;
-    
+
+
     private String docName;
     private String contentType;
     //fileid treeid 为单个档案挂接上传文件时用到

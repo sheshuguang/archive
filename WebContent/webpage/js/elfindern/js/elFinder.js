@@ -5,6 +5,7 @@
  * @author Dmitry (dio) Levashov
  **/
 window.elFinder = function(node, opts) {
+
 	this.time('load');
 	
 	var self = this,
@@ -310,6 +311,8 @@ window.elFinder = function(node, opts) {
 	 * @type Object
 	 **/
 	this.options = $.extend(true, {}, this._options, opts||{});
+
+
 	
 	if (opts.ui) {
 		this.options.ui = opts.ui;
@@ -348,6 +351,8 @@ window.elFinder = function(node, opts) {
 	 * @type String
 	 **/
 	this.id = id;
+
+   // this.uploadURL = opts.urlUpload || opts.url;
 	
 	/**
 	 * URL to upload files
@@ -1872,7 +1877,8 @@ elFinder.prototype = {
 			'video/x-ms-wmv'                : 'VideoWM',
 			'video/x-flv'                   : 'VideoFlash',
 			'video/x-matroska'              : 'VideoMKV',
-			'video/ogg'                     : 'VideoOGG'
+			'video/ogg'                     : 'VideoOGG',
+            'message/rfc822'               :'HTML'
 		},
 	
 	/**

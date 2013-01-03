@@ -4,3 +4,5 @@ WebContent/WEB-INF/classes/*
 archive.iml
 .classpath
 .project
+/nbproject/private/
+/build/

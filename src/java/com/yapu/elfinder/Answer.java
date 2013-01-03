@@ -21,6 +21,34 @@ public class Answer {
     private List<DirFileInfor> added; //添加的文件列表
     private List<String> removed;//删除掉的文件；
 
+    private List<String> select;
+    private Object error;
+    private Object errorData;
+
+    public List<String> getSelect() {
+        return select;
+    }
+
+    public void setSelect(List<String> select) {
+        this.select = select;
+    }
+
+    public Object getErrorData() {
+        return errorData;
+    }
+
+    public void setErrorData(Object errorData) {
+        this.errorData = errorData;
+    }
+
+    public Object getError() {
+        return error;
+    }
+
+    public void setError(Object error) {
+        this.error = error;
+    }
+
     public List<String> getRemoved() {
         return removed;
     }
