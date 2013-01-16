@@ -22,12 +22,12 @@ function setGridResize() {
 	var gridPager = $jerTabGrid.children('.grid-pager').outerHeight();			//分页
 	
 	$gridDiv.height( $jerTabGrid.innerHeight() - gridHeader -  gridMenu - gridPager - 8);
-//	alert($gridDiv.height());
 	
-//	var gridHdrH	= $gridDiv.find('.slick-header').outerHeight();
-//	$gridList	= $gridDiv.find('.slick-viewport') ;
-//	$gridList.height( $gridDiv.innerHeight() - gridHdrH );
+	
+	//查找
 }
+
+var pageLayout;
 
 $(function() {
 	pageLayout = $('body').layout({
@@ -36,15 +36,23 @@ $(function() {
 //			size		:	"73",
 			spacing_open:	4,
 			closable	:	true,
-			resizable	:	true
+			resizable	:	true,
+			onresize_end:	function(){
+//				resizeContent
+//				alert($batchLayoutPan.length);
+				if ($batchLayoutPan.length == 0) {
+					alert("dd");
+				}
+				$batchLayoutPan.resizeAll();
+				$batchLayoutPan.layout();
+			}
 		},
 		center__onresize:	function (pane, $pane, state, options) {
 			//当浏览器高度变化时。修改子对象的高
-			//设置tab的高
+			// 公共的高度
 			var tab_pages = $pane.find('.tab_pages').outerHeight();
 			$jerTabContent = $pane.find('#jerichotab_contentholder');
 			$jerTabContent.height( state.innerHeight - tab_pages);  //-8
-			
 			
 			$jerTabContent.find('.curholder').height($jerTabContent.innerHeight() - 5);
 			$jerTabContent.find('.holder').height($jerTabContent.innerHeight() - 5);
@@ -55,6 +63,14 @@ $(function() {
 			$jerTabContent.find('.grid-div').height( $jerTabContent.innerHeight() - 20 -  35 - 20 - 29);
 			
 			$jerTabContent.find('.slick-viewport').height(  $jerTabContent.innerHeight() - 20 -  35 - 20 - 56);
+			
+//			//以下设置解决批量挂接单页面多grid的高
+//			$batchlayout = $jerTabContent.find('#batchlayout');
+//			//如果批量挂接不存在
+//			if ($batchlayout.height() == null) {
+//				return;
+//			}
+//			$batchlayout.height($jerTabContent.innerHeight() - 5);
 			
 			
 			//修改tab页的高

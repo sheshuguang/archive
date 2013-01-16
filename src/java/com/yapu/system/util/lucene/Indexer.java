@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.jsp.tagext.TryCatchFinally;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -25,6 +23,7 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.yapu.archive.entity.SysDoc;
 import com.yapu.archive.entity.SysTempletfield;
+import com.yapu.system.util.FileOperate;
 
 /**
  * lucene 数据库索引相关操作
@@ -35,6 +34,11 @@ import com.yapu.archive.entity.SysTempletfield;
 public class Indexer {
 	
 	private String indexDir = "/LUCENE";
+	
+	private void delLucentIndex(String folderPath) {
+		FileOperate fo = new FileOperate();
+		fo.delFolder(folderPath);
+	}
 	
 	/**
 	 * 创建索引

@@ -269,8 +269,39 @@ function deleteyesfile() {
 	}
 //	archiveCommon.yesItems = attYesGridConfig.dataView.getItems();
 }
+
+function aa() {
+	//以下设置解决批量挂接单页面多grid的高
+	$batchlayout = $jerTabContent.find('#batchlayout');
+	//如果批量挂接不存在
+	if ($batchlayout.height() == null) {
+		return;
+	}
+	$batchlayout.height($jerTabContent.innerHeight() - 5);
+	
+	$archive = $batchlayout.find('#archive');
+	$nofile = $batchlayout.find('#nofile');
+	$yesfile = $batchlayout.find('#yesfile');
+	$archive.height($batchlayout.innerHeight() * 0.4);
+	$nofile.height($batchlayout.innerHeight() * 0.3);
+	$yesfile.height($batchlayout.innerHeight() * 0.3);
+	
+	//设置archive grid 下的控件高。
+	$archive.find('#archiveAttachmentDiv').height($archive.innerHeight() - 20 - 65);
+	$archive.find('.slick-viewport').height(  $archive.find('#archiveAttachmentDiv').innerHeight() - 20 - 56);
+	
+	//设置yesfile已挂接的grid高
+	$yesfile.find('#archiveAttachmentDiv-yes').height($archive.innerHeight() - 20 - 100);
+	$yesfile.find('.slick-viewport').height(  $archive.find('#archiveAttachmentDiv-yes').innerHeight() - 20 - 56);
+	
+	//设置yesfile已挂接的grid高
+	$nofile.find('#archiveAttachmentDiv-no').height($archive.innerHeight() - 20 - 100);
+	$nofile.find('.slick-viewport').height(  $archive.find('#archiveAttachmentDiv-no').innerHeight() - 20 - 56);
+	
+	
+}
 $(function() {
-	$("#batchlayout").css({  height: $('#center').height()-25});
+	aa();
 	//声明上传控件。#uploadFile，作为公共的资源，在archiveMgr.js里
 	$("#uploadFile").dialog({
         autoOpen: false,
@@ -290,27 +321,36 @@ $(function() {
         }
     });
 	
-	pageLayout = $('#batchlayout').layout({
+	batchLayoutPan = $('#batchlayout').layout({
 		applyDefaultStyles: false,
 		north: {
-			size		:	"230",
+			paneSelector:	"#archive",
+			size		:	"200",
 			spacing_open:	2,
 			closable	:	false,
 			resizable	:	true
 		},
 		center: {
-			size		:	"30",
+			paneSelector:	"#yesfile",
+//			size		:	"100",
 			spacing_open:	2,
 			closable	:	false,
 			resizable	:	true
 		},
-		east: {
-			size		:	"300",
+		south: {
+			paneSelector:	"#nofile",
+			size		:	"170",
 			spacing_open:	2,
 			closable	:	false,
 			resizable	:	true
+		},
+		center__onresize:	function (pane, $pane, state, options) {
+			//当浏览器高度变化时。修改子对象的高
+			// 公共的高度
+			aa();
 		}
 	});
+	
 	
 	//生成档案grid
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";

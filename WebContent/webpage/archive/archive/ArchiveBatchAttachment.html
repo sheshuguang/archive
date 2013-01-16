@@ -2,9 +2,9 @@
 <script type="text/javascript" src="ArchiveBatchAttachment.js"></script>
 
 <div id="batchlayout" style="width:100%">
-	<div id="file" class="ui-layout-north" style="overflow:hidden;height:230px;padding:0px; width:100%">
-		<div style="position: relative; width: 100%; height: 230px; overflow: hidden">
-			<div id="grid-header-attachment" class="grid-header" style="width: 100%">批量挂接</div>
+	<div id="archive" class="ui-layout-north" style="overflow:hidden;padding:0px; width:100%">
+		<div style="position: relative; width: 100%; height:100%; overflow: hidden">
+			<div id="grid-header-attachment" class="grid-header" style="width: 100%;height:20px">批量挂接</div>
 			<div style="width:100%;height:35px">
 				<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
 					<li><a href="javascript:void(0);" onClick="setcondition()">设置挂接条件</a></li>
@@ -12,13 +12,13 @@
 					<li><a href="javascript:void(0);" onClick="savearchive()">保存</a></li>
 				</ul>
 			</div>
-			<div id="archiveAttachmentDiv" class="grid-div" style="width: 100%; height: 70%"></div>
+			<div id="archiveAttachmentDiv" class="grid-div" style="width: 100%; height: 100%"></div>
 		</div>
 	</div>
 	
-	<div id="nofile" class="ui-layout-east" style="width:300px;">
-		<div id="nofilediv" style="position: relative; width: 100%; height: 250px; overflow: hidden">
-			<div class="grid-header" style="width: 100%">未挂接文件</div>
+	<div id="nofile" class="ui-layout-south" style="overflow:hidden;padding:0px; width:100%">
+		<div id="nofilediv" style="position: relative; width: 100%; overflow: hidden">
+			<div class="grid-header" style="width: 100%;height:20px">未挂接文件</div>
 			<div style="width:100%;height:35px">
 				<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
 					<li><a href="javascript:void(0);" onClick="autofile()">批量挂接</a></li>
@@ -27,18 +27,18 @@
 					<li><a href="javascript:void(0);" onClick="deletefile()">移除</a></li>
 				</ul>
 			</div>
-			<div id="archiveAttachmentDiv-no" class="grid-div" style="width: 100%; height: 75%"></div>
+			<div id="archiveAttachmentDiv-no" class="grid-div" style="width: 100%; height: 100%"></div>
 		</div>
 	</div>
-	<div class="ui-layout-center"  style="background:#fafafa;overflow:hidden">
-		<div style="position: relative; width: 100%; height: 250px; overflow: hidden">
-			<div class="grid-header" style="width: 100%">已挂接文件</div>
+	<div id="yesfile" class="ui-layout-center" style="overflow:hidden;padding:0px; width:100%">
+		<div style="position: relative; width: 100%; overflow: hidden">
+			<div class="grid-header" style="width: 100%;height:20px">已挂接文件</div>
 			<div style="width:100%;height:35px">
 				<ul class="nav nav-pills" style="background-color: #F5F5F5; border: 1px solid #D3D3D3">
 						<li><a href="javascript:void(0);" onClick="deleteyesfile()">移除</a></li>
 					</ul>
 			</div>
-			<div id="archiveAttachmentDiv-yes" class="grid-div" style="width: 100%; height: 75%"></div>
+			<div id="archiveAttachmentDiv-yes" class="grid-div" style="width: 100%; height: 100%"></div>
 		</div>
 	</div>
 </div>
@@ -46,7 +46,7 @@
 
 
 <!-- 挂接条件窗口 -->
-<div id="setrequwindows">
+<div id="setrequwindows" style="display:none">
 	<form class="form-horizontal" style="margin-top:20px;">
 		<fieldset>
           <div class="control-group">

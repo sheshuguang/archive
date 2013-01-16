@@ -3,35 +3,45 @@
 var importGridConfig = new us.archive.ui.Gridconfig();
 //select import file excel type
 function selectfile() {
-	$.window({
-		showModal	: true,
-			modalOpacity: 0.5,
-	    title		: "选择文件",
-	    content		: $("#selectfilewindows"),
-	    width		: 400,
-	    height		: 200,
-	    showFooter	: false,
-	    showRoundCorner: true,
-	    minimizable	: false,
-	    maximizable	: false,
-	    onShow		: function(wnd) {
-	    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
-	    	//修改导入按钮点击事件
-	    	var importBtn = container.find("#importBtn"); // 尋找container底下的指定更改按钮
-			//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-	    	importBtn.unbind("click"); 
-	    	importBtn.click( function(){
-	    		importArchive(wnd);
-			});
-			//修改关闭按钮事件
-			var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
-			//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-			closeBtn.unbind("click"); 
-			closeBtn.click( function(){
-				wnd.close();
-			});
-	    }
+	$( "#selectfilewindows" ).dialog({
+		autoOpen: false,
+		height: 200,
+		width: 400,
+		title:'选择文件',
+		modal: true,
+		resizable:false,
+		create: function(event, ui) {
+			
+		},
+		open:function(event,ui) {
+			$('#selectfile').val('');
+		},
+		buttons: {
+			"提交": function() {
+				importArchive();
+				
+			},
+			"关闭": function() {
+				$( this ).dialog( "close" );
+			}
+//			测试打开dialog里iframe加载其他页面
+//			,
+//			"test":function() {
+//				$("<div></div>").append($("<iframe width='100%' height='100%'  id='Preview' src='dispatch.action?page=/webpage/archive/archive/ArchiveBatchAttachment.html' ></iframe>")).dialog({ 
+//					autoOpen: true, 
+//					modal: true, 
+//					height: 500,
+//					width: 800,
+//					resizable:true ,
+//					title: "打印预览如果需要打印请点击打印按钮"
+//				 });
+//			}
+		},
+		close: function() {
+			
+		}
 	});
+	$( "#selectfilewindows" ).dialog('open');
 }
 //import data batch update
 function importbatchupdate() {
@@ -40,50 +50,41 @@ function importbatchupdate() {
 		return b - a;
 	});
 	if (selectRows.length > 0) {
-		$.window({
-			showModal	: true,
-   			modalOpacity: 0.5,
-		    title		: "批量修改",
-		    content		: $("#batchwindows"),
-		    width		: 300,
-		    height		: 200,
-		    showFooter	: false,
-		    showRoundCorner: true,
-		    minimizable	: false,
-		    maximizable	: false,
-		    onShow		: function(wnd) {
-		    	var container = wnd.getContainer(); // 抓到window裡最外層div物件
-				var selectContent = container.find("#selectfield"); // 尋找container底下的指定select框
-				var batchBtn = container.find("#batchBtn"); // 尋找container底下的指定更改按钮
-				//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-				batchBtn.unbind("click"); 
-				batchBtn.click( function(){
-					us.batchUpdate(importGridConfig.grid,importGridConfig.dataView,false,wnd,archiveCommon.tableType);
-				});
-				//修改关闭按钮事件
-				var closeBtn = container.find("#closeBtn"); // 尋找container底下的指定更改按钮
-				//给更改按钮赋予点击事件(因为存在多个grid，所以更改按钮的参数是临时赋予的)
-				closeBtn.unbind("click"); 
-				closeBtn.click( function(){
-					wnd.close();
-				});
-//				var value = inputer.val(); // 取得值
-				selectContent.empty();
-				
+		$( "#batchwindows" ).dialog({
+			autoOpen: false,
+			height: 280,
+			width: 500,
+			title:'批量修改',
+			modal: true,
+			resizable:false,
+			create: function(event, ui) {
+				$("#selectfield").empty();
 				for (var i=0;i<importGridConfig.columns_fields.length;i++) {
-					if (importGridConfig.columns_fields[i].id != "rownum" && importGridConfig.columns_fields[i].id != "isdoc" && importGridConfig.columns_fields[i].id != "files") {
-						selectContent.append("<option value='"+importGridConfig.columns_fields[i].id+"'>"+importGridConfig.columns_fields[i].name+"</option>");
+					if (importGridConfig.columns_fields[i].id != "rownum" && importGridConfig.columns_fields[i].id != "isdoc" && ajGridconfig.columns_fields[i].id != "files") {
+						$("#selectfield").append("<option value='"+importGridConfig.columns_fields[i].id+"'>"+importGridConfig.columns_fields[i].name+"</option>");
 					}
 				}
-		    }
+			},
+			open:function(event,ui) {
+				$("#updatetxt").val("");
+			},
+			buttons: {
+				"提交": function() {
+					us.batchUpdate(importGridConfig.grid,importGridConfig.dataView,false,archiveCommon.tableType);
+				},
+				"关闭": function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
 		});
+		$( "#batchwindows" ).dialog('open');
+		
 	}
 	else {
-		$.Zebra_Dialog('请选择要修改的数据。 ', {
-            'type':     'information',
-            'title':    '系统提示',
-            'buttons':  ['确定']
-        });
+		us.openalert('请选择要修改的数据。 ','系统提示','alertbody alert_Information');
 	}
 }
 //import data delete
@@ -93,26 +94,21 @@ function importdelete() {
 		return b - a;
 	});
 	if (selectRows.length > 0) {
-		$.Zebra_Dialog('确定要删除选中的数据吗? ', {
-			'type':     'question',
-            'title':    '系统提示',
-            'buttons':  ['确定', '取消'],
-            'onClose':  function(caption) {
-            	if (caption == '确定') {
-            		for ( var i = 0; i < selectRows.length; i++) {
-    					var item = importGridConfig.dataView.getItem(selectRows[i]);
-    					importGridConfig.dataView.deleteItem(item.id);
-    				}
-            	}
-            }
-        });
+		us.openconfirm('确定要删除选中的 <span style="color:red">'+selectRows.length+'</span>' + 
+				' 条数据吗? ','系统提示',
+				function() {
+					for ( var i = 0; i < selectRows.length; i++) {
+						var item = importGridConfig.dataView.getItem(selectRows[i]);
+						importGridConfig.dataView.deleteItem(item.id);
+					}
+				},
+				function() {
+					
+				}
+		);
 	}
 	else {
-		$.Zebra_Dialog('请选择要删除的数据。 ', {
-            'type':     'information',
-            'title':    '系统提示',
-            'buttons':  ['确定']
-        });
+		us.openalert('请选择要删除的数据。 ','系统提示','alertbody alert_Information');
 	}
 }
 // import data save
@@ -123,27 +119,19 @@ function importsave() {
 		var par = "importData=" + JSON.stringify(a) + "&tableType=" + archiveCommon.tableType;
 
 		$.post("saveImportArchive.action",par,function(data){
-				new $.Zebra_Dialog(data, {
-	  				'buttons':  false,
-	   			    'modal': false,
-	   			    'position': ['right - 20', 'top + 20'],
-	   			    'auto_close': 2500
-	            });
+			us.openalert(data,'系统提示','alertbody alert_Information');
 			}
 		);
 	}
 	else {
-		$.Zebra_Dialog('没有找到导入数据.<br>请重新读取Excel导入文件或与管理员联系。 ', {
-            'type':     'information',
-            'title':    '系统提示',
-            'buttons':  ['确定']
-        });
+		us.openalert('没有找到导入数据.<br>请重新读取Excel导入文件或与管理员联系。 ','系统提示','alertbody alert_Information');
 	}
 }
 
 
 $(function() {
-	$("#importgrid").css({  height: $('#center').height()-25});
+	setGridResize();
+//	$("#importgrid").css({  height: $('#center').height()-25});
 	var par = "treeid=" + archiveCommon.selectTreeid + "&tableType=" + archiveCommon.tableType + "&importType=1";
 	$.ajax({
 		async : false,
@@ -155,23 +143,18 @@ $(function() {
 				importGridConfig.columns_fields = fields;
 				importGridConfig.fieldsDefaultValue = fieldsDefaultValue;
 			} else {
-				new $.Zebra_Dialog('读取字段信息时出错，请关闭浏览器，重新登录尝试或与管理员联系!', {
-					'buttons' : false,
-					'modal' : false,
-					'position' : [ 'right - 20', 'top + 20' ],
-					'auto_close' : 2500
-				});
+				us.openalert('读取字段信息时出错，请关闭浏览器，重新登录尝试或与管理员联系! ','系统提示','alertbody alert_Information');
 			}
 		}
 	});
 	var importTitle = "";
-	importTitle = archiveCommon.selectTreeName + '_文件导入';
-//	if (archiveCommon.tableType == '01') {
-//		importTitle = archiveCommon.selectTreeName + '_案卷导入';
-//	}
-//	else {
-//		importTitle = archiveCommon.selectTreeName + '_文件导入';
-//	}
+//	importTitle = archiveCommon.selectTreeName + '_文件导入';
+	if (archiveCommon.tableType == '01') {
+		importTitle = archiveCommon.selectTreeName + '_案卷导入';
+	}
+	else {
+		importTitle = archiveCommon.selectTreeName + '_文件导入';
+	}
 	$("#grid-header_import").html(importTitle);
 	
 	// 创建checkbox列
@@ -224,18 +207,21 @@ $(function() {
 	
 });
 
-function importArchive(w) {
-	var wnds = $.window.getAll();
-	var aa = wnds[wnds.length -1].getContainer();
-	var bb = aa.find("#selectfile");
+function importArchive() {
+//	var wnds = $.window.getAll();
+//	var aa = wnds[wnds.length -1].getContainer();
+//	var bb = aa.find("#selectfile");
+//	
+//	
+//	var container = w.getContainer(); // 抓到window裡最外層div物件
+//	var fileContent = container.find("#selectfile"); // 尋找container底下的指定input element
+//	var importArchiveForm = container.find("#importArchiveForm");
 	
+	var importArchiveForm = $('#importArchiveForm');
 	
-	var container = w.getContainer(); // 抓到window裡最外層div物件
-	var fileContent = container.find("#selectfile"); // 尋找container底下的指定input element
-	var importArchiveForm = container.find("#importArchiveForm");
-	var filePath = fileContent.val();
+	var filePath = $('#selectfile').val();
 	if (!filePath) {
-		alert("请选择导入到文件。");
+		us.openalert('请选择导入到文件。','系统提示','alertbody alert_Information');
 		return;
 	}
 	// 判断上传文件类型
@@ -248,17 +234,15 @@ function importArchive(w) {
 		else {
 			url += '&tableType=02&selectAid=' + archiveCommon.selectAid;
 		}
-//		importArchiveForm.attr('action','upload.action?treeid=' + archiveCommon.selectTreeid + '&tableType=01');
 		importArchiveForm.attr('action',url);
 		importArchiveForm.submit();
 	}
-//	wnd.close();
 }
 
 function showCallback(backType, jsonStr) {
 
 	if (backType == "failure") {
-		alert(jsonStr);
+		us.openalert(jsonStr,'系统提示','alertbody alert_Information');
 	} else {
 		var json = JSON.parse(jsonStr);
 		importGridConfig.dataView.beginUpdate();
@@ -266,23 +250,19 @@ function showCallback(backType, jsonStr) {
 		importGridConfig.dataView.endUpdate();
 		importGridConfig.grid.registerPlugin(new Slick.AutoTooltips());
 	}
-	//关闭windows
-//	$.modal.close();
-//	selectFileWindow.close();
-//	$.window.close();
-	$.window.closeAll();
+//	$.window.closeAll();
 }
 
 function selectfile_Validator(selectfile) {
 	if (selectfile == " ") {
-		alert("请选择Excel类型的导入文件！ ");
+		us.openalert('请选择Excel类型的导入文件！','系统提示','alertbody alert_Information');
 		return false;
 	}
 	var last = selectfile.match(/^(.*)(\.)(.{1,8})$/)[3]; // 检查上传文件格式
 	last = last.toUpperCase();
 	if (last == "XLS") {
 	} else {
-		alert("只能上传Excel文件,请重新选择！ ");
+		us.openalert('只能上传Excel文件,请重新选择！ ','系统提示','alertbody alert_Information');
 		return false;
 	}
 	return true;
