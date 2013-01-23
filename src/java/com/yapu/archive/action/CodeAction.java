@@ -34,11 +34,7 @@ public class CodeAction extends BaseAction {
 		if (null == templetfieldid || "".equals(templetfieldid)) {
 			return null;
 		}
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+        PrintWriter out = this.getPrintWriter();
 		
 		//获得templetfieldid的code列表
 		SysCodeExample example = new SysCodeExample();
@@ -70,6 +66,24 @@ public class CodeAction extends BaseAction {
 		out.write(resultStr);
 		return null;
 	}
+
+    public String getFieldCode() throws IOException {
+        PrintWriter out = this.getPrintWriter();
+
+        if (null == templetfieldid || "".equals(templetfieldid)) {
+            out.write("error");
+            return null;
+        }
+        //获得templetfieldid的code列表
+        SysCodeExample example = new SysCodeExample();
+        example.createCriteria().andTempletfieldidEqualTo(templetfieldid);
+        example.setOrderByClause("codeorder");
+
+        List<SysCode> codeList = codeService.selectByWhereNotPage(example);
+        Gson gson = new Gson();
+        out.write(gson.toJson(codeList));
+        return null;
+    }
 	
 	public String save() throws IOException {
 		HttpServletResponse response = getResponse();

@@ -10,10 +10,6 @@
         <action name="listNoLinkDocAsAccount" class="docAction" method="listNoLinkDocAsAccount"></action>
         <!-- 根据选择的档案条目读取所属电子全文数据 -->
         <action name="listLinkDoc" class="docAction" method="listLinkDoc"></action>
-        <!--打开电子全文页签-->
-        <action name="showDocListTab" class="docAction" method="showDocListTab">
-            <result name="success">/webpage/archive/archive/DocList.html</result>
-        </action>
         <!--上传文件-->
         <action name="uploadFile" class="docAction" method="uploadFile"></action>
         

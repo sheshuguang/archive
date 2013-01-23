@@ -48,13 +48,15 @@ public class DocService implements IDocService {
 						serverPath += doc.getDocpath(); 
 						FileOperate fo = new FileOperate();
 						boolean b = fo.delFile(serverPath);
-						if (b) {
-							//删除文件记录
-							return docDao.deleteByPrimaryKey(docID);
-						}
-						else {
-							return 0;
-						}
+                        //删除文件记录
+                        return docDao.deleteByPrimaryKey(docID);
+//						if (b) {
+//							//删除文件记录
+//							return docDao.deleteByPrimaryKey(docID);
+//						}
+//						else {
+//							return 0;
+//						}
 					}
 					else {
 						//TODO 处理ftp删除

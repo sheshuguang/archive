@@ -215,10 +215,38 @@ $(function() {
 });
 
 function showTreeList(ob,id,text) {
-	archiveCommon.selectTreeName = text;
-	archiveCommon.selectTreeid = id;
-	var url = "showArchiveList.action?treeid=" + id;
-	us.addtab(ob,'档案管理','ajax', url);
+    archiveCommon.selectTreeName = text;
+    archiveCommon.selectTreeid = id;
+    var archiveType = "";
+    //同步获得当前所选档案类型。
+    var par = "treeid=" + archiveCommon.selectTreeid;
+    $.ajax({
+        async : false,
+        url : "getTempletType.action?" + par,
+//        url : "listArchive.action?" + par,
+        type : 'post',
+        dataType : 'text',  //靠，这里的参数有很多种。如果是script。那么后台传来的string类型就没有反应
+        success : function(data) {
+            archiveType = data;
+            if (data != null) {
+                archiveType = data;
+            } else {
+                us.openalert('<span style="color:red">读取数据时出错.</span></br>请关闭浏览器，重新登录尝试或与管理员联系!',
+                    '系统提示',
+                    'alertbody alert_Information'
+                );
+            }
+        }
+    });
+    var url = "";
+    if (archiveType == "A" || archiveType == "F") {
+        url  = "showArchiveList.action?treeid=" + id;
+        us.addtab(ob,'档案管理','ajax', url);
+    }
+    else if (archiveType == "P") {
+        url = "dispatch.action?page=/webpage/archive/archive/MediaList.html";
+        us.addtab($('#media'),'多媒体管理','ajax', url);
+    }
 }
 
 /**

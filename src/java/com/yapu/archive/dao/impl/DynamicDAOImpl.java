@@ -53,8 +53,14 @@ public class DynamicDAOImpl extends SqlMapClientDaoSupport implements DynamicDAO
 	public boolean insert(String sql) {
 		HashMap map = new HashMap();
 		map.put("sql", sql);
-		getSqlMapClientTemplate().insert("Dynamic.insertSql", map);
-		return false;
+
+        try {
+            getSqlMapClientTemplate().insert("Dynamic.insertSql", map);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
 	}
 	
 	@SuppressWarnings("unchecked")

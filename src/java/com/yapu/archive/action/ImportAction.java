@@ -168,9 +168,9 @@ public class ImportAction extends BaseAction {
 		
 		List<SysTable> tableList = treeService.getTreeOfTable(archiveList.get(0).get("treeid").toString());
 		//sb存储insert语句values前的
-		StringBuffer sb = new StringBuffer();
+//		StringBuffer sb = new StringBuffer();
 		//value 存储values之后的
-		StringBuffer value = new StringBuffer();
+//		StringBuffer value = new StringBuffer();
 		String tableName = "";
 		//得到表名
 		for (int i=0;i<tableList.size();i++) {
@@ -180,51 +180,57 @@ public class ImportAction extends BaseAction {
 			}
 		}
 		List<SysTempletfield> fieldList = treeService.getTreeOfTempletfield(archiveList.get(0).get("treeid").toString(), tableType);
-		boolean b = false;
+
+        boolean b = dynamicService.insert(archiveList,tableName,fieldList);
+
+//		boolean b = false;
 		
 		//存储sql语句
-		List<String> sqlList = new ArrayList<String>();
-		try {
-			for (int z=0;z<archiveList.size();z++) {
-				//创建insert sql
-				HashMap<String,String> row = (HashMap<String,String>) archiveList.get(z);
-				sb.append("insert into ").append(tableName);
-				
-				sb.append(" (");
-				value.append(" (");
-				for (SysTempletfield field : fieldList) {
-					sb.append(field.getEnglishname()).append(",");
-					if (field.getFieldtype().contains("VARCHAR")) {
-						value.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
-					}
-					else {
-						value.append(row.get(field.getEnglishname().toLowerCase())).append(",");
-					}
-				}
-				sb.deleteCharAt(sb.length() -1).append(" ) values ");
-				value.deleteCharAt(value.length() - 1).append(" )");
-				
-				sb.append(value.toString());
-				sqlList.add(sb.toString());
-				//清空sb和value ，进行创建下一条sql
-				sb.setLength(0);
-				value.setLength(0);
-			}
-			if (sqlList.size() > 0) {
-				b = dynamicService.insert(sqlList);
-				
-				if (b) {
-					result = "保存错误，操作中止，请检查数据。";
-					out.write(result);
-					return null;
-				}
-			}
-		} catch (Exception e) {
-			result = "保存错误，操作中止，请检查数据。";
-			out.write(result);
-			return null;
-		}
-		
+//		List<String> sqlList = new ArrayList<String>();
+//		try {
+//			for (int z=0;z<archiveList.size();z++) {
+//				//创建insert sql
+//				HashMap<String,String> row = (HashMap<String,String>) archiveList.get(z);
+//				sb.append("insert into ").append(tableName);
+//
+//				sb.append(" (");
+//				value.append(" (");
+//				for (SysTempletfield field : fieldList) {
+//					sb.append(field.getEnglishname()).append(",");
+//					if (field.getFieldtype().contains("VARCHAR")) {
+//						value.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
+//					}
+//					else {
+//						value.append(row.get(field.getEnglishname().toLowerCase())).append(",");
+//					}
+//				}
+//				sb.deleteCharAt(sb.length() -1).append(" ) values ");
+//				value.deleteCharAt(value.length() - 1).append(" )");
+//
+//				sb.append(value.toString());
+//				sqlList.add(sb.toString());
+//				//清空sb和value ，进行创建下一条sql
+//				sb.setLength(0);
+//				value.setLength(0);
+//			}
+//			if (sqlList.size() > 0) {
+//				b = dynamicService.insert(sqlList);
+//
+//				if (b) {
+//					result = "保存错误，操作中止，请检查数据。";
+//					out.write(result);
+//					return null;
+//				}
+//			}
+//		} catch (Exception e) {
+//			result = "保存错误，操作中止，请检查数据。";
+//			out.write(result);
+//			return null;
+//		}
+
+        if (!b) {
+            result = "保存错误，操作中止，请检查数据。";
+        }
 		out.write(result);
 		return null;
 	}
@@ -254,7 +260,7 @@ public class ImportAction extends BaseAction {
 		
 		List<SysTable> tableList = treeService.getTreeOfTable(archiveList.get(0).get("treeid").toString());
 		//sb存储update语句
-		StringBuffer sb = new StringBuffer();
+//		StringBuffer sb = new StringBuffer();
 		String tableName = "";
 		//得到表名
 		for (int i=0;i<tableList.size();i++) {
@@ -264,48 +270,52 @@ public class ImportAction extends BaseAction {
 			}
 		}
 		List<SysTempletfield> fieldList = treeService.getTreeOfTempletfield(archiveList.get(0).get("treeid").toString(), tableType);
-		boolean b = false;
+
+        boolean b = dynamicService.update(archiveList,tableName,fieldList);
+//		boolean b = false;
 		
-		//存储sql语句
-		List<String> sqlList = new ArrayList<String>();
-		try {
-			for (int z=0;z<archiveList.size();z++) {
-				//创建insert sql
-				HashMap<String,String> row = (HashMap<String,String>) archiveList.get(z);
-				sb.append("update ").append(tableName).append(" set ");
-				
-				for (SysTempletfield field : fieldList) {
-					if (!"id".equals(field.getEnglishname().toLowerCase())) {
-						sb.append(field.getEnglishname().toLowerCase()).append("=");
-						if (field.getFieldtype().contains("VARCHAR")) {
-							sb.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
-						}
-						else {
-							sb.append(row.get(field.getEnglishname().toLowerCase())).append(",");
-						}
-					}
-				}
-				sb.deleteCharAt(sb.length() -1).append(" where id='").append(row.get("id").toString()).append("'");
-				
-				sqlList.add(sb.toString());
-				//清空sb，进行创建下一条sql
-				sb.setLength(0);
-			}
-			if (sqlList.size() > 0) {
-				b = dynamicService.update(sqlList);
-				
-				if (!b) {
-					result = "保存错误，操作中止，请检查数据。";
-					out.write(result);
-					return null;
-				}
-			}
-		} catch (Exception e) {
-			result = "保存错误，操作中止，请检查数据。";
-			out.write(result);
-			return null;
-		}
-		
+//		//存储sql语句
+//		List<String> sqlList = new ArrayList<String>();
+//		try {
+//			for (int z=0;z<archiveList.size();z++) {
+//				//创建insert sql
+//				HashMap<String,String> row = (HashMap<String,String>) archiveList.get(z);
+//				sb.append("update ").append(tableName).append(" set ");
+//
+//				for (SysTempletfield field : fieldList) {
+//					if (!"id".equals(field.getEnglishname().toLowerCase())) {
+//						sb.append(field.getEnglishname().toLowerCase()).append("=");
+//						if (field.getFieldtype().contains("VARCHAR")) {
+//							sb.append("'").append(row.get(field.getEnglishname().toLowerCase())).append("',");
+//						}
+//						else {
+//							sb.append(row.get(field.getEnglishname().toLowerCase())).append(",");
+//						}
+//					}
+//				}
+//				sb.deleteCharAt(sb.length() -1).append(" where id='").append(row.get("id").toString()).append("'");
+//
+//				sqlList.add(sb.toString());
+//				//清空sb，进行创建下一条sql
+//				sb.setLength(0);
+//			}
+//			if (sqlList.size() > 0) {
+//				b = dynamicService.update(sqlList);
+//
+//				if (!b) {
+//					result = "保存错误，操作中止，请检查数据。";
+//					out.write(result);
+//					return null;
+//				}
+//			}
+//		} catch (Exception e) {
+//			result = "保存错误，操作中止，请检查数据。";
+//			out.write(result);
+//			return null;
+//		}
+		if (!b) {
+            result = "保存错误，操作中止，请检查数据。";
+        }
 		out.write(result);
 		return null;
 	}

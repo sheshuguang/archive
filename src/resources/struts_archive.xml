@@ -42,6 +42,8 @@
 		<action name="listCode" class="codeAction" method="list"></action>
 		<!-- 保存代码-->
 		<action name="saveCode" class="codeAction" method="save"></action>
+        <!-- 根据fieldid，查找代码-->
+        <action name="getFieldCode" class="codeAction" method="getFieldCode"></action>
 		
 		<!-- ========== tree =========================== -->
 		<!-- 显示树-->
@@ -63,14 +65,13 @@
         <action name="showArchiveWjList" class="archiveAction" method="showWjArchive">
 			<result name="success">/webpage/archive/archive/ArchiveWjList.html</result>
 		</action>
-		<!-- 读取字段-->
-		<action name="createField" class="archiveAction" method="createField"></action>
+        <!-- 检查树节点背后的档案模块类型。是A \F\P -->
+        <action name="getTempletType" class="archiveAction" method="getArchiveType"></action>
 		<!-- 读取grid字段-->
 		<action name="getField" class="archiveAction" method="getField"></action>
 		<!-- 显示列表-->
 		<action name="listArchive" class="archiveAction" method="list"></action>
-		<!-- 保存-->
-		<action name="saveArchive" class="archiveAction" method="save"></action>
+
 		<!-- 删除档案-->
 		<action name="deleteArchive" class="archiveAction" method="delete"></action>
 

@@ -107,7 +107,8 @@
     		 return;
     	 }
          if (isEdit == 0) {
-             var par = "templetname=" + $('#templetname').val() + "&copyTempletid=" + $("#templettype").val() + "&templetid="+UUID.prototype.createUUID ();
+//             var par = "templetname=" + $('#templetname').val() + "&copyTempletid=" + $("#templettype").val() + "&templetid="+UUID.prototype.createUUID ();
+             var par = "templetname=" + $('#templetname').val() + "&copyTempletid=" + $("#templettype").val();
 			 $.post("addTemplet.action",par,function(data){
    					new $.Zebra_Dialog(data, {
    		  				'buttons':  false,

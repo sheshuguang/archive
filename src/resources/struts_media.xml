@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- media涉及的操作都在这里 -->
+	<package name="media" extends="struts-archive" >
+
+        <!-- 检查树节点背后的档案模块类型。是A \F\P -->
+        <action name="getFieldList" class="archiveAction" method="getFieldForMedia"></action>
+        <!-- 读取原始的档案数据。不为grid-->
+        <action name="listForMediaArchive" class="archiveAction" method="listForMedia"></action>
+
+        <!-- 多媒体上传 -->
+        <action name ="uploadMedia" class ="mediaAction" method="uploadMedia">
+            <param name="savePath">/WEB-INF/files/upload</param>
+        </action >
+
+    </package>
+</struts>

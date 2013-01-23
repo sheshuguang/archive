@@ -54,7 +54,7 @@ public class TempletService implements ITempletService {
 	
 	/**
 	 * 删除模板前，删除模板的关联表
-	 * @param templet
+	 * @param templetid
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -157,7 +157,7 @@ public class TempletService implements ITempletService {
 	
 	/**
 	 * 删除资源树节点前，删除资源树的各种关联
-	 * @param tree
+	 * @param treeIDList
 	 */
 	private Boolean deleteTree(List<String> treeIDList) {
 		if (null != treeIDList && treeIDList.size() > 0) {
@@ -235,6 +235,9 @@ public class TempletService implements ITempletService {
 			if ("A".equals(templet.getTemplettype()) && tableList.get(i).getTabletype().equals("01")) {
 				newTable.setTablelabel(templet.getTempletname()+ "_案卷级");
 			}
+            else if ("P".equals(templet.getTemplettype()) && tableList.get(i).getTabletype().equals("01")) {
+                newTable.setTablelabel(templet.getTempletname()+ "_案卷级");
+            }
 			else {
 				newTable.setTablelabel(templet.getTempletname() + "_文件级");
 			}
@@ -284,122 +287,7 @@ public class TempletService implements ITempletService {
 				}
 			}
 		}
-//		
-//		
-//		
-//			//得到模板类型，用来取字段。
-//			String templetType = templet.getTemplettype();
-//			if (templetType.equals("A")) {
-//				//如果是标准档案，取得标准模板对应的表
-//				SysTableExample ste = new SysTableExample();
-//				ste.createCriteria().andTempletidEqualTo("1");
-//				//得到参照的基础模板
-//				List<SysTable> tableList = tableDao.selectByExample(ste);
-//				for (int i=0;i<tableList.size();i++) {
-//					//插入表名管理表
-//					SysTable newTable = new SysTable();
-//					newTable.setTableid(UUID.randomUUID().toString());
-//					if (tableList.get(i).getTabletype().equals("01")) {
-//						newTable.setTablelabel(templet.getTempletname()+ "_案卷级");
-//					}
-//					else {
-//						newTable.setTablelabel(templet.getTempletname() + "_文件级");
-//					}
-//					newTable.setTablename("A_" + templet.getTempletid().substring(0, 8) + "_" + tableList.get(i).getTabletype());
-//					newTable.setTempletid(templet.getTempletid());
-//					newTable.setTabletype(tableList.get(i).getTabletype());
-//					//插入
-//					tableDao.insertSelective(newTable);
-//					
-//					//根据参照模板的字段，得到创建新表的sql语句
-//					SysTempletfieldExample stfe = new SysTempletfieldExample();
-//					stfe.createCriteria().andTableidEqualTo(tableList.get(i).getTableid());
-//					List<SysTempletfield> templetfieldList = templetfieldDao.selectByExample(stfe);
-//					if (null != templetfieldList && !"".equals(templetfieldList)) {
-//						String sql = createSql(templetfieldList);
-//						sql = "create table " + newTable.getTablename() + " (" + sql + ")";
-//						dynamicDao.postUpdate(sql.toString());
-//						
-//						//将模板字段，作为新表的字段插入字段管理表
-//						for (int j=0;j<templetfieldList.size();j++) {
-//							SysTempletfield templetfield = templetfieldList.get(j);
-//							templetfield.setTempletfieldid(UUID.randomUUID().toString());
-//							templetfield.setTableid(newTable.getTableid());
-//							templetfieldDao.insertSelective(templetfield);
-//						}
-//						//判断字段是否有代码
-//						if (templetfield.getIscode() == 1) {
-//							//得到代码
-//							SysCodeExample sce = new SysCodeExample();
-//							sce.createCriteria().andTempletfieldidEqualTo(templetfieldList.get(j).getTempletfieldid());
-//							
-//							List<SysCode> codeList = codeDao.selectByExample(sce);
-//							if (codeList.size() > 0) {
-//								for (int z=0;z<codeList.size();z++) {
-//									SysCode code = codeList.get(z);
-//									code.setCodeid(UUID.randomUUID().toString());
-//									code.setTempletfieldid(templetfield.getTempletfieldid());
-//									codeDao.insertSelective(code);
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//			else {
-//				//如果是文件档案，取得文件模板对应的表
-//				SysTableExample ste = new SysTableExample();
-//				ste.createCriteria().andTempletidEqualTo("2");
-//				//得到参照的基础模板
-//				List<SysTable> tableList = tableDao.selectByExample(ste);
-//				for (int i=0;i<tableList.size();i++) {
-//					//插入表名管理表
-//					SysTable newTable = new SysTable();
-//					newTable.setTableid(UUID.randomUUID().toString());
-//					newTable.setTablelabel(templet.getTempletname() + "_文件级");
-//					newTable.setTablename("F_" + templet.getTempletid().substring(0, 8) + "_" + tableList.get(i).getTabletype());
-//					newTable.setTempletid(templet.getTempletid());
-//					newTable.setTabletype(tableList.get(i).getTabletype());
-//					//插入
-//					tableDao.insertSelective(newTable);
-//					
-//					//根据参照模板的字段，得到创建新表的sql语句
-//					SysTempletfieldExample stfe = new SysTempletfieldExample();
-//					stfe.createCriteria().andTableidEqualTo(tableList.get(i).getTableid());
-//					List<SysTempletfield> templetfieldList = templetfieldDao.selectByExample(stfe);
-//					if (null != templetfieldList && !"".equals(templetfieldList)) {
-//						String sql = createSql(templetfieldList);
-//						sql = "create table " + newTable.getTablename() + " (" + sql + ")";
-//						dynamicDao.postUpdate(sql.toString());
-//						
-//						//将模板字段，作为新表的字段插入字段管理表
-//						for (int j=0;j<templetfieldList.size();j++) {
-//							SysTempletfield templetfield = templetfieldList.get(j);
-//							templetfield.setTempletfieldid(UUID.randomUUID().toString());
-//							templetfield.setTableid(newTable.getTableid());
-//							templetfieldDao.insertSelective(templetfield);
-//							
-//							//判断字段是否有代码
-//							if (templetfield.getIscode() == 1) {
-//								//得到代码
-//								SysCodeExample sce = new SysCodeExample();
-//								sce.createCriteria().andTempletfieldidEqualTo(templetfieldList.get(j).getTempletfieldid());
-//								
-//								List<SysCode> codeList = codeDao.selectByExample(sce);
-//								if (codeList.size() > 0) {
-//									for (int z=0;z<codeList.size();z++) {
-//										SysCode code = codeList.get(z);
-//										code.setCodeid(UUID.randomUUID().toString());
-//										code.setTempletfieldid(templetfield.getTempletfieldid());
-//										codeDao.insertSelective(code);
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-			return true;
+		return true;
 	}
 	
 	private String createSql(List<SysTempletfield> fieldList) {
@@ -440,7 +328,7 @@ public class TempletService implements ITempletService {
 	private boolean createTree(SysTemplet templet) {
 		String templetType = templet.getTemplettype();
 		
-		if ("A".equals(templetType) || "F".equals(templetType)) {
+		if ("A".equals(templetType) || "P".equals(templetType) || "F".equals(templetType)) {
 			SysTree tree = new SysTree();
 			tree.setTreeid(UUID.randomUUID().toString());
 			tree.setTreename(templet.getTempletname());
@@ -472,20 +360,37 @@ public class TempletService implements ITempletService {
 		//新建模板后，要创建真实表
 		if (null != templet) {
 			try {
-				//1 得到参考模板的类型，创建模板
-				SysTempletExample example = new SysTempletExample();
-				example.createCriteria().andTempletidEqualTo(copyTempletid);
-				List<SysTemplet> copyList = templetDao.selectByExample(example);
-				if (copyList.size() != 1) {
-					return false;
-				}
-				String type = copyList.get(0).getTemplettype();
-				if ("CA".equals(type)) {
+//				//1 得到参考模板的类型，创建模板
+//				SysTempletExample example = new SysTempletExample();
+//				example.createCriteria().andTempletidEqualTo(copyTempletid);
+//				List<SysTemplet> copyList = templetDao.selectByExample(example);
+//				if (copyList.size() != 1) {
+//					return false;
+//				}
+//				String type = copyList.get(0).getTemplettype();
+//				if ("CA".equals(type)) {
+//					type = "A";
+//				}
+//				else if("CF".equals(type)) {
+//					type = "F";
+//				}
+
+                //1 得到参考模板的类型，创建模板
+                SysTemplet copyTemplet = templetDao.selectByPrimaryKey(copyTempletid);
+                if (null == copyTemplet) {
+                    return false;
+                }
+                String type = copyTemplet.getTemplettype();
+                if ("CA".equals(type)) {
 					type = "A";
 				}
 				else if("CF".equals(type)) {
 					type = "F";
 				}
+                else if ("CP".equals(type)) {
+                    type = "P";
+                }
+
 				templet.setTemplettype(type);
 				templetDao.insertSelective(templet);
 				//2 创建表名管理表\ 创建真实表 \插入模板的字段 \插入代码表

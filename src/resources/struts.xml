@@ -37,6 +37,7 @@
 	<include file="struts_authority.xml" />
 	<include file="struts_search.xml" />
 	<include file="struts_doc.xml" />
+    <include file="struts_media.xml" />
 	
 	<!-- Add packages here -->
 </struts>

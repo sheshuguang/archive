@@ -287,7 +287,10 @@
     	<property name="docService" ref="docService" />
     	<property name="docServerService" ref="docserverService"/>
     </bean>
-    
+    <bean id="mediaAction" class="com.yapu.archive.action.MediaAction">
+        <property name="dynamicService" ref="dynamicService" />
+        <property name="treeService" ref="treeService" />
+    </bean>
     <bean id="dispatchAction" class="com.yapu.system.action.DispatchAction">
     </bean>
 

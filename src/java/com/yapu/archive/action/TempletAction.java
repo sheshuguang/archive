@@ -3,6 +3,7 @@ package com.yapu.archive.action;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -77,18 +78,15 @@ public class TempletAction extends BaseAction {
 	 */
 	public String insert() throws IOException {
 		String result =	"保存时出现错误，请重试或与管理员联系。";
-		HttpServletResponse response = getResponse();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out  = response.getWriter();
+        PrintWriter out = this.getPrintWriter();
 		
 		if (null == templetname || "".equals(templetname)) {
 			out.write(result);
 			return null;
 		}
 		SysTemplet templet = new SysTemplet();
-		templet.setTempletid(templetid);
+//		templet.setTempletid(templetid);
+        templet.setTempletid(UUID.randomUUID().toString());
 		templet.setTempletname(templetname);
 		if(templetService.insertTemplet(templet,copyTempletid)){
 			result="保存成功！";
