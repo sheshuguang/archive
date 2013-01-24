@@ -83,8 +83,9 @@ var mediaWjCommon = {
                     html += "</div>";
                 }
             }
-
-            $('#addMediaDialog').html(html);
+            $('#mediaWjInfoForm').html(html);
+            $('.mediainfo').attr("src","../../media/no_photo_135.png");
+            $("#mediaWjInfo").dialog("open");
         }
     },
     picHandle:function() {
@@ -152,7 +153,7 @@ var mediaWjCommon = {
             }
 
 //            html += "<div><img class='mediawj_image' style=\"width: 260px; height: 180px;\" onload=\"mediaWjCommon.imageHandle(this,260,180)\" src=\""+slt+"\"></div>";
-            html += "<div><img class='mediawj_image' style=\"width: 260px; height: 180px;\"  src=\""+slt+"\"></div>";
+            html += "<div><img class='mediawj_image' onclick='mediaWjCommon.showAddWjDialog()' style=\"width: 260px; height: 180px;\"  src=\""+slt+"\"></div>";
             html += "</a>";
             html += "</li>";
             if (n == 3 || n+1 == mediaWjCommon.data.length) {
@@ -206,9 +207,10 @@ var mediaWjCommon = {
         });
         //初始化多媒体文件信息dialog
         $("#mediaWjInfo").dialog({
+            title:'多媒体档案信息',
             autoOpen: false,
-            height: 470,
-            width: 560,
+            height: 670,
+            width: 860,
             modal: true,
             buttons: {
                 "保存":function() {

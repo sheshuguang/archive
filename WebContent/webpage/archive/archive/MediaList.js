@@ -156,7 +156,7 @@ var mediaCommon = {
             if (mediaCommon.data[i].TM.length > 20) {
                 tm = mediaCommon.data[i].TM.substring(0, 20) + "....";
             }
-            html += "<h6 rel=\"tooltip\" title=" + mediaCommon.data[i].AJH + ">" + ajh + "</h6>";
+            html += "<h6 ><a rel=\"tooltip\" href=\"#\" title="+mediaCommon.data[i].AJH+">" + ajh + "</a></h6>";
             html += "<p rel=\"tooltip\" title=" + mediaCommon.data[i].TM + " class=\"pp\">" + tm + "</p>";
             html += "<p><a class=\"btn btn-primary btn-small\" href=\"javascript:;\">查看</a> <a class=\"btn btn-small\" href=\"javascript:;\">编辑</a> <a class=\"btn btn-small\" href=\"javascript:;\">删除</a></p>";
             html += "</div>";
